@@ -13,6 +13,8 @@
   "scripts": {
     "deploy": "npm run build && wrangler pages deploy",
     "build": "cross-env NODE_OPTIONS=\"--max-old-space-size=8192\" remix vite:build",
+    "build:web": "npm run build",
+    "build:app": "node scripts/prepare-spa.js && cross-env VITE_APP_BUILD=true npm run build",
     "dev": "node pre-start.cjs  && remix vite:dev",
     "test": "vitest --run",
     "test:watch": "vitest",

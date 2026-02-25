@@ -44,6 +44,7 @@ export default defineConfig((config) => {
         },
       },
       remixVitePlugin({
+        ssr: process.env.VITE_APP_BUILD === 'true' ? false : true,
         future: {
           v3_fetcherPersist: true,
           v3_relativeSplatPath: true,

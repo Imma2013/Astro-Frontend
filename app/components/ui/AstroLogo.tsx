@@ -8,16 +8,27 @@ interface AstroLogoProps {
 
 export function AstroLogo({ className, textClassName, iconClassName }: AstroLogoProps) {
   return (
-    <span className={classNames('inline-flex items-center gap-2 group cursor-default', className)}>
-      <svg 
-        viewBox="0 0 24 24" 
-        fill="currentColor" 
-        xmlns="http://www.w3.org/2000/svg" 
-        className={classNames("w-6 h-6 text-[#168AE6] transition-transform duration-300 group-hover:-translate-y-0.5", iconClassName)}
-      >
-        <path d="M12.98 2.336c-.46-.448-1.5-.448-1.96 0-2.392 2.332-4.04 5.92-4.04 9.664 0 .972.112 1.92.32 2.832l-1.844 2.82c-.372.568-.112 1.344.536 1.504l3.18.796v2.108c0 .592.58.988 1.12.768l1.708-.684 1.708.684c.54.22 1.12-.176 1.12-.768v-2.108l3.18-.796c.648-.16.908-.936.536-1.504l-1.844-2.82c.208-.912.32-1.86.32-2.832 0-3.744-1.648-7.332-4.04-9.664zm-1.42 12.368a1.56 1.56 0 11.88 0 1.56 1.56 0 01-.88 0z" />
-      </svg>
-      <span className={classNames('text-xl font-bold tracking-tight text-Astro-elements-textPrimary', textClassName)}>
+    <span className={classNames('inline-flex items-center gap-2.5 group cursor-default', className)}>
+      <span className={classNames(
+        "relative flex h-8 w-8 items-center justify-center rounded-full bg-[#168AE6] shadow-md transition-all duration-300 group-hover:scale-105 group-hover:shadow-lg",
+        iconClassName
+      )}>
+        <svg 
+          viewBox="0 0 24 24" 
+          fill="none" 
+          xmlns="http://www.w3.org/2000/svg" 
+          className="w-4.5 h-4.5 text-white drop-shadow-sm"
+        >
+          <path 
+            d="M12 2L12 2C12 2 11 5 11 9C11 13 12 15 12 15M12 2C12 2 13 5 13 9C13 13 12 15 12 15M12 2L9 6L8 11L9 16L12 22L15 16L16 11L15 6L12 2Z" 
+            stroke="currentColor" 
+            strokeWidth="2.5" 
+            strokeLinecap="round" 
+            strokeLinejoin="round"
+          />
+        </svg>
+      </span>
+      <span className={classNames('text-2xl font-bold tracking-tight text-Astro-elements-textPrimary', textClassName)}>
         Astro
       </span>
     </span>
