@@ -16,6 +16,11 @@ export default defineConfig((config) => {
     define: {
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
     },
+    resolve: {
+      alias: {
+        'react-dom/server': 'react-dom/server.browser',
+      },
+    },
     build: {
       target: 'esnext',
     },

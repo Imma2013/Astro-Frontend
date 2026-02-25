@@ -1,6 +1,8 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import { globSync } from 'fast-glob';
+import pkg from 'fast-glob';
+
+const { globSync } = pkg;
 
 /**
  * This script transforms the Remix codebase into a static SPA.
@@ -9,7 +11,7 @@ import { globSync } from 'fast-glob';
  * generates in SPA mode, but SPA mode forbids server-side exports.
  */
 
-const routesDir = path.resolve('app/routes');
+const routesDir = path.resolve('app/routes').replace(/\\/g, '/');
 const files = globSync(`${routesDir}/**/*.{ts,tsx}`);
 
 console.log(`Transforming ${files.length} routes for SPA build...`);
@@ -18,29 +20,67 @@ files.forEach(file => {
   let content = fs.readFileSync(file, 'utf8');
   let changed = false;
 
-  // Skip files that already have clientLoader/clientAction unless we are doing a clean pass
+  // Stub out ALL api routes for desktop build to avoid server-side dependency leakage
+  if (path.basename(file).startsWith('api.')) {
+      console.log(`  Stubbing API route: ${path.basename(file)}`);
+      content = `
+import { json } from '@remix-run/react';
+
+export const clientLoader = () => {
+  return json({ error: 'This API is not available in the local-only desktop app.' }, { status: 501 });
+};
+
+export const clientAction = () => {
+  return json({ error: 'This API is not available in the local-only desktop app.' }, { status: 501 });
+};
+`;
+      fs.writeFileSync(file, content);
+      return;
+  }
+
+  // Replace export { loader, ... } or export { loader as ... } from '...'
+  if (content.match(/export\s+\{.*?\bloader\b.*?\}\s+from/)) {
+    content = content.replace(/\bloader\b/g, 'clientLoader');
+    changed = true;
+  }
   
+  if (content.match(/export\s+\{.*?\baction\b.*?\}\s+from/)) {
+    content = content.replace(/\baction\b/g, 'clientAction');
+    changed = true;
+  }
+
+  // Handle export { loader }; (re-export from local)
+  if (content.match(/export\s+\{.*?\bloader\b.*?\}[\s;]*/m)) {
+    content = content.replace(/\bloader\b/g, 'clientLoader');
+    changed = true;
+  }
+  
+  if (content.match(/export\s+\{.*?\baction\b.*?\}[\s;]*/m)) {
+    content = content.replace(/\baction\b/g, 'clientAction');
+    changed = true;
+  }
+
   // Replace export async function loader
-  if (content.match(/export (async )?function loader/)) {
-    content = content.replace(/export (async )?function loader/g, 'export $1function clientLoader');
+  if (content.match(/export\s+(async\s+)?function\s+loader\b/)) {
+    content = content.replace(/export\s+(async\s+)?function\s+loader\b/g, 'export $1function clientLoader');
     changed = true;
   }
 
   // Replace export const loader
-  if (content.match(/export const loader/)) {
-    content = content.replace(/export const loader/g, 'export const clientLoader');
+  if (content.match(/export\s+const\s+loader\b/)) {
+    content = content.replace(/export\s+const\s+loader\b/g, 'export const clientLoader');
     changed = true;
   }
 
   // Replace export async function action
-  if (content.match(/export (async )?function action/)) {
-    content = content.replace(/export (async )?function action/g, 'export $1function clientAction');
+  if (content.match(/export\s+(async\s+)?function\s+action\b/)) {
+    content = content.replace(/export\s+(async\s+)?function\s+action\b/g, 'export $1function clientAction');
     changed = true;
   }
 
   // Replace export const action
-  if (content.match(/export const action/)) {
-    content = content.replace(/export const action/g, 'export const clientAction');
+  if (content.match(/export\s+const\s+action\b/)) {
+    content = content.replace(/export\s+const\s+action\b/g, 'export const clientAction');
     changed = true;
   }
 
