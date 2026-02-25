@@ -31,9 +31,9 @@ jobs:
           sudo apt-get install -y libgtk-3-dev libwebkit2gtk-4.0-dev libappindicator3-dev librsvg2-dev patchelf
 
       - name: Download llama-server binary
-        working-directory: astro-ide/src-tauri
         shell: bash
         run: |
+          cd astro-ide/src-tauri
           mkdir -p bin
           cd bin
           if [ "${{ matrix.platform }}" == "windows-latest" ]; then
