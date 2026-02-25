@@ -33,7 +33,7 @@ jobs:
       - name: Download llama-server binary
         shell: bash
         run: |
-          cd astro-ide/src-tauri
+          cd src-tauri
           mkdir -p bin
           cd bin
           if [ "${{ matrix.platform }}" == "windows-latest" ]; then
@@ -61,7 +61,6 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install
-        working-directory: astro-ide
 
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
@@ -73,7 +72,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          projectPath: 'astro-ide'
           tagName: ${{ github.ref_name }}
           releaseName: 'Astro ${{ github.ref_name }}'
           releaseBody: 'See the assets to download Astro for Windows, Mac, and Linux.'
