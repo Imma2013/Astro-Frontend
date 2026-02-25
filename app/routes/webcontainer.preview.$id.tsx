@@ -1,20 +1,21 @@
-import { useLoaderData, type ClientLoaderFunctionArgs } from '@remix-run/react';
+import { json, type LoaderFunctionArgs } from '@remix-run/cloudflare';
+import { useLoaderData } from '@remix-run/react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 const PREVIEW_CHANNEL = 'preview-updates';
 
-export function clientLoader({ params }: ClientLoaderFunctionArgs) {
+export async function loader({ params }: LoaderFunctionArgs) {
   const previewId = params.id;
 
   if (!previewId) {
-    throw new Error('Preview ID is required');
+    throw new Response('Preview ID is required', { status: 400 });
   }
 
-  return { previewId };
+  return json({ previewId });
 }
 
 export default function WebContainerPreview() {
-  const { previewId } = useLoaderData<typeof clientLoader>();
+  const { previewId } = useLoaderData<typeof loader>();
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const broadcastChannelRef = useRef<BroadcastChannel>();
   const [previewUrl, setPreviewUrl] = useState('');
