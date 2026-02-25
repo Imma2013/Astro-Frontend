@@ -29,7 +29,7 @@ export function LandingPage() {
       const targetAsset = release.assets.find((asset: any) => asset.name.endsWith(assetExtension));
       
       if (!targetAsset) {
-        throw new Error(\`Could not find the \${platform.toUpperCase()} installer in the latest release.\`);
+        throw new Error(`Could not find the ${platform.toUpperCase()} installer in the latest release.`);
       }
       
       // Trigger the direct download
@@ -40,7 +40,7 @@ export function LandingPage() {
       link.click();
       document.body.removeChild(link);
       
-      toast.success(\`Downloading Astro for \${platform.toUpperCase()}...\`);
+      toast.success(`Downloading Astro for ${platform.toUpperCase()}...`);
       
     } catch (error: any) {
       console.error('Download failed:', error);
