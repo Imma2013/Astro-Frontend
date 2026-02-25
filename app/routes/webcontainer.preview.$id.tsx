@@ -14,7 +14,7 @@ export function clientLoader({ params }: ClientLoaderFunctionArgs) {
 }
 
 export default function WebContainerPreview() {
-  const { previewId } = useLoaderData<typeof clientLoader>();
+  const { previewId } = (useLoaderData<typeof clientLoader>() || {}) as { previewId: string };
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const broadcastChannelRef = useRef<BroadcastChannel>();
   const [previewUrl, setPreviewUrl] = useState('');
