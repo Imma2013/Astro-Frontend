@@ -30,7 +30,7 @@
       "bin/llama-server"
     ],
     "resources": [
-      "bin/*.dll"
+      "bin/*"
     ],
     "icon": [
       "icons/32x32.png",

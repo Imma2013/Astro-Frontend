@@ -3,10 +3,12 @@ name: Build & Release Tauri App
 on:
   push:
     tags:
-      - 'v*' # Trigger the build only when you push a tag like v1.0.0
+      - 'v*'
 
 jobs:
   release:
+    permissions:
+      contents: write
     strategy:
       fail-fast: false
       matrix:
@@ -28,6 +30,30 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y libgtk-3-dev libwebkit2gtk-4.0-dev libappindicator3-dev librsvg2-dev patchelf
 
+      - name: Download llama-server binary
+        working-directory: astro-ide/src-tauri
+        shell: bash
+        run: |
+          mkdir -p bin
+          cd bin
+          if [ "${{ matrix.platform }}" == "windows-latest" ]; then
+            curl -L -o llama.zip https://github.com/ggml-org/llama.cpp/releases/download/b8147/llama-b8147-bin-win-vulkan-x64.zip
+            unzip llama.zip
+            mv llama-server.exe llama-server-x86_64-pc-windows-msvc.exe
+            mv *.dll ./ 2>/dev/null || true
+          elif [ "${{ matrix.platform }}" == "macos-latest" ]; then
+            curl -L -o llama-arm.zip https://github.com/ggml-org/llama.cpp/releases/download/b8147/llama-b8147-bin-macos-arm64.zip
+            unzip llama-arm.zip -d arm
+            mv arm/llama-server llama-server-aarch64-apple-darwin
+            curl -L -o llama-x64.zip https://github.com/ggml-org/llama.cpp/releases/download/b8147/llama-b8147-bin-macos-x64.zip
+            unzip llama-x64.zip -d x64
+            mv x64/llama-server llama-server-x86_64-apple-darwin
+          elif [ "${{ matrix.platform }}" == "ubuntu-22.04" ]; then
+            curl -L -o llama.zip https://github.com/ggml-org/llama.cpp/releases/download/b8147/llama-b8147-bin-ubuntu-x64.zip
+            unzip llama.zip
+            mv llama-server llama-server-x86_64-unknown-linux-gnu
+          fi
+
       - name: Install pnpm
         uses: pnpm/action-setup@v3
         with:
@@ -39,6 +65,8 @@ jobs:
 
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-apple-darwin, x86_64-apple-darwin
 
       - name: Build Tauri App
         uses: tauri-apps/tauri-action@v0
@@ -46,8 +74,9 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           projectPath: 'astro-ide'
-          tagName: app-v__VERSION__
-          releaseName: 'Astro v__VERSION__'
-          releaseBody: 'See the assets to download Astro for Windows and Mac.'
+          tagName: ${{ github.ref_name }}
+          releaseName: 'Astro ${{ github.ref_name }}'
+          releaseBody: 'See the assets to download Astro for Windows, Mac, and Linux.'
           releaseDraft: false
           prerelease: false
+          args: ${{ matrix.platform == 'macos-latest' && '--target universal-apple-darwin' || '' }}
