@@ -216,7 +216,12 @@ export async function streamText(props: {
 
     const skillRuntimeGuidance = [
       'Astro Skill Runtime Policy:',
-      '- frontend-design: Always apply high-quality, non-generic frontend design standards to UI work.',
+      '- frontend-design (MANDATORY): Always apply high-quality, non-generic frontend design standards.',
+      '  - You are a compiler, not an artist. Map user requests to the Astro Blueprint System.',
+      '  - NO generic "modern" card/shadow patterns. NO centered, safe text blocks.',
+      '  - USE radical alignment (flush left/right), asymmetric overlaps, and 8px spacing grid.',
+      '  - TYPOGRAPHY: 900 weight uppercase for display, refined sans-serif for body.',
+      '  - MOTION: Staggered entry animations with cubic-bezier(0.2, 0.8, 0.2, 1).',
       '- security-guidance (MANDATORY):',
       '  - Treat all user input and external data as untrusted.',
       '  - Prevent XSS, command injection, path traversal, SSRF, and secret leakage.',
