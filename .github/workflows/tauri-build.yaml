@@ -38,19 +38,19 @@ jobs:
           cd bin
           if [ "${{ matrix.platform }}" == "windows-latest" ]; then
             curl -L -o llama.zip https://github.com/ggml-org/llama.cpp/releases/download/b8147/llama-b8147-bin-win-vulkan-x64.zip
-            unzip llama.zip
+            unzip -o llama.zip
             mv llama-server.exe llama-server-x86_64-pc-windows-msvc.exe
             mv *.dll ./ 2>/dev/null || true
           elif [ "${{ matrix.platform }}" == "macos-latest" ]; then
             curl -L -o llama-arm.zip https://github.com/ggml-org/llama.cpp/releases/download/b8147/llama-b8147-bin-macos-arm64.zip
-            unzip llama-arm.zip -d arm
+            unzip -o llama-arm.zip -d arm
             mv arm/llama-server llama-server-aarch64-apple-darwin
             curl -L -o llama-x64.zip https://github.com/ggml-org/llama.cpp/releases/download/b8147/llama-b8147-bin-macos-x64.zip
-            unzip llama-x64.zip -d x64
+            unzip -o llama-x64.zip -d x64
             mv x64/llama-server llama-server-x86_64-apple-darwin
           elif [ "${{ matrix.platform }}" == "ubuntu-22.04" ]; then
             curl -L -o llama.zip https://github.com/ggml-org/llama.cpp/releases/download/b8147/llama-b8147-bin-ubuntu-x64.zip
-            unzip llama.zip
+            unzip -o llama.zip
             mv llama-server llama-server-x86_64-unknown-linux-gnu
           fi
 
