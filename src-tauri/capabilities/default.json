@@ -7,7 +7,24 @@
   ],
   "permissions": [
     "core:default",
-    "shell:allow-sidecar",
-    "fs:default"
+    "fs:default",
+    {
+      "identifier": "shell:allow-spawn",
+      "allow": [
+        {
+          "name": "bin/llama-server",
+          "sidecar": true
+        }
+      ]
+    },
+    {
+      "identifier": "shell:allow-execute",
+      "allow": [
+        {
+          "name": "bin/llama-server",
+          "sidecar": true
+        }
+      ]
+    }
   ]
 }
