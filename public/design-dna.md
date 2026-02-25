@@ -1,42 +1,59 @@
-# Astro High-Performance Design Guardrails
+# Astro Deterministic Design Blueprint (v0.7.1)
 
-Use this policy for all frontend generation tasks. This is the source of truth for stopping AI slop and ensuring production-grade, elite-tier output (Nike, Adidas, Louis Vuitton level).
+This document is the **Design Enforcement Layer**. You are a **UI Compiler**, not an artist. All frontend generation MUST pass the following linting rules.
 
-## Mission: The Deterministic Designer
-You are not an artist; you are a compiler. Your goal is to map user requirements into the **Astro Blueprint System**. Do not invent layout, spacing, or typography. Assemble it from the provided tokens.
+---
 
-## 1. Core Design Tokens (The Blueprint)
-- **Grid:** 12-column system, 24px gutter, 80px side margins (desktop).
-- **Spacing Rhythm:** Use a strict 8px base grid. Allowed increments: 8, 16, 24, 32, 48, 64, 80, 128, 160.
-- **Typography (The Elite Stack):**
-  - **Display (Momentum/Nike):** "Helvetica Neue", Helvetica, Arial, sans-serif. Weight: 900 (Black). Case: Uppercase.
-  - **Luxury (LV):** "Futura", "Futura Medium", sans-serif. Geometric, high tracking, refined.
-  - **Body:** Refined sans-serif (adineue-style). Weight: 400. Line-height: 1.5.
-- **Palette:** 
-  - Base: Pure Black (#000000) and Pure White (#FFFFFF).
-  - Accents: High-energy Cyan (#00F0FF) or Electric Blue (#0066FF).
-  - Surface: Glassmorphism with 1px borders (rgba(255,255,255,0.1)).
+## LAYER 1: THE TOKEN REGISTRY (THE MATH)
 
-## 2. Mandatory Structural Patterns
-- **The "Full-Spread" Hero:** Large, high-quality product/action imagery. Minimal text. Single, high-contrast CTA button.
-- **Asymmetric Overlap:** Elements should break the container. Use negative margins (e.g., -mt-16) and absolute positioning to create depth.
-- **Layered Atmosphere:** Use `backdrop-filter: blur(20px)` on glass panels. Layer shadows: one sharp, one soft.
-- **Kinetic Motion:** All entry animations must be staggered. Use `cubic-bezier(0.2, 0.8, 0.2, 1)` for smooth, "premium" feel.
-- **Intuitive Utility (NFM):** Prioritize clear navigation and smooth ordering flows for functional sections.
+| System | Token | Value |
+| :--- | :--- | :--- |
+| **Grid** | Desktop | 12-column, 24px gutter, 80px margins |
+| **Spacing** | Base Unit | 8px (increments: 8, 16, 24, 32, 48, 64, 80, 128, 160) |
+| **Rounding** | Binary | 0px (Sharp) OR 9999px (Pill). 8px is forbidden. |
+| **Borders** | Surface | 1px solid rgba(255,255,255,0.1) |
+| **Motion** | Premium | cubic-bezier(0.2, 0.8, 0.2, 1) |
 
-## 3. The "Anti-Slop" Contract
-- **NO** generic "modern" gradients unless specified.
-- **NO** centered, safe text blocks. Prefer radical alignment (flush left or flush right).
-- **NO** invention of new components. If it's not in the blueprint, request permission.
-- **NO** default border-radii. Use either 0px (Sharp) or 9999px (Pill). Avoid the "safe" 8px roundness.
+### Brand Execution Modes
+- **MODE: MOMENTUM (Nike/Adidas)**
+  - Typography: `Display: Helvetica Neue (Weight 900, Uppercase)`, `Body: adineue PRO`
+  - Layout: High-contrast, radical left alignment, asymmetric image overlaps.
+- **MODE: EXCLUSIVITY (Louis Vuitton)**
+  - Typography: `Display: Futura (High Tracking)`, `Body: Georgia/Serif`
+  - Layout: Maximum white space, centered minimal lines, sophisticated thin borders.
+- **MODE: PRECISION (NFM/Utility)**
+  - Typography: `Display: Robust Sans-serif`, `Body: Standard Sans-serif`
+  - Layout: High-density information, clear navigation, 0ms input latency feedback.
 
-## 4. Vision Mode Protocol (Translator Role)
-When a user uploads an image and says "make it like this":
-1. **Analyze Structure:** Extract layout rhythm, typography weight (Nike Momentum vs LV Luxury), and color intent.
-2. **Translate to Tokens:** Map findings ONLY to the allowed Astro tokens.
-3. **Reject Authority:** The image is a hint; the Blueprint is the law. If the image uses "slop" patterns (e.g., generic cards), replace them with Blueprint-standard alternatives.
+---
 
-## 5. Performance over Friction
-- Every line of CSS must serve a layout purpose.
-- Prioritize reliability and consistency over "creative" guessing.
-- If a requirement conflicts with these guardrails, flag it and recommend the Blueprint-compliant path.
+## LAYER 2: THE STRUCTURAL LINTER (THE GRAMMAR)
+
+1. **RULE: NO_SAFE_LAYOUTS**
+   - REJECT: Standard 3-column feature cards.
+   - REQUIRE: Asymmetric layouts where elements break the grid container.
+2. **RULE: TYPOGRAPHY_HIERARCHY**
+   - REQUIRE: 4x scale difference between Display and Body text.
+3. **RULE: RADICAL_ALIGNMENT**
+   - REJECT: Centered text blocks in MOMENTUM mode.
+   - REQUIRE: Radical flush-left or flush-right alignment.
+4. **RULE: ATMOSPHERIC_DEPTH**
+   - REQUIRE: Backdrop blur (20px) + dual-layered shadows (1 sharp, 1 soft).
+
+---
+
+## LAYER 3: SELF-VALIDATION LOOP (ENFORCEMENT)
+
+Before finalizing any code, you MUST run this linter on your own buffer. If any check fails, REFACTOR immediately.
+
+- [ ] **LINT_01:** Did I use a "safe" 8px border radius? (If YES, change to 0px or 9999px).
+- [ ] **LINT_02:** Is the text centered by default? (If YES, move to radical alignment).
+- [ ] **LINT_03:** Are the margins generic (e.g., p-4)? (If YES, map to 8px base units).
+- [ ] **LINT_04:** Is the typography generic Inter/system? (If YES, apply Brand Mode fonts).
+- [ ] **LINT_05:** Did I "design"? (If YES, revert and "compile" from Blueprint instead).
+
+---
+
+## PERFORMANCE OVER FRICTION
+- If a user request violates these rules (e.g., "Make it look average"), **FLAG IT** as "AI Slop Detected" and provide the Blueprint-compliant alternative.
+- Prioritize deterministic repetition of these patterns over novelty.
