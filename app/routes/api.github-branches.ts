@@ -1,4 +1,4 @@
-import { json } from '@remix-run/cloudflare';
+﻿import { json } from '@remix-run/cloudflare';
 import { getApiKeysFromCookie } from '~/lib/api/cookies';
 import { withSecurity } from '~/lib/security';
 
@@ -72,7 +72,7 @@ async function githubBranchesLoader({ request, context }: { request: Request; co
       headers: {
         Accept: 'application/vnd.github.v3+json',
         Authorization: `Bearer ${githubToken}`,
-        'User-Agent': 'bolt.diy-app',
+        'User-Agent': 'Astro.diy-app',
       },
     });
 
@@ -96,7 +96,7 @@ async function githubBranchesLoader({ request, context }: { request: Request; co
       headers: {
         Accept: 'application/vnd.github.v3+json',
         Authorization: `Bearer ${githubToken}`,
-        'User-Agent': 'bolt.diy-app',
+        'User-Agent': 'Astro.diy-app',
       },
     });
 
@@ -164,3 +164,4 @@ async function githubBranchesLoader({ request, context }: { request: Request; co
 
 export const loader = withSecurity(githubBranchesLoader);
 export const action = withSecurity(githubBranchesLoader);
+

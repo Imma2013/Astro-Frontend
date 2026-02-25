@@ -1,4 +1,4 @@
-import { motion, type Variants } from 'framer-motion';
+﻿import { motion, type Variants } from 'framer-motion';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 import { Dialog, DialogButton, DialogDescription, DialogRoot, DialogTitle } from '~/components/ui/Dialog';
@@ -14,6 +14,7 @@ import { useSearchFilter } from '~/lib/hooks/useSearchFilter';
 import { classNames } from '~/utils/classNames';
 import { useStore } from '@nanostores/react';
 import { profileStore } from '~/lib/stores/profile';
+import { AstroLogo } from '~/components/ui/AstroLogo';
 
 const menuVariants = {
   closed: {
@@ -279,27 +280,52 @@ export const Menu = () => {
   }, [open, selectionMode]);
 
   useEffect(() => {
-    const enterThreshold = 20;
-    const exitThreshold = 20;
+    const onPointerDown = (event: MouseEvent) => {
+      if (!open || isSettingsOpen || !menuRef.current) {
+        return;
+      }
 
-    function onMouseMove(event: MouseEvent) {
+      const target = event.target as Node | null;
+
+      if (target && !menuRef.current.contains(target)) {
+        setOpen(false);
+      }
+    };
+
+    window.addEventListener('mousedown', onPointerDown);
+
+    return () => {
+      window.removeEventListener('mousedown', onPointerDown);
+    };
+  }, [open, isSettingsOpen]);
+
+  useEffect(() => {
+    const onEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape' && open && !isSettingsOpen) {
+        setOpen(false);
+      }
+    };
+
+    window.addEventListener('keydown', onEscape);
+
+    return () => {
+      window.removeEventListener('keydown', onEscape);
+    };
+  }, [open, isSettingsOpen]);
+
+  useEffect(() => {
+    const onToggleSidebar = () => {
       if (isSettingsOpen) {
         return;
       }
 
-      if (event.pageX < enterThreshold) {
-        setOpen(true);
-      }
+      setOpen((current) => !current);
+    };
 
-      if (menuRef.current && event.clientX > menuRef.current.getBoundingClientRect().right + exitThreshold) {
-        setOpen(false);
-      }
-    }
-
-    window.addEventListener('mousemove', onMouseMove);
+    window.addEventListener('astro:toggle-sidebar', onToggleSidebar);
 
     return () => {
-      window.removeEventListener('mousemove', onMouseMove);
+      window.removeEventListener('astro:toggle-sidebar', onToggleSidebar);
     };
   }, [isSettingsOpen]);
 
@@ -329,18 +355,19 @@ export const Menu = () => {
         initial="closed"
         animate={open ? 'open' : 'closed'}
         variants={menuVariants}
-        style={{ width: '340px' }}
+        style={{ width: '340px', zIndex: isSettingsOpen ? 1300 : 1200 }}
         className={classNames(
           'flex selection-accent flex-col side-menu fixed top-0 h-full rounded-r-2xl',
-          'bg-white dark:bg-gray-950 border-r border-bolt-elements-borderColor',
+          'bg-white dark:bg-gray-950 border-r border-Astro-elements-borderColor',
           'shadow-sm text-sm',
-          isSettingsOpen ? 'z-40' : 'z-sidebar',
         )}
       >
         <div className="h-12 flex items-center justify-between px-4 border-b border-gray-100 dark:border-gray-800/50 bg-gray-50/50 dark:bg-gray-900/50 rounded-tr-2xl">
-          <div className="text-gray-900 dark:text-white font-medium"></div>
+          <a href="/" className="flex items-center gap-2 text-gray-900 dark:text-white font-semibold tracking-tight">
+            <AstroLogo textClassName="text-base" iconClassName="h-5 w-5" />
+          </a>
           <div className="flex items-center gap-3">
-            <HelpButton onClick={() => window.open('https://stackblitz-labs.github.io/bolt.diy/', '_blank')} />
+            <HelpButton onClick={() => window.open('https://stackblitz-labs.github.io/Astro.diy/', '_blank')} />
             <span className="font-medium text-sm text-gray-900 dark:text-white truncate">
               {profile?.username || 'Guest User'}
             </span>
@@ -538,3 +565,4 @@ export const Menu = () => {
     </>
   );
 };
+

@@ -1,4 +1,4 @@
-import { memo, forwardRef, type ForwardedRef } from 'react';
+﻿import { memo, forwardRef, type ForwardedRef } from 'react';
 import { classNames } from '~/utils/classNames';
 
 type IconSize = 'sm' | 'md' | 'lg' | 'xl' | 'xxl';
@@ -46,7 +46,7 @@ export const IconButton = memo(
         <button
           ref={ref}
           className={classNames(
-            'flex items-center text-bolt-elements-item-contentDefault bg-transparent enabled:hover:text-bolt-elements-item-contentActive rounded-md p-1 enabled:hover:bg-bolt-elements-item-backgroundActive disabled:cursor-not-allowed focus:outline-none',
+            'flex items-center text-Astro-elements-item-contentDefault bg-transparent enabled:hover:text-Astro-elements-item-contentActive rounded-md p-1 enabled:hover:bg-Astro-elements-item-backgroundActive disabled:cursor-not-allowed focus:outline-none',
             {
               [classNames('opacity-30', disabledClassName)]: disabled,
             },
@@ -82,3 +82,4 @@ function getIconSize(size: IconSize) {
     return 'text-2xl';
   }
 }
+

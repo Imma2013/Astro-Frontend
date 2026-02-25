@@ -1,0 +1,47 @@
+name: Build & Release Tauri App
+
+on:
+  push:
+    tags:
+      - 'v*' # Trigger the build only when you push a tag like v1.0.0
+
+jobs:
+  release:
+    strategy:
+      fail-fast: false
+      matrix:
+        platform: [macos-latest, windows-latest]
+
+    runs-on: ${{ matrix.platform }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 9
+
+      - name: Install dependencies
+        run: pnpm install
+        working-directory: astro-ide
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Build Tauri App
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          projectPath: 'astro-ide'
+          tagName: app-v__VERSION__
+          releaseName: 'Astro v__VERSION__'
+          releaseBody: 'See the assets to download Astro for Windows and Mac.'
+          releaseDraft: false
+          prerelease: false

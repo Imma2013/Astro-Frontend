@@ -1,4 +1,4 @@
-import { atom, map } from 'nanostores';
+﻿import { atom, map } from 'nanostores';
 import { PROVIDER_LIST } from '~/utils/constants';
 import type { IProviderConfig } from '~/types/model';
 import type { TabVisibilityConfig, TabWindowConfig, UserTabConfig } from '~/components/@settings/core/types';
@@ -24,7 +24,7 @@ export interface Shortcuts {
 }
 
 export const URL_CONFIGURABLE_PROVIDERS = ['Ollama', 'LMStudio', 'OpenAILike'];
-export const LOCAL_PROVIDERS = ['OpenAILike', 'LMStudio', 'Ollama'];
+export const LOCAL_PROVIDERS = ['WebLLM', 'OpenAILike', 'LMStudio', 'Ollama'];
 
 export type ProviderSetting = Record<string, IProviderConfig>;
 
@@ -91,8 +91,8 @@ const getInitialProviderSettings = (): ProviderSetting => {
     initialSettings[provider.name] = {
       ...provider,
       settings: {
-        // Local providers should be disabled by default
-        enabled: !LOCAL_PROVIDERS.includes(provider.name),
+        // Keep local providers visible by default so users can run local-first without extra setup clicks.
+        enabled: true,
       },
     };
   });
@@ -336,7 +336,7 @@ const getInitialTabConfiguration = (): TabWindowConfig => {
   }
 
   try {
-    const saved = localStorage.getItem('bolt_tab_configuration');
+    const saved = localStorage.getItem('Astro_tab_configuration');
 
     if (!saved) {
       return defaultConfig;
@@ -369,7 +369,7 @@ export const resetTabConfiguration = () => {
   };
 
   tabConfigurationStore.set(defaultConfig);
-  localStorage.setItem('bolt_tab_configuration', JSON.stringify(defaultConfig));
+  localStorage.setItem('Astro_tab_configuration', JSON.stringify(defaultConfig));
 };
 
 // First, let's define the SettingsStore interface
@@ -403,3 +403,4 @@ export const useSettingsStore = create<SettingsStore>((set) => ({
     set({ selectedTab: tab });
   },
 }));
+

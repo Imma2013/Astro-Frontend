@@ -14,6 +14,8 @@ import { extractPropertiesFromMessage } from '~/lib/.server/llm/utils';
 import type { DesignScheme } from '~/types/design-scheme';
 import { MCPService } from '~/lib/services/mcpService';
 import { StreamRecoveryManager } from '~/lib/.server/llm/stream-recovery';
+import type { AstroRuntimeConfig } from '~/types/astro';
+import { enforceOpenRouterModelAllowlist, enforceOpenRouterRateLimit } from '~/lib/.server/openrouter/guard';
 
 export async function action(args: ActionFunctionArgs) {
   return chatAction(args);
@@ -48,7 +50,7 @@ async function chatAction({ context, request }: ActionFunctionArgs) {
     },
   });
 
-  const { messages, files, promptId, contextOptimization, supabase, chatMode, designScheme, maxLLMSteps } =
+  const { messages, files, promptId, contextOptimization, supabase, chatMode, designScheme, astroRuntime, maxLLMSteps } =
     await request.json<{
       messages: Messages;
       files: any;
@@ -56,6 +58,7 @@ async function chatAction({ context, request }: ActionFunctionArgs) {
       contextOptimization: boolean;
       chatMode: 'discuss' | 'build';
       designScheme?: DesignScheme;
+      astroRuntime?: AstroRuntimeConfig;
       supabase?: {
         isConnected: boolean;
         hasSelectedProject: boolean;
@@ -72,6 +75,17 @@ async function chatAction({ context, request }: ActionFunctionArgs) {
   const providerSettings: Record<string, IProviderSetting> = JSON.parse(
     parseCookies(cookieHeader || '').providers || '{}',
   );
+  const latestUserMessage = [...messages].reverse().find((entry) => entry.role === 'user');
+
+  if (latestUserMessage) {
+    const { model, provider } = extractPropertiesFromMessage(latestUserMessage);
+    enforceOpenRouterModelAllowlist(provider, model);
+    enforceOpenRouterRateLimit({
+      provider,
+      apiKeys,
+      env: context.cloudflare?.env as unknown as Record<string, string> | undefined,
+    });
+  }
 
   const stream = new SwitchableStream();
 
@@ -277,10 +291,11 @@ async function chatAction({ context, request }: ActionFunctionArgs) {
               contextOptimization,
               contextFiles: filteredFiles,
               chatMode,
-              designScheme,
-              summary,
-              messageSliceId,
-            });
+            designScheme,
+            astroRuntime,
+            summary,
+            messageSliceId,
+          });
 
             result.mergeIntoDataStream(dataStream);
 
@@ -319,6 +334,7 @@ async function chatAction({ context, request }: ActionFunctionArgs) {
           contextFiles: filteredFiles,
           chatMode,
           designScheme,
+          astroRuntime,
           summary,
           messageSliceId,
         });
@@ -389,7 +405,7 @@ async function chatAction({ context, request }: ActionFunctionArgs) {
 
           if (typeof chunk === 'string') {
             if (chunk.startsWith('g') && !lastChunk.startsWith('g')) {
-              controller.enqueue(encoder.encode(`0: "<div class=\\"__boltThought__\\">"\n`));
+              controller.enqueue(encoder.encode(`0: "<div class=\\"__AstroThought__\\">"\n`));
             }
 
             if (lastChunk.startsWith('g') && !chunk.startsWith('g')) {
@@ -461,3 +477,4 @@ async function chatAction({ context, request }: ActionFunctionArgs) {
     });
   }
 }
+

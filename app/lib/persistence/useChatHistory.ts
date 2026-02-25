@@ -1,4 +1,4 @@
-import { useLoaderData, useNavigate, useSearchParams } from '@remix-run/react';
+﻿import { useLoaderData, useNavigate, useSearchParams } from '@remix-run/react';
 import { useState, useEffect, useCallback } from 'react';
 import { atom } from 'nanostores';
 import { generateId, type JSONValue, type Message } from 'ai';
@@ -130,15 +130,15 @@ export function useChatHistory() {
                   role: 'assistant',
 
                   // Combine followup message and the artifact with files and command actions
-                  content: `Bolt Restored your chat from a snapshot. You can revert this message to load the full chat history.
-                  <boltArtifact id="restored-project-setup" title="Restored Project & Setup" type="bundled">
+                  content: `Astro Restored your chat from a snapshot. You can revert this message to load the full chat history.
+                  <AstroArtifact id="restored-project-setup" title="Restored Project & Setup" type="bundled">
                   ${Object.entries(snapshot?.files || {})
                     .map(([key, value]) => {
                       if (value?.type === 'file') {
                         return `
-                      <boltAction type="file" filePath="${key}">
+                      <AstroAction type="file" filePath="${key}">
 ${value.content}
-                      </boltAction>
+                      </AstroAction>
                       `;
                       } else {
                         return ``;
@@ -146,7 +146,7 @@ ${value.content}
                     })
                     .join('\n')}
                   ${commandActionsString} 
-                  </boltArtifact>
+                  </AstroArtifact>
                   `, // Added commandActionsString, followupMessage, updated id and title
                   annotations: [
                     'no-store',
@@ -409,3 +409,4 @@ function navigateChat(nextId: string) {
 
   window.history.replaceState({}, '', url);
 }
+

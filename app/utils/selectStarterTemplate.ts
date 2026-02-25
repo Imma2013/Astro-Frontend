@@ -1,4 +1,4 @@
-import ignore from 'ignore';
+﻿import ignore from 'ignore';
 import type { ProviderInfo } from '~/types/model';
 import type { Template } from '~/types/template';
 import { STARTER_TEMPLATES } from './constants';
@@ -160,11 +160,11 @@ export async function getTemplates(templateName: string, title?: string) {
      */
   }
 
-  // exclude    .bolt
-  filteredFiles = filteredFiles.filter((x) => x.path.startsWith('.bolt') == false);
+  // exclude    .Astro
+  filteredFiles = filteredFiles.filter((x) => x.path.startsWith('.Astro') == false);
 
-  // check for ignore file in .bolt folder
-  const templateIgnoreFile = files.find((x) => x.path.startsWith('.bolt') && x.name == 'ignore');
+  // check for ignore file in .Astro folder
+  const templateIgnoreFile = files.find((x) => x.path.startsWith('.Astro') && x.name == 'ignore');
 
   const filesToImport = {
     files: filteredFiles,
@@ -184,20 +184,20 @@ export async function getTemplates(templateName: string, title?: string) {
   }
 
   const assistantMessage = `
-Bolt is initializing your project with the required files using the ${template.name} template.
-<boltArtifact id="imported-files" title="${title || 'Create initial files'}" type="bundled">
+Astro is initializing your project with the required files using the ${template.name} template.
+<AstroArtifact id="imported-files" title="${title || 'Create initial files'}" type="bundled">
 ${filesToImport.files
   .map(
     (file) =>
-      `<boltAction type="file" filePath="${file.path}">
+      `<AstroAction type="file" filePath="${file.path}">
 ${file.content}
-</boltAction>`,
+</AstroAction>`,
   )
   .join('\n')}
-</boltArtifact>
+</AstroArtifact>
 `;
   let userMessage = ``;
-  const templatePromptFile = files.filter((x) => x.path.startsWith('.bolt')).find((x) => x.name == 'prompt');
+  const templatePromptFile = files.filter((x) => x.path.startsWith('.Astro')).find((x) => x.name == 'prompt');
 
   if (templatePromptFile) {
     userMessage = `
@@ -218,17 +218,17 @@ The following files are READ-ONLY and must never be modified:
 ${filesToImport.ignoreFile.map((file) => `- ${file.path}`).join('\n')}
 
 Permitted actions:
-✓ Import these files as dependencies
-✓ Read from these files
-✓ Reference these files
+âœ“ Import these files as dependencies
+âœ“ Read from these files
+âœ“ Reference these files
 
 Strictly forbidden actions:
-❌ Modify any content within these files
-❌ Delete these files
-❌ Rename these files
-❌ Move these files
-❌ Create new versions of these files
-❌ Suggest changes to these files
+âŒ Modify any content within these files
+âŒ Delete these files
+âŒ Rename these files
+âŒ Move these files
+âŒ Create new versions of these files
+âŒ Suggest changes to these files
 
 Any attempt to modify these protected files will result in immediate termination of the operation.
 
@@ -253,3 +253,4 @@ IMPORTANT: Dont Forget to install the dependencies before running the app by usi
     userMessage,
   };
 }
+

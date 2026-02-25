@@ -1,4 +1,4 @@
-import { json } from '@remix-run/cloudflare';
+﻿import { json } from '@remix-run/cloudflare';
 import { getApiKeysFromCookie } from '~/lib/api/cookies';
 import { withSecurity } from '~/lib/security';
 
@@ -22,7 +22,7 @@ async function supabaseUserLoader({ request, context }: { request: Request; cont
     const response = await fetch('https://api.supabase.com/v1/projects', {
       headers: {
         Authorization: `Bearer ${supabaseToken}`,
-        'User-Agent': 'bolt.diy-app',
+        'User-Agent': 'Astro.diy-app',
       },
     });
 
@@ -105,7 +105,7 @@ async function supabaseUserAction({ request, context }: { request: Request; cont
       const response = await fetch('https://api.supabase.com/v1/projects', {
         headers: {
           Authorization: `Bearer ${supabaseToken}`,
-          'User-Agent': 'bolt.diy-app',
+          'User-Agent': 'Astro.diy-app',
         },
       });
 
@@ -159,7 +159,7 @@ async function supabaseUserAction({ request, context }: { request: Request; cont
       const response = await fetch(`https://api.supabase.com/v1/projects/${projectId}/api-keys`, {
         headers: {
           Authorization: `Bearer ${supabaseToken}`,
-          'User-Agent': 'bolt.diy-app',
+          'User-Agent': 'Astro.diy-app',
         },
       });
 
@@ -197,3 +197,4 @@ export const action = withSecurity(supabaseUserAction, {
   rateLimit: true,
   allowedMethods: ['POST'],
 });
+

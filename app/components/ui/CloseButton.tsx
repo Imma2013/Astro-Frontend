@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { motion } from 'framer-motion';
 import { classNames } from '~/utils/classNames';
 
@@ -32,8 +32,8 @@ export function CloseButton({ onClick, className, size = 'md' }: CloseButtonProp
       type="button"
       onClick={onClick}
       className={classNames(
-        'text-bolt-elements-textTertiary hover:text-bolt-elements-textSecondary dark:text-bolt-elements-textTertiary-dark dark:hover:text-bolt-elements-textSecondary-dark',
-        'rounded-lg hover:bg-bolt-elements-background-depth-2 dark:hover:bg-bolt-elements-background-depth-3',
+        'text-Astro-elements-textTertiary hover:text-Astro-elements-textSecondary dark:text-Astro-elements-textTertiary-dark dark:hover:text-Astro-elements-textSecondary-dark',
+        'rounded-lg hover:bg-Astro-elements-background-depth-2 dark:hover:bg-Astro-elements-background-depth-3',
         'transition-colors duration-200',
         'focus:outline-none focus:ring-2 focus:ring-purple-500/50',
         sizeClasses[size],
@@ -47,3 +47,4 @@ export function CloseButton({ onClick, className, size = 'md' }: CloseButtonProp
     </motion.button>
   );
 }
+

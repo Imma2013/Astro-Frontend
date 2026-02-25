@@ -3,7 +3,7 @@
  * Preventing TS checks with files presented in the video for a better presentation.
  */
 import type { JSONValue, Message } from 'ai';
-import React, { type RefCallback, useEffect, useState } from 'react';
+import React, { type RefCallback, useEffect, useRef, useState } from 'react';
 import { ClientOnly } from 'remix-utils/client-only';
 import { Menu } from '~/components/sidebar/Menu.client';
 import { Workbench } from '~/components/workbench/Workbench.client';
@@ -35,6 +35,81 @@ import type { ElementInfo } from '~/components/workbench/Inspector';
 import LlmErrorAlert from './LLMApiAlert';
 
 const TEXTAREA_MIN_HEIGHT = 76;
+const LOCAL_PROVIDER_NAMES = ['WebLLM', 'OpenAILike', 'LMStudio'];
+const MANUAL_MODEL_LOCK_KEY = 'Astro_model_manual_lock';
+const AUTOSET_GUARD_KEY = 'Astro_model_autoset_in_progress';
+const MOBILE_UA_REGEX = /android|iphone|ipad|mobile/;
+const LIGHT_TASK_HINTS = [
+  'scaffold',
+  'boilerplate',
+  'template',
+  'quick',
+  'outline',
+  'summarize',
+  'summarise',
+  'draft',
+];
+const HEAVY_TASK_HINTS = [
+  'refactor',
+  'architecture',
+  'optimize',
+  'optimise',
+  'debug',
+  'migration',
+  'complex',
+  'performance',
+  'production',
+];
+
+const IMAGE_TASK_HINTS = ['image', 'vision', 'screenshot', 'photo', 'ocr', 'diagram', 'analyze picture'];
+
+function isLikelyMobileDevice(): boolean {
+  if (typeof navigator === 'undefined') {
+    return false;
+  }
+
+  return MOBILE_UA_REGEX.test(navigator.userAgent.toLowerCase());
+}
+
+function pickAutoModelCandidates(params: {
+  isMobile: boolean;
+  hasImageContext: boolean;
+  normalizedPrompt: string;
+}): string[] {
+  const { isMobile, hasImageContext, normalizedPrompt } = params;
+
+  if (hasImageContext) {
+    return [
+      'Phi-3.5-vision-instruct-q4f16_1-MLC',
+      'Phi-3.5-vision-instruct-q3f16_1-MLC',
+      'Phi-3.5-mini-instruct-q4f16_1-MLC',
+      'Llama-3.2-1B-Instruct-q4f16_1-MLC',
+    ];
+  }
+
+  if (isMobile) {
+    return ['Phi-3.5-mini-instruct-q4f16_1-MLC', 'Llama-3.2-1B-Instruct-q4f16_1-MLC'];
+  }
+
+  const isLightTask = LIGHT_TASK_HINTS.some((hint) => normalizedPrompt.includes(hint));
+  const isHeavyTask = HEAVY_TASK_HINTS.some((hint) => normalizedPrompt.includes(hint));
+
+  if (isLightTask && !isHeavyTask) {
+    return [
+      'Phi-3.5-mini-instruct-q4f16_1-MLC',
+      'Qwen2.5-Coder-3B-Instruct-q4f16_1-MLC',
+      'Llama-3.2-3B-Instruct-q4f16_1-MLC',
+    ];
+  }
+
+  return [
+    'Qwen2.5-Coder-7B-Instruct-q4f16_1-MLC',
+    'Qwen2.5-Coder-3B-Instruct-q4f16_1-MLC',
+    'Phi-3.5-mini-instruct-q4f16_1-MLC',
+    'Llama-3.2-3B-Instruct-q4f16_1-MLC',
+    'Llama-3.2-1B-Instruct-q4f16_1-MLC',
+  ];
+}
 
 interface BaseChatProps {
   textareaRef?: React.RefObject<HTMLTextAreaElement> | undefined;
@@ -138,12 +213,13 @@ export const BaseChat = React.forwardRef<HTMLDivElement, BaseChatProps>(
     const TEXTAREA_MAX_HEIGHT = chatStarted ? 400 : 200;
     const [apiKeys, setApiKeys] = useState<Record<string, string>>(getApiKeysFromCookies());
     const [modelList, setModelList] = useState<ModelInfo[]>([]);
-    const [isModelSettingsCollapsed, setIsModelSettingsCollapsed] = useState(false);
+    const [isModelSettingsCollapsed, setIsModelSettingsCollapsed] = useState(true);
     const [isListening, setIsListening] = useState(false);
     const [recognition, setRecognition] = useState<SpeechRecognition | null>(null);
     const [transcript, setTranscript] = useState('');
     const [isModelLoading, setIsModelLoading] = useState<string | undefined>('all');
     const [progressAnnotations, setProgressAnnotations] = useState<ProgressAnnotation[]>([]);
+    const autoTierAppliedRef = useRef(false);
     const expoUrl = useStore(expoUrlAtom);
     const [qrModalOpen, setQrModalOpen] = useState(false);
 
@@ -229,6 +305,144 @@ export const BaseChat = React.forwardRef<HTMLDivElement, BaseChatProps>(
       }
     }, [providerList, provider]);
 
+    useEffect(() => {
+      if (autoTierAppliedRef.current || typeof window === 'undefined') {
+        return;
+      }
+
+      const savedProvider = Cookies.get('selectedProvider');
+      const savedModel = Cookies.get('selectedModel');
+      const hasManualLock = localStorage.getItem(MANUAL_MODEL_LOCK_KEY) === '1';
+      const hasLocalSelection = !!savedProvider && LOCAL_PROVIDER_NAMES.includes(savedProvider) && !!savedModel;
+
+      if (hasManualLock || hasLocalSelection) {
+        autoTierAppliedRef.current = true;
+        return;
+      }
+
+      if (!providerList?.length || !modelList.length || !setProvider || !setModel) {
+        return;
+      }
+
+      const rawProfile = localStorage.getItem('Astro_hardware_profile');
+
+      if (!rawProfile) {
+        autoTierAppliedRef.current = true;
+        return;
+      }
+
+      try {
+        JSON.parse(rawProfile);
+        const isMobile = isLikelyMobileDevice();
+        const modelCandidates = pickAutoModelCandidates({
+          isMobile,
+          hasImageContext: false,
+          normalizedPrompt: '',
+        });
+        const localProviders = providerList.filter((candidate) => LOCAL_PROVIDER_NAMES.includes(candidate.name));
+
+        if (!localProviders.length) {
+          autoTierAppliedRef.current = true;
+          return;
+        }
+
+        const providerOrder = ['WebLLM', 'LMStudio', 'OpenAILike'];
+        const selectedLocalProvider =
+          providerOrder
+            .map((providerName) => localProviders.find((candidate) => candidate.name === providerName))
+            .find(Boolean) || localProviders[0];
+
+        if (!selectedLocalProvider) {
+          autoTierAppliedRef.current = true;
+          return;
+        }
+
+        const localModels = modelList.filter((entry) => entry.provider === selectedLocalProvider.name);
+
+        if (!localModels.length) {
+          autoTierAppliedRef.current = true;
+          return;
+        }
+
+        const matchedModel =
+          modelCandidates
+            .map((modelName) => localModels.find((entry) => entry.name === modelName))
+            .find(Boolean) || localModels[0];
+
+        localStorage.setItem(AUTOSET_GUARD_KEY, '1');
+        setProvider(selectedLocalProvider);
+        setModel(matchedModel.name);
+
+        Cookies.set('selectedProvider', selectedLocalProvider.name, { expires: 30 });
+        Cookies.set('selectedModel', matchedModel.name, { expires: 30 });
+      } catch (error) {
+        console.warn('Failed to apply Astro hardware tier model selection:', error);
+      } finally {
+        localStorage.removeItem(AUTOSET_GUARD_KEY);
+        autoTierAppliedRef.current = true;
+      }
+    }, [modelList, providerList, setModel, setProvider]);
+
+    const autoRouteModelForTask = (messageText: string) => {
+      if (!setModel || !setProvider || typeof window === 'undefined') {
+        return;
+      }
+
+      if (localStorage.getItem(MANUAL_MODEL_LOCK_KEY) === '1') {
+        return;
+      }
+
+      const localProviders = (providerList || []).filter((candidate) => LOCAL_PROVIDER_NAMES.includes(candidate.name));
+
+      if (!localProviders.length || !modelList.length) {
+        return;
+      }
+
+      const providerOrder = ['WebLLM', 'LMStudio', 'OpenAILike'];
+      const selectedLocalProvider =
+        providerOrder
+          .map((providerName) => localProviders.find((candidate) => candidate.name === providerName))
+          .find(Boolean) || localProviders[0];
+
+      if (!selectedLocalProvider) {
+        return;
+      }
+
+      const providerModels = modelList.filter((entry) => entry.provider === selectedLocalProvider.name);
+
+      if (!providerModels.length) {
+        return;
+      }
+
+      const normalizedPrompt = `${messageText || ''}`.toLowerCase();
+      const hasImageContext =
+        imageDataList.length > 0 || IMAGE_TASK_HINTS.some((hint) => normalizedPrompt.includes(hint.toLowerCase()));
+      const isMobile = isLikelyMobileDevice();
+      const modelCandidates = pickAutoModelCandidates({
+        isMobile,
+        hasImageContext,
+        normalizedPrompt,
+      });
+      const nextModel =
+        modelCandidates
+          .map((modelName) => providerModels.find((entry) => entry.name === modelName))
+          .find(Boolean) || providerModels[0];
+
+      if (provider?.name !== selectedLocalProvider.name) {
+        localStorage.setItem(AUTOSET_GUARD_KEY, '1');
+        setProvider(selectedLocalProvider);
+        Cookies.set('selectedProvider', selectedLocalProvider.name, { expires: 30 });
+      }
+
+      if (model !== nextModel.name) {
+        localStorage.setItem(AUTOSET_GUARD_KEY, '1');
+        setModel(nextModel.name);
+        Cookies.set('selectedModel', nextModel.name, { expires: 30 });
+      }
+
+      localStorage.removeItem(AUTOSET_GUARD_KEY);
+    };
+
     const onApiKeysChange = async (providerName: string, apiKey: string) => {
       const newApiKeys = { ...apiKeys, [providerName]: apiKey };
       setApiKeys(newApiKeys);
@@ -270,6 +484,7 @@ export const BaseChat = React.forwardRef<HTMLDivElement, BaseChatProps>(
 
     const handleSendMessage = (event: React.UIEvent, messageInput?: string) => {
       if (sendMessage) {
+        autoRouteModelForTask(messageInput || input || '');
         sendMessage(event, messageInput);
         setSelectedElement?.(null);
 
@@ -352,10 +567,10 @@ export const BaseChat = React.forwardRef<HTMLDivElement, BaseChatProps>(
           <div className={classNames(styles.Chat, 'flex flex-col flex-grow lg:min-w-[var(--chat-min-width)] h-full')}>
             {!chatStarted && (
               <div id="intro" className="mt-[16vh] max-w-2xl mx-auto text-center px-4 lg:px-0">
-                <h1 className="text-3xl lg:text-6xl font-bold text-bolt-elements-textPrimary mb-4 animate-fade-in">
+                <h1 className="text-3xl lg:text-6xl font-bold text-Astro-elements-textPrimary mb-4 animate-fade-in">
                   Where ideas begin
                 </h1>
-                <p className="text-md lg:text-xl mb-8 text-bolt-elements-textSecondary animate-fade-in animation-delay-200">
+                <p className="text-md lg:text-xl mb-8 text-Astro-elements-textSecondary animate-fade-in animation-delay-200">
                   Bring ideas to life in seconds or get help on existing projects.
                 </p>
               </div>
@@ -511,9 +726,9 @@ function ScrollToBottom() {
   return (
     !isAtBottom && (
       <>
-        <div className="sticky bottom-0 left-0 right-0 bg-gradient-to-t from-bolt-elements-background-depth-1 to-transparent h-20 z-10" />
+        <div className="sticky bottom-0 left-0 right-0 bg-gradient-to-t from-Astro-elements-background-depth-1 to-transparent h-20 z-10" />
         <button
-          className="sticky z-50 bottom-0 left-0 right-0 text-4xl rounded-lg px-1.5 py-0.5 flex items-center justify-center mx-auto gap-2 bg-bolt-elements-background-depth-2 border border-bolt-elements-borderColor text-bolt-elements-textPrimary text-sm"
+          className="sticky z-50 bottom-0 left-0 right-0 text-4xl rounded-lg px-1.5 py-0.5 flex items-center justify-center mx-auto gap-2 bg-Astro-elements-background-depth-2 border border-Astro-elements-borderColor text-Astro-elements-textPrimary text-sm"
           onClick={() => scrollToBottom()}
         >
           Go to last message
@@ -523,3 +738,4 @@ function ScrollToBottom() {
     )
   );
 }
+

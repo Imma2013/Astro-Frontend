@@ -1,9 +1,9 @@
-import { LLMManager } from '~/lib/modules/llm/manager';
+﻿import { LLMManager } from '~/lib/modules/llm/manager';
 import type { Template } from '~/types/template';
 
 export const WORK_DIR_NAME = 'project';
 export const WORK_DIR = `/home/${WORK_DIR_NAME}`;
-export const MODIFICATIONS_TAG_NAME = 'bolt_file_modifications';
+export const MODIFICATIONS_TAG_NAME = 'Astro_file_modifications';
 export const MODEL_REGEX = /^\[Model: (.*?)\]\n\n/;
 export const PROVIDER_REGEX = /\[Provider: (.*?)\]\n\n/;
 export const DEFAULT_MODEL = 'claude-3-5-sonnet-latest';
@@ -36,25 +36,25 @@ export const STARTER_TEMPLATES: Template[] = [
     name: 'Expo App',
     label: 'Expo App',
     description: 'Expo starter template for building cross-platform mobile apps',
-    githubRepo: 'xKevIsDev/bolt-expo-template',
+    githubRepo: 'xKevIsDev/Astro-expo-template',
     tags: ['mobile', 'expo', 'mobile-app', 'android', 'iphone'],
-    icon: 'i-bolt:expo',
+    icon: 'i-Astro:expo',
   },
   {
     name: 'Basic Astro',
     label: 'Astro Basic',
     description: 'Lightweight Astro starter template for building fast static websites',
-    githubRepo: 'xKevIsDev/bolt-astro-basic-template',
+    githubRepo: 'xKevIsDev/Astro-astro-basic-template',
     tags: ['astro', 'blog', 'performance'],
-    icon: 'i-bolt:astro',
+    icon: 'i-Astro:astro',
   },
   {
     name: 'NextJS Shadcn',
     label: 'Next.js with shadcn/ui',
     description: 'Next.js starter fullstack template integrated with shadcn/ui components and styling system',
-    githubRepo: 'xKevIsDev/bolt-nextjs-shadcn-template',
+    githubRepo: 'xKevIsDev/Astro-nextjs-shadcn-template',
     tags: ['nextjs', 'react', 'typescript', 'shadcn', 'tailwind'],
-    icon: 'i-bolt:nextjs',
+    icon: 'i-Astro:nextjs',
   },
   {
     name: 'Vite Shadcn',
@@ -62,39 +62,39 @@ export const STARTER_TEMPLATES: Template[] = [
     description: 'Vite starter fullstack template integrated with shadcn/ui components and styling system',
     githubRepo: 'xKevIsDev/vite-shadcn',
     tags: ['vite', 'react', 'typescript', 'shadcn', 'tailwind'],
-    icon: 'i-bolt:shadcn',
+    icon: 'i-Astro:shadcn',
   },
   {
     name: 'Qwik Typescript',
     label: 'Qwik TypeScript',
     description: 'Qwik framework starter with TypeScript for building resumable applications',
-    githubRepo: 'xKevIsDev/bolt-qwik-ts-template',
+    githubRepo: 'xKevIsDev/Astro-qwik-ts-template',
     tags: ['qwik', 'typescript', 'performance', 'resumable'],
-    icon: 'i-bolt:qwik',
+    icon: 'i-Astro:qwik',
   },
   {
     name: 'Remix Typescript',
     label: 'Remix TypeScript',
     description: 'Remix framework starter with TypeScript for full-stack web applications',
-    githubRepo: 'xKevIsDev/bolt-remix-ts-template',
+    githubRepo: 'xKevIsDev/Astro-remix-ts-template',
     tags: ['remix', 'typescript', 'fullstack', 'react'],
-    icon: 'i-bolt:remix',
+    icon: 'i-Astro:remix',
   },
   {
     name: 'Slidev',
     label: 'Slidev Presentation',
     description: 'Slidev starter template for creating developer-friendly presentations using Markdown',
-    githubRepo: 'xKevIsDev/bolt-slidev-template',
+    githubRepo: 'xKevIsDev/Astro-slidev-template',
     tags: ['slidev', 'presentation', 'markdown'],
-    icon: 'i-bolt:slidev',
+    icon: 'i-Astro:slidev',
   },
   {
     name: 'Sveltekit',
     label: 'SvelteKit',
     description: 'SvelteKit starter template for building fast, efficient web applications',
-    githubRepo: 'bolt-sveltekit-template',
+    githubRepo: 'Astro-sveltekit-template',
     tags: ['svelte', 'sveltekit', 'typescript'],
-    icon: 'i-bolt:svelte',
+    icon: 'i-Astro:svelte',
   },
   {
     name: 'Vanilla Vite',
@@ -102,39 +102,39 @@ export const STARTER_TEMPLATES: Template[] = [
     description: 'Minimal Vite starter template for vanilla JavaScript projects',
     githubRepo: 'xKevIsDev/vanilla-vite-template',
     tags: ['vite', 'vanilla-js', 'minimal'],
-    icon: 'i-bolt:vite',
+    icon: 'i-Astro:vite',
   },
   {
     name: 'Vite React',
     label: 'React + Vite + typescript',
     description: 'React starter template powered by Vite for fast development experience',
-    githubRepo: 'xKevIsDev/bolt-vite-react-ts-template',
+    githubRepo: 'xKevIsDev/Astro-vite-react-ts-template',
     tags: ['react', 'vite', 'frontend', 'website', 'app'],
-    icon: 'i-bolt:react',
+    icon: 'i-Astro:react',
   },
   {
     name: 'Vite Typescript',
     label: 'Vite + TypeScript',
     description: 'Vite starter template with TypeScript configuration for type-safe development',
-    githubRepo: 'xKevIsDev/bolt-vite-ts-template',
+    githubRepo: 'xKevIsDev/Astro-vite-ts-template',
     tags: ['vite', 'typescript', 'minimal'],
-    icon: 'i-bolt:typescript',
+    icon: 'i-Astro:typescript',
   },
   {
     name: 'Vue',
     label: 'Vue.js',
     description: 'Vue.js starter template with modern tooling and best practices',
-    githubRepo: 'xKevIsDev/bolt-vue-template',
+    githubRepo: 'xKevIsDev/Astro-vue-template',
     tags: ['vue', 'typescript', 'frontend'],
-    icon: 'i-bolt:vue',
+    icon: 'i-Astro:vue',
   },
   {
     name: 'Angular',
     label: 'Angular Starter',
     description: 'A modern Angular starter template with TypeScript support and best practices configuration',
-    githubRepo: 'xKevIsDev/bolt-angular-template',
+    githubRepo: 'xKevIsDev/Astro-angular-template',
     tags: ['angular', 'typescript', 'frontend', 'spa'],
-    icon: 'i-bolt:angular',
+    icon: 'i-Astro:angular',
   },
   {
     name: 'SolidJS',
@@ -142,6 +142,7 @@ export const STARTER_TEMPLATES: Template[] = [
     description: 'Lightweight SolidJS starter template for building fast static websites',
     githubRepo: 'xKevIsDev/solidjs-ts-tw',
     tags: ['solidjs'],
-    icon: 'i-bolt:solidjs',
+    icon: 'i-Astro:solidjs',
   },
 ];
+

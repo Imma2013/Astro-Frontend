@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { getFeatureFlags, markFeatureViewed, type Feature } from '~/lib/api/features';
 
-const VIEWED_FEATURES_KEY = 'bolt_viewed_features';
+const VIEWED_FEATURES_KEY = 'Astro_viewed_features';
 
 const getViewedFeatures = (): string[] => {
   try {
@@ -70,3 +70,4 @@ export const useFeatures = () => {
 
   return { hasNewFeatures, unviewedFeatures, acknowledgeFeature, acknowledgeAllFeatures };
 };
+

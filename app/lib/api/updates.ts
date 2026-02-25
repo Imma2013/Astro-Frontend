@@ -1,4 +1,4 @@
-export interface UpdateCheckResult {
+﻿export interface UpdateCheckResult {
   available: boolean;
   version: string;
   releaseNotes?: string;
@@ -56,7 +56,7 @@ export const checkForUpdates = async (): Promise<UpdateCheckResult> => {
      * Using raw.githubusercontent.com which doesn't require authentication
      */
     const latestPackageResponse = await fetch(
-      'https://raw.githubusercontent.com/stackblitz-labs/bolt.diy/main/package.json',
+      'https://raw.githubusercontent.com/stackblitz-labs/Astro.diy/main/package.json',
     );
 
     if (!latestPackageResponse.ok) {
@@ -106,3 +106,4 @@ export const acknowledgeUpdate = async (version: string): Promise<void> => {
     console.error('Failed to store acknowledged version:', error);
   }
 };
+

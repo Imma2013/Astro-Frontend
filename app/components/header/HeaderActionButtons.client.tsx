@@ -1,4 +1,4 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { useStore } from '@nanostores/react';
 import { workbenchStore } from '~/lib/stores/workbench';
 import { DeployButton } from '~/components/deploy/DeployButton';
@@ -11,28 +11,29 @@ export function HeaderActionButtons({ chatStarted: _chatStarted }: HeaderActionB
   const [activePreviewIndex] = useState(0);
   const previews = useStore(workbenchStore.previews);
   const activePreview = previews[activePreviewIndex];
+  const showPublicDeployUi = import.meta.env.VITE_ENABLE_PUBLIC_DEPLOY_UI === 'true';
 
   const shouldShowButtons = activePreview;
 
   return (
     <div className="flex items-center gap-1">
       {/* Deploy Button */}
-      {shouldShowButtons && <DeployButton />}
+      {shouldShowButtons && showPublicDeployUi && <DeployButton />}
 
       {/* Debug Tools */}
       {shouldShowButtons && (
-        <div className="flex border border-bolt-elements-borderColor rounded-md overflow-hidden text-sm">
+        <div className="flex border border-Astro-elements-borderColor rounded-md overflow-hidden text-sm">
           <button
             onClick={() =>
-              window.open('https://github.com/stackblitz-labs/bolt.diy/issues/new?template=bug_report.yml', '_blank')
+              window.open('https://github.com/stackblitz-labs/Astro.diy/issues/new?template=bug_report.yml', '_blank')
             }
-            className="rounded-l-md items-center justify-center [&:is(:disabled,.disabled)]:cursor-not-allowed [&:is(:disabled,.disabled)]:opacity-60 px-3 py-1.5 text-xs bg-accent-500 text-white hover:text-bolt-elements-item-contentAccent [&:not(:disabled,.disabled)]:hover:bg-bolt-elements-button-primary-backgroundHover outline-accent-500 flex gap-1.5"
+            className="rounded-l-md items-center justify-center [&:is(:disabled,.disabled)]:cursor-not-allowed [&:is(:disabled,.disabled)]:opacity-60 px-3 py-1.5 text-xs bg-accent-500 text-white hover:text-Astro-elements-item-contentAccent [&:not(:disabled,.disabled)]:hover:bg-Astro-elements-button-primary-backgroundHover outline-accent-500 flex gap-1.5"
             title="Report Bug"
           >
             <div className="i-ph:bug" />
             <span>Report Bug</span>
           </button>
-          <div className="w-px bg-bolt-elements-borderColor" />
+          <div className="w-px bg-Astro-elements-borderColor" />
           <button
             onClick={async () => {
               try {
@@ -42,7 +43,7 @@ export function HeaderActionButtons({ chatStarted: _chatStarted }: HeaderActionB
                 console.error('Failed to download debug log:', error);
               }
             }}
-            className="rounded-r-md items-center justify-center [&:is(:disabled,.disabled)]:cursor-not-allowed [&:is(:disabled,.disabled)]:opacity-60 px-3 py-1.5 text-xs bg-accent-500 text-white hover:text-bolt-elements-item-contentAccent [&:not(:disabled,.disabled)]:hover:bg-bolt-elements-button-primary-backgroundHover outline-accent-500 flex gap-1.5"
+            className="rounded-r-md items-center justify-center [&:is(:disabled,.disabled)]:cursor-not-allowed [&:is(:disabled,.disabled)]:opacity-60 px-3 py-1.5 text-xs bg-accent-500 text-white hover:text-Astro-elements-item-contentAccent [&:not(:disabled,.disabled)]:hover:bg-Astro-elements-button-primary-backgroundHover outline-accent-500 flex gap-1.5"
             title="Download Debug Log"
           >
             <div className="i-ph:download" />
@@ -53,3 +54,4 @@ export function HeaderActionButtons({ chatStarted: _chatStarted }: HeaderActionB
     </div>
   );
 }
+

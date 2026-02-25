@@ -1,4 +1,4 @@
-import { type Message } from 'ai';
+﻿import { type Message } from 'ai';
 import { DEFAULT_MODEL, DEFAULT_PROVIDER, MODEL_REGEX, PROVIDER_REGEX } from '~/utils/constants';
 import { IGNORE_PATTERNS, type FileMap } from './constants';
 import ignore from 'ignore';
@@ -44,9 +44,9 @@ export function extractPropertiesFromMessage(message: Omit<Message, 'id'>): {
   return { model, provider, content: cleanedContent };
 }
 
-export function simplifyBoltActions(input: string): string {
-  // Using regex to match boltAction tags that have type="file"
-  const regex = /(<boltAction[^>]*type="file"[^>]*>)([\s\S]*?)(<\/boltAction>)/g;
+export function simplifyAstroActions(input: string): string {
+  // Using regex to match AstroAction tags that have type="file"
+  const regex = /(<AstroAction[^>]*type="file"[^>]*>)([\s\S]*?)(<\/AstroAction>)/g;
 
   // Replace each matching occurrence
   return input.replace(regex, (_0, openingTag, _2, closingTag) => {
@@ -82,10 +82,10 @@ export function createFilesContext(files: FileMap, useRelativePath?: boolean) {
         filePath = path.replace('/home/project/', '');
       }
 
-      return `<boltAction type="file" filePath="${filePath}">${codeWithLinesNumbers}</boltAction>`;
+      return `<AstroAction type="file" filePath="${filePath}">${codeWithLinesNumbers}</AstroAction>`;
     });
 
-  return `<boltArtifact id="code-content" title="Code Content" >\n${fileContexts.join('\n')}\n</boltArtifact>`;
+  return `<AstroArtifact id="code-content" title="Code Content" >\n${fileContexts.join('\n')}\n</AstroArtifact>`;
 }
 
 export function extractCurrentContext(messages: Message[]) {
@@ -126,3 +126,4 @@ export function extractCurrentContext(messages: Message[]) {
 
   return { summary, codeContext };
 }
+

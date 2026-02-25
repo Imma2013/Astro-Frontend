@@ -28,8 +28,14 @@ import type { ElementInfo } from '~/components/workbench/Inspector';
 import type { TextUIPart, FileUIPart, Attachment } from '@ai-sdk/ui-utils';
 import { useMCPStore } from '~/lib/stores/mcp';
 import type { LlmErrorAlertType } from '~/types/actions';
+import { astroSettingsStore, setDesignDna, setDesignDnaSourceUrl } from '~/lib/stores/astro';
+import { generateLocalWebLLMReply } from '~/lib/local/webllm.client';
 
 const logger = createScopedLogger('Chat');
+const MANUAL_MODEL_LOCK_KEY = 'Astro_model_manual_lock';
+const AUTOSET_GUARD_KEY = 'Astro_model_autoset_in_progress';
+const WEBLLM_PROVIDER_NAME = 'WebLLM';
+const DESIGN_DNA_AUTOLOAD_SOURCES = ['/design-dna.md', '/context/design-dna.md'];
 
 export function Chat() {
   renderLogger.trace('Chat');
@@ -116,6 +122,52 @@ export const ChatImpl = memo(
     const [chatMode, setChatMode] = useState<'discuss' | 'build'>('build');
     const [selectedElement, setSelectedElement] = useState<ElementInfo | null>(null);
     const mcpSettings = useMCPStore((state) => state.settings);
+    const astroSettings = useStore(astroSettingsStore);
+
+    useEffect(() => {
+      const existingDesignDna = astroSettings.designDna?.trim();
+
+      if (existingDesignDna) {
+        return;
+      }
+
+      let cancelled = false;
+
+      const autoloadDesignDna = async () => {
+        for (const source of DESIGN_DNA_AUTOLOAD_SOURCES) {
+          try {
+            const response = await fetch(source, { cache: 'no-store' });
+
+            if (!response.ok) {
+              continue;
+            }
+
+            const text = (await response.text()).trim();
+
+            if (!text) {
+              continue;
+            }
+
+            if (cancelled) {
+              return;
+            }
+
+            setDesignDna(text.slice(0, 30_000));
+            setDesignDnaSourceUrl(source);
+            logger.info(`Auto-loaded Design DNA from ${source}`);
+            return;
+          } catch {
+            // Try next source.
+          }
+        }
+      };
+
+      autoloadDesignDna();
+
+      return () => {
+        cancelled = true;
+      };
+    }, [astroSettings.designDna]);
 
     const {
       messages,
@@ -147,6 +199,14 @@ export const ChatImpl = memo(
             supabaseUrl: supabaseConn?.credentials?.supabaseUrl,
             anonKey: supabaseConn?.credentials?.anonKey,
           },
+        },
+        astroRuntime: {
+          deploymentMode: astroSettings.deploymentMode,
+          backendProvider: astroSettings.backendProvider,
+          backendCustomApiUrl: astroSettings.backendCustomApiUrl,
+          autoScaffoldBackend: astroSettings.autoScaffoldBackend,
+          designDna: astroSettings.designDna,
+          designDnaSourceUrl: astroSettings.designDnaSourceUrl,
         },
         maxLLMSteps: mcpSettings.maxLLMSteps,
       },
@@ -403,11 +463,79 @@ export const ChatImpl = memo(
       if (selectedElement) {
         console.log('Selected Element:', selectedElement);
 
-        const elementInfo = `<div class=\"__boltSelectedElement__\" data-element='${JSON.stringify(selectedElement)}'>${JSON.stringify(`${selectedElement.displayText}`)}</div>`;
+        const elementInfo = `<div class=\"__AstroSelectedElement__\" data-element='${JSON.stringify(selectedElement)}'>${JSON.stringify(`${selectedElement.displayText}`)}</div>`;
         finalMessageContent = messageContent + elementInfo;
       }
 
       runAnimation();
+      const useLocalWebLLM = provider.name === WEBLLM_PROVIDER_NAME;
+
+      if (useLocalWebLLM) {
+        setFakeLoading(true);
+
+        try {
+          const userMessageText = `[Model: ${model}]\n\n[Provider: ${provider.name}]\n\n${finalMessageContent}`;
+          const history = messages
+            .filter((entry) => entry.role === 'user' || entry.role === 'assistant')
+            .map((entry) => ({
+              role: entry.role,
+              content: entry.content,
+            })) as Array<{ role: 'user' | 'assistant'; content: string }>;
+          const { text: localAssistantText, resolvedModel } = await generateLocalWebLLMReply({
+            model,
+            chatMode,
+            history,
+            userMessage: finalMessageContent,
+            imageDataList,
+            onProgress: (status) => {
+              logger.info(`WebLLM: ${status}`);
+            },
+          });
+
+          const userMessageObj: Message = {
+            id: `${Date.now()}-user-local`,
+            role: 'user',
+            content: userMessageText,
+            parts: createMessageParts(userMessageText, imageDataList),
+          };
+          const assistantMessageObj: Message = {
+            id: `${Date.now()}-assistant-local`,
+            role: 'assistant',
+            content: localAssistantText,
+          };
+
+          setMessages([...messages, userMessageObj, assistantMessageObj]);
+
+          if (resolvedModel !== model) {
+            setModel(resolvedModel);
+            Cookies.set('selectedModel', resolvedModel, { expires: 30 });
+          }
+        } catch (localError: any) {
+          handleError(
+            {
+              message: JSON.stringify({
+                message:
+                  localError?.message ||
+                  'Local WebLLM failed. Check browser WebGPU support and try a smaller local model.',
+                statusCode: 500,
+                isRetryable: true,
+                provider: WEBLLM_PROVIDER_NAME,
+              }),
+            },
+            'chat',
+          );
+        } finally {
+          setFakeLoading(false);
+          setInput('');
+          Cookies.remove(PROMPT_COOKIE_KEY);
+          setUploadedFiles([]);
+          setImageDataList([]);
+          resetEnhancer();
+          textareaRef.current?.blur();
+        }
+
+        return;
+      }
 
       if (!chatStarted) {
         setFakeLoading(true);
@@ -585,11 +713,19 @@ export const ChatImpl = memo(
     }, []);
 
     const handleModelChange = (newModel: string) => {
+      if (typeof window !== 'undefined' && localStorage.getItem(AUTOSET_GUARD_KEY) !== '1') {
+        localStorage.setItem(MANUAL_MODEL_LOCK_KEY, '1');
+      }
+
       setModel(newModel);
       Cookies.set('selectedModel', newModel, { expires: 30 });
     };
 
     const handleProviderChange = (newProvider: ProviderInfo) => {
+      if (typeof window !== 'undefined' && localStorage.getItem(AUTOSET_GUARD_KEY) !== '1') {
+        localStorage.setItem(MANUAL_MODEL_LOCK_KEY, '1');
+      }
+
       setProvider(newProvider);
       Cookies.set('selectedProvider', newProvider.name, { expires: 30 });
     };
@@ -683,3 +819,4 @@ export const ChatImpl = memo(
     );
   },
 );
+

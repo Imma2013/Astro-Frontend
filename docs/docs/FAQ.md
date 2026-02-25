@@ -1,9 +1,9 @@
-# Frequently Asked Questions (FAQ)
+﻿# Frequently Asked Questions (FAQ)
 
 ## Models and Setup
 
-??? question "What are the best models for bolt.diy?"
-For the best experience with bolt.diy, we recommend using the following models from our 19 supported providers:
+??? question "What are the best models for Astro.diy?"
+For the best experience with Astro.diy, we recommend using the following models from our 19 supported providers:
 
     **Top Recommended Models:**
     - **Claude 3.5 Sonnet** (Anthropic): Best overall coder, excellent for complex applications
@@ -42,7 +42,7 @@ You can configure API keys in two ways:
     ```
 
     **Option 2: In-App Configuration**
-    - Click the settings icon (⚙️) in the sidebar
+    - Click the settings icon (âš™ï¸) in the sidebar
     - Navigate to the "Providers" tab
     - Switch between "Cloud Providers" and "Local Providers" tabs
     - Click on a provider card to expand its configuration
@@ -54,7 +54,7 @@ You can configure API keys in two ways:
         Never commit API keys to version control. The `.env.local` file is already in `.gitignore`.
 
 ??? question "How do I add a new LLM provider?"
-bolt.diy uses a modular provider architecture. To add a new provider:
+Astro.diy uses a modular provider architecture. To add a new provider:
 
     1. **Create a Provider Class** in `app/lib/modules/llm/providers/your-provider.ts`
     2. **Implement the BaseProvider interface** with your provider's specific logic
@@ -70,7 +70,7 @@ Moonshot AI provides access to advanced Kimi models with excellent reasoning cap
     1. Visit [Moonshot AI Platform](https://platform.moonshot.ai/console/api-keys)
     2. Create an account and generate an API key
     3. Add `MOONSHOT_API_KEY=your_key_here` to your `.env.local` file
-    4. Or configure it directly in Settings → Providers → Cloud Providers → Moonshot
+    4. Or configure it directly in Settings â†’ Providers â†’ Cloud Providers â†’ Moonshot
 
     **Available Models:**
     - **Kimi K2 Preview**: Latest Kimi model with 128K context
@@ -101,7 +101,7 @@ xAI has released several new Grok models with enhanced capabilities:
 ## Best Practices
 
 ??? question "How do I access help and documentation?"
-bolt.diy provides multiple ways to access help and documentation:
+Astro.diy provides multiple ways to access help and documentation:
 
     **Help Icon in Sidebar:**
     - Look for the question mark (?) icon in the sidebar
@@ -118,7 +118,7 @@ bolt.diy provides multiple ways to access help and documentation:
     - **GitHub Issues**: Report bugs and request features
     - **Community Forum**: [thinktank.ottomator.ai](https://thinktank.ottomator.ai)
 
-??? question "How do I get the best results with bolt.diy?"
+??? question "How do I get the best results with Astro.diy?"
 Follow these proven strategies for optimal results:
 
     **Project Setup:**
@@ -138,10 +138,10 @@ Follow these proven strategies for optimal results:
     - **Deploy easily**: Use built-in Vercel, Netlify, or GitHub Pages deployment
 
 ??? question "How do I use MCP (Model Context Protocol) tools?"
-MCP extends bolt.diy's AI capabilities with external tools:
+MCP extends Astro.diy's AI capabilities with external tools:
 
     **Setting up MCP:**
-    1. Go to Settings → MCP tab
+    1. Go to Settings â†’ MCP tab
     2. Add MCP server configurations
     3. Configure server endpoints and authentication
     4. Enable/disable servers as needed
@@ -154,11 +154,11 @@ MCP extends bolt.diy's AI capabilities with external tools:
 
     The MCP integration allows the AI to interact with external services and data sources during conversations.
 
-??? question "How do I deploy my bolt.diy projects?"
-bolt.diy supports one-click deployment to multiple platforms:
+??? question "How do I deploy my Astro.diy projects?"
+Astro.diy supports one-click deployment to multiple platforms:
 
     **Supported Platforms:**
-    - **Vercel**: Go to Settings → Connections → Vercel, then deploy with one click
+    - **Vercel**: Go to Settings â†’ Connections â†’ Vercel, then deploy with one click
     - **Netlify**: Connect your Netlify account and deploy instantly
     - **GitHub Pages**: Push to GitHub and enable Pages in repository settings
 
@@ -169,7 +169,7 @@ bolt.diy supports one-click deployment to multiple platforms:
     - Preview deployments for testing
 
 ??? question "How do I use Git integration features?"
-bolt.diy provides comprehensive Git and GitHub integration:
+Astro.diy provides comprehensive Git and GitHub integration:
 
     **Basic Git Operations:**
     - Import existing repositories by URL
@@ -178,29 +178,29 @@ bolt.diy provides comprehensive Git and GitHub integration:
     - Push/pull changes seamlessly
 
     **Advanced Features:**
-    - Connect GitHub account in Settings → Connections
+    - Connect GitHub account in Settings â†’ Connections
     - Import from your connected repositories
     - Version control with diff visualization
     - Collaborative development support
 
 ## Project Information
 
-??? question "How do I contribute to bolt.diy?"
+??? question "How do I contribute to Astro.diy?"
 Check out our [Contribution Guide](CONTRIBUTING.md) for more details on how to get involved!
 
-??? question "What are the future plans for bolt.diy?"
+??? question "What are the future plans for Astro.diy?"
 Visit our [Roadmap](https://roadmap.sh/r/ottodev-roadmap-2ovzo) for the latest updates.  
  New features and improvements are on the way!
 
 ??? question "Why are there so many open issues/pull requests?"
-bolt.diy began as a small showcase project on @ColeMedin's YouTube channel to explore editing open-source projects with local LLMs. However, it quickly grew into a massive community effort!
+Astro.diy began as a small showcase project on @ColeMedin's YouTube channel to explore editing open-source projects with local LLMs. However, it quickly grew into a massive community effort!
 
     We're forming a team of maintainers to manage demand and streamline issue resolution. The maintainers are rockstars, and we're also exploring partnerships to help the project thrive.
 
 ## New Features & Technologies
 
-??? question "What's new in bolt.diy?"
-Recent major additions to bolt.diy include:
+??? question "What's new in Astro.diy?"
+Recent major additions to Astro.diy include:
 
     **Advanced AI Capabilities:**
     - **19 LLM Providers**: Support for Anthropic, OpenAI, Google, DeepSeek, Cohere, and more
@@ -227,10 +227,10 @@ Recent major additions to bolt.diy include:
     - **Build Optimization**: Automatic configuration for popular frameworks
 
 ??? question "How do I use the new project templates?"
-bolt.diy offers templates for popular frameworks and technologies:
+Astro.diy offers templates for popular frameworks and technologies:
 
     **Getting Started:**
-    1. Start a new project in bolt.diy
+    1. Start a new project in Astro.diy
     2. Browse available templates in the starter selection
     3. Choose your preferred technology stack
     4. The AI will scaffold your project with best practices
@@ -264,7 +264,7 @@ Use Supabase for backend database functionality:
     **Setup Process:**
     1. Create a Supabase project at supabase.com
     2. Get your project URL and API keys
-    3. Configure the connection in your bolt.diy project
+    3. Configure the connection in your Astro.diy project
     4. Use Supabase tools to interact with your database
 
     **Available Features:**
@@ -276,7 +276,7 @@ Use Supabase for backend database functionality:
 
 ## Model Comparisons
 
-??? question "How do local LLMs compare to larger models like Claude 3.5 Sonnet for bolt.diy?"
+??? question "How do local LLMs compare to larger models like Claude 3.5 Sonnet for Astro.diy?"
 While local LLMs are improving rapidly, larger models still offer the best results for complex applications. Here's the current landscape:
 
     **Recommended for Production:**
@@ -316,7 +316,7 @@ While local LLMs are improving rapidly, larger models still offer the best resul
 This generic error message means something went wrong. Check these locations:
 
     - **Terminal output**: If you started with Docker or `pnpm`
-    - **Browser developer console**: Press `F12` → Console tab
+    - **Browser developer console**: Press `F12` â†’ Console tab
     - **Server logs**: Check for any backend errors
     - **Network tab**: Verify API calls are working
 
@@ -340,9 +340,9 @@ Blank previews usually indicate code generation issues:
 ??? error "MCP server connection failed"
 If you're having trouble with MCP integrations:
 
-    - **Verify server configuration** in Settings → MCP
+    - **Verify server configuration** in Settings â†’ MCP
     - **Check server endpoints** and authentication credentials
-    - **Test server connectivity** outside of bolt.diy
+    - **Test server connectivity** outside of Astro.diy
     - **Review MCP server logs** for specific error messages
     - **Ensure server supports** the MCP protocol version
 
@@ -386,7 +386,7 @@ If the live preview isn't working:
 **Windows-specific issue**: Update the [Visual C++ Redistributable](https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-170)
 
 ??? error "Miniflare or Wrangler errors in Windows"
-**Windows development environment**: Install Visual Studio C++ (version 14.40.33816 or later). More details in [GitHub Issues](https://github.com/stackblitz-labs/bolt.diy/issues/19)
+**Windows development environment**: Install Visual Studio C++ (version 14.40.33816 or later). More details in [GitHub Issues](https://github.com/stackblitz-labs/Astro.diy/issues/19)
 
 ??? error "Provider not showing up after adding it"
 If your custom LLM provider isn't appearing:
@@ -402,7 +402,8 @@ If your custom LLM provider isn't appearing:
 ## Get Help & Support
 
 !!! tip "Community Support"
-[Join the bolt.diy Community](https://thinktank.ottomator.ai/c/bolt-diy/17){target=\_blank} for discussions and help
+[Join the Astro.diy Community](https://thinktank.ottomator.ai/c/Astro-diy/17){target=\_blank} for discussions and help
 
 !!! bug "Report Issues"
-[Open an Issue](https://github.com/stackblitz-labs/bolt.diy/issues/19){target=\_blank} in our GitHub Repository
+[Open an Issue](https://github.com/stackblitz-labs/Astro.diy/issues/19){target=\_blank} in our GitHub Repository
+

@@ -10,6 +10,8 @@ import { createScopedLogger } from '~/utils/logger';
 import { createFilesContext, extractPropertiesFromMessage } from './utils';
 import { discussPrompt } from '~/lib/common/prompts/discuss-prompt';
 import type { DesignScheme } from '~/types/design-scheme';
+import type { AstroRuntimeConfig } from '~/types/astro';
+import { enforceOpenRouterModelAllowlist, enforceOpenRouterRateLimit } from '~/lib/.server/openrouter/guard';
 
 export type Messages = Message[];
 
@@ -44,9 +46,9 @@ function getCompletionTokenLimit(modelDetails: any): number {
 }
 
 function sanitizeText(text: string): string {
-  let sanitized = text.replace(/<div class=\\"__boltThought__\\">.*?<\/div>/s, '');
+  let sanitized = text.replace(/<div class=\\"__AstroThought__\\">.*?<\/div>/s, '');
   sanitized = sanitized.replace(/<think>.*?<\/think>/s, '');
-  sanitized = sanitized.replace(/<boltAction type="file" filePath="package-lock\.json">[\s\S]*?<\/boltAction>/g, '');
+  sanitized = sanitized.replace(/<AstroAction type="file" filePath="package-lock\.json">[\s\S]*?<\/AstroAction>/g, '');
 
   return sanitized.trim();
 }
@@ -65,6 +67,7 @@ export async function streamText(props: {
   messageSliceId?: number;
   chatMode?: 'discuss' | 'build';
   designScheme?: DesignScheme;
+  astroRuntime?: AstroRuntimeConfig;
 }) {
   const {
     messages,
@@ -79,6 +82,7 @@ export async function streamText(props: {
     summary,
     chatMode,
     designScheme,
+    astroRuntime,
   } = props;
   let currentModel = DEFAULT_MODEL;
   let currentProvider = DEFAULT_PROVIDER.name;
@@ -162,6 +166,108 @@ export async function streamText(props: {
       },
     }) ?? getSystemPrompt();
 
+  if (chatMode === 'build' && astroRuntime) {
+    const deploymentMode = astroRuntime.deploymentMode || 'local-only';
+    const backendProvider = astroRuntime.backendProvider || 'magical-scaffold';
+    const backendTarget =
+      backendProvider === 'custom-rest' ? astroRuntime.backendCustomApiUrl?.trim() || 'not configured' : 'n/a';
+    const backendRuntimeGuidance =
+      backendProvider === 'magical-scaffold'
+        ? [
+            'Astro Backend Runtime:',
+            '- Backend provider: Magical Scaffold (local Node.js/Express in WebContainer).',
+            '- By default, when building features that require server behavior, proactively create or update backend files.',
+            '- Keep generated backend local-first and runnable immediately in the project workspace.',
+            '- Do not require hosted services unless the user explicitly asks for them.',
+          ].join('\n')
+        : backendProvider === 'supabase'
+          ? [
+              'Astro Backend Runtime:',
+              '- Backend provider: Supabase.',
+              '- Prefer Supabase-auth, database, and edge function workflows over local Express scaffolding.',
+              '- Only generate local backend files when explicitly requested by the user.',
+            ].join('\n')
+          : [
+              'Astro Backend Runtime:',
+              '- Backend provider: Custom REST API.',
+              `- Custom REST base URL: ${backendTarget}`,
+              '- Align generated client/server integration with this custom API contract.',
+              '- Avoid creating local backend scaffolding unless explicitly requested by the user.',
+            ].join('\n');
+
+    const scaffoldBehavior = astroRuntime.autoScaffoldBackend
+      ? 'Auto-scaffold behavior is enabled and should be treated as default.'
+      : 'Auto-scaffold behavior is disabled; ask before creating backend scaffolding.';
+
+    const deploymentGuidance =
+      deploymentMode === 'local-only'
+        ? [
+            'Astro Deployment Mode: Local-Only.',
+            '- Favor browser-local storage and execution (IndexedDB/OPFS/local inference) whenever possible.',
+            '- Avoid depending on cloud backends, hosted logging, or paid external APIs unless the user explicitly requests an exception.',
+            '- Treat GitHub Pages as static hosting only; do not assume server databases or secret backend functions are available there.',
+          ].join('\n')
+        : [
+            'Astro Deployment Mode: Hosted Augment.',
+            '- Keep local-first defaults, but you may propose optional hosted integrations when they provide clear value.',
+            '- Make cloud dependencies explicit and reversible.',
+            '- Distinguish static hosting responsibilities from backend/data responsibilities in recommendations.',
+          ].join('\n');
+
+    const skillRuntimeGuidance = [
+      'Astro Skill Runtime Policy:',
+      '- frontend-design: Always apply high-quality, non-generic frontend design standards to UI work.',
+      '- security-guidance (MANDATORY):',
+      '  - Treat all user input and external data as untrusted.',
+      '  - Prevent XSS, command injection, path traversal, SSRF, and secret leakage.',
+      '  - Do not log secrets or expose keys/tokens in code or responses.',
+      '  - Prefer safe defaults, input validation, output encoding, and least privilege.',
+      '- feature-dev behavior:',
+      '  - For multi-file/complex features, reason in small increments and preserve existing behavior.',
+      '  - Explicitly call out trade-offs and constraints when relevant.',
+      '- code-review behavior:',
+      '  - Before finalizing, self-check for regressions, missing edge cases, and missing tests.',
+      '  - Prioritize correctness, safety, and maintainability over speed.',
+    ].join('\n');
+
+    systemPrompt = `${systemPrompt}
+
+${backendRuntimeGuidance}
+${scaffoldBehavior}
+${deploymentGuidance}
+${skillRuntimeGuidance}
+`;
+
+  }
+
+  if (astroRuntime) {
+    const runtimeDesignDna = astroRuntime.designDna?.trim();
+
+    if (runtimeDesignDna) {
+      const sourceLine = astroRuntime.designDnaSourceUrl
+        ? `Source URL: ${astroRuntime.designDnaSourceUrl}`
+        : 'Source URL: manual upload';
+      const maxDesignDnaChars = 16_000;
+      const clippedDesignDna =
+        runtimeDesignDna.length > maxDesignDnaChars
+          ? `${runtimeDesignDna.slice(0, maxDesignDnaChars)}\n...[truncated for prompt budget]`
+          : runtimeDesignDna;
+
+      systemPrompt = `${systemPrompt}
+
+Astro Design DNA Runtime:
+- Apply the following uploaded design DNA as high-priority guidance for UI/UX generation.
+- Preserve compatibility with the current stack and existing design tokens.
+- Use this as a style and component reference, not as a reason to output broken or incomplete code.
+${sourceLine}
+
+BEGIN DESIGN DNA
+${clippedDesignDna}
+END DESIGN DNA
+`;
+    }
+  }
+
   if (chatMode === 'build' && contextFiles && contextOptimization) {
     const codeContext = createFilesContext(contextFiles, true);
 
@@ -220,6 +326,12 @@ export async function streamText(props: {
   }
 
   logger.info(`Sending llm call to ${provider.name} with model ${modelDetails.name}`);
+  enforceOpenRouterModelAllowlist(provider.name, modelDetails.name);
+  enforceOpenRouterRateLimit({
+    provider: provider.name,
+    apiKeys,
+    env: serverEnv as Record<string, string> | undefined,
+  });
 
   // Log reasoning model detection and token parameters
   const isReasoning = isReasoningModel(modelDetails.name);
@@ -280,7 +392,13 @@ export async function streamText(props: {
       apiKeys,
       providerSettings,
     }),
-    system: chatMode === 'build' ? systemPrompt : discussPrompt(),
+    system:
+      chatMode === 'build'
+        ? systemPrompt
+        : discussPrompt({
+            designDna: astroRuntime?.designDna,
+            designDnaSourceUrl: astroRuntime?.designDnaSourceUrl,
+          }),
     ...tokenParams,
     messages: convertToCoreMessages(processedMessages as any),
     ...filteredOptions,
@@ -309,3 +427,4 @@ export async function streamText(props: {
 
   return await _streamText(streamParams);
 }
+

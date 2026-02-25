@@ -1,4 +1,4 @@
-import { json } from '@remix-run/cloudflare';
+﻿import { json } from '@remix-run/cloudflare';
 import { getApiKeysFromCookie } from '~/lib/api/cookies';
 import { withSecurity } from '~/lib/security';
 
@@ -22,7 +22,7 @@ async function netlifyUserLoader({ request, context }: { request: Request; conte
     const response = await fetch('https://api.netlify.com/api/v1/user', {
       headers: {
         Authorization: `Bearer ${netlifyToken}`,
-        'User-Agent': 'bolt.diy-app',
+        'User-Agent': 'Astro.diy-app',
       },
     });
 
@@ -91,7 +91,7 @@ async function netlifyUserAction({ request, context }: { request: Request; conte
         headers: {
           Authorization: `Bearer ${netlifyToken}`,
           'Content-Type': 'application/json',
-          'User-Agent': 'bolt.diy-app',
+          'User-Agent': 'Astro.diy-app',
         },
       });
 
@@ -140,3 +140,4 @@ export const action = withSecurity(netlifyUserAction, {
   rateLimit: true,
   allowedMethods: ['POST'],
 });
+

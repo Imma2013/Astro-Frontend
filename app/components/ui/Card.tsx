@@ -1,4 +1,4 @@
-import { forwardRef } from 'react';
+﻿import { forwardRef } from 'react';
 import { classNames } from '~/utils/classNames';
 
 export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {}
@@ -8,7 +8,7 @@ const Card = forwardRef<HTMLDivElement, CardProps>(({ className, ...props }, ref
     <div
       ref={ref}
       className={classNames(
-        'rounded-lg border border-bolt-elements-borderColor bg-bolt-elements-background-depth-1 text-bolt-elements-textPrimary shadow-sm',
+        'rounded-lg border border-Astro-elements-borderColor bg-Astro-elements-background-depth-1 text-Astro-elements-textPrimary shadow-sm',
         className,
       )}
       {...props}
@@ -37,7 +37,7 @@ CardTitle.displayName = 'CardTitle';
 
 const CardDescription = forwardRef<HTMLParagraphElement, React.HTMLAttributes<HTMLParagraphElement>>(
   ({ className, ...props }, ref) => {
-    return <p ref={ref} className={classNames('text-sm text-bolt-elements-textSecondary', className)} {...props} />;
+    return <p ref={ref} className={classNames('text-sm text-Astro-elements-textSecondary', className)} {...props} />;
   },
 );
 CardDescription.displayName = 'CardDescription';
@@ -53,3 +53,4 @@ const CardFooter = forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElemen
 CardFooter.displayName = 'CardFooter';
 
 export { Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent };
+

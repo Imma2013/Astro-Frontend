@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { motion } from 'framer-motion';
 import { classNames } from '~/utils/classNames';
 
@@ -72,7 +72,7 @@ export function GradientCard({
         'p-5 rounded-xl bg-gradient-to-br',
         gradientClass,
         borderEffect
-          ? 'border border-bolt-elements-borderColor dark:border-bolt-elements-borderColor-dark hover:border-purple-500/40'
+          ? 'border border-Astro-elements-borderColor dark:border-Astro-elements-borderColor-dark hover:border-purple-500/40'
           : '',
         'transition-all duration-300 shadow-sm',
         hoverEffect ? 'hover:shadow-md' : '',
@@ -98,3 +98,4 @@ function getGradientColorFromSeed(seedString?: string): string {
 
   return GRADIENT_COLORS[index];
 }
+

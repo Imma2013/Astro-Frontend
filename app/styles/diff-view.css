@@ -1,4 +1,4 @@
-.diff-panel-content {
+﻿.diff-panel-content {
   scrollbar-width: thin;
   scrollbar-color: rgba(155, 155, 155, 0.5) transparent;
 }
@@ -40,7 +40,7 @@
   @apply bg-red-500/20 border-l-4 border-red-500;
 }
 
-/* Melhorar contraste para mudanças */
+/* Melhorar contraste para mudanÃ§as */
 .diff-panel-content .group:hover .diff-block-added {
   @apply bg-green-500/30;
 }
@@ -49,20 +49,20 @@
   @apply bg-red-500/30;
 }
 
-/* Estilos unificados para ambas as visualizações */
+/* Estilos unificados para ambas as visualizaÃ§Ãµes */
 .diff-line {
   @apply flex group min-w-fit transition-colors duration-150;
 }
 
 .diff-line-number {
-  @apply w-12 shrink-0 pl-2 py-0.5 text-left font-mono text-bolt-elements-textTertiary border-r border-bolt-elements-borderColor bg-bolt-elements-background-depth-1;
+  @apply w-12 shrink-0 pl-2 py-0.5 text-left font-mono text-Astro-elements-textTertiary border-r border-Astro-elements-borderColor bg-Astro-elements-background-depth-1;
 }
 
 .diff-line-content {
-  @apply px-4 py-0.5 font-mono whitespace-pre flex-1 group-hover:bg-bolt-elements-background-depth-2 text-bolt-elements-textPrimary;
+  @apply px-4 py-0.5 font-mono whitespace-pre flex-1 group-hover:bg-Astro-elements-background-depth-2 text-Astro-elements-textPrimary;
 }
 
-/* Cores específicas para adições/remoções */
+/* Cores especÃ­ficas para adiÃ§Ãµes/remoÃ§Ãµes */
 .diff-added {
   @apply bg-green-500/20 border-l-4 border-green-500;
 }
@@ -70,3 +70,4 @@
 .diff-removed {
   @apply bg-red-500/20 border-l-4 border-red-500;
 }
+

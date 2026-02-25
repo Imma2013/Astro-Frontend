@@ -1,9 +1,9 @@
-import { createScopedLogger } from '~/utils/logger';
+﻿import { createScopedLogger } from '~/utils/logger';
 
 const logger = createScopedLogger('LockedFiles');
 
 // Key for storing locked files in localStorage
-export const LOCKED_FILES_KEY = 'bolt.lockedFiles';
+export const LOCKED_FILES_KEY = 'Astro.lockedFiles';
 
 export interface LockedItem {
   chatId: string; // Chat ID to scope locks to a specific project
@@ -509,3 +509,4 @@ if (typeof window !== 'undefined') {
     }
   });
 }
+

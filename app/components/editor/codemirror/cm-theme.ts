@@ -1,4 +1,4 @@
-import { Compartment, type Extension } from '@codemirror/state';
+﻿import { Compartment, type Extension } from '@codemirror/state';
 import { EditorView } from '@codemirror/view';
 import { vscodeDark, vscodeLight } from '@uiw/codemirror-theme-vscode';
 import type { Theme } from '~/types/theme.js';
@@ -171,10 +171,10 @@ function getEditorTheme(settings: EditorSettings) {
     '.cm-tooltip.cm-readonly-tooltip': {
       padding: '4px',
       whiteSpace: 'nowrap',
-      backgroundColor: 'var(--bolt-elements-bg-depth-2)',
-      borderColor: 'var(--bolt-elements-borderColorActive)',
+      backgroundColor: 'var(--Astro-elements-bg-depth-2)',
+      borderColor: 'var(--Astro-elements-borderColorActive)',
       '& .cm-tooltip-arrow:before': {
-        borderTopColor: 'var(--bolt-elements-borderColorActive)',
+        borderTopColor: 'var(--Astro-elements-borderColorActive)',
       },
       '& .cm-tooltip-arrow:after': {
         borderTopColor: 'transparent',
@@ -190,3 +190,4 @@ function getLightTheme() {
 function getDarkTheme() {
   return vscodeDark;
 }
+

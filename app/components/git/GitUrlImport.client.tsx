@@ -1,4 +1,4 @@
-import { useSearchParams } from '@remix-run/react';
+﻿import { useSearchParams } from '@remix-run/react';
 import { generateId, type Message } from 'ai';
 import ignore from 'ignore';
 import { useEffect, useState } from 'react';
@@ -7,7 +7,7 @@ import { BaseChat } from '~/components/chat/BaseChat';
 import { Chat } from '~/components/chat/Chat.client';
 import { useGit } from '~/lib/hooks/useGit';
 import { useChatHistory } from '~/lib/persistence';
-import { createCommandsMessage, detectProjectCommands, escapeBoltTags } from '~/utils/projectCommands';
+import { createCommandsMessage, detectProjectCommands, escapeAstroTags } from '~/utils/projectCommands';
 import { LoadingOverlay } from '~/components/ui/LoadingOverlay';
 import { toast } from 'react-toastify';
 
@@ -75,16 +75,16 @@ export function GitUrlImport() {
           const filesMessage: Message = {
             role: 'assistant',
             content: `Cloning the repo ${repoUrl} into ${workdir}
-<boltArtifact id="imported-files" title="Git Cloned Files"  type="bundled">
+<AstroArtifact id="imported-files" title="Git Cloned Files"  type="bundled">
 ${fileContents
   .map(
     (file) =>
-      `<boltAction type="file" filePath="${file.path}">
-${escapeBoltTags(file.content)}
-</boltAction>`,
+      `<AstroAction type="file" filePath="${file.path}">
+${escapeAstroTags(file.content)}
+</AstroAction>`,
   )
   .join('\n')}
-</boltArtifact>`,
+</AstroArtifact>`,
             id: generateId(),
             createdAt: new Date(),
           };
@@ -145,3 +145,4 @@ ${escapeBoltTags(file.content)}
     </ClientOnly>
   );
 }
+

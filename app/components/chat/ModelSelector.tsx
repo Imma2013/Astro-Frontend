@@ -4,6 +4,7 @@ import type { KeyboardEvent } from 'react';
 import type { ModelInfo } from '~/lib/modules/llm/types';
 import { classNames } from '~/utils/classNames';
 import { LOCAL_PROVIDERS } from '~/lib/stores/settings';
+import { isOpenRouterAllowedModel } from '~/lib/openrouter/policy';
 
 // Fuzzy search utilities
 const levenshteinDistance = (str1: string, str2: string): number => {
@@ -115,6 +116,7 @@ export const ModelSelector = ({
   providerList,
   modelLoading,
 }: ModelSelectorProps) => {
+  const HIDDEN_PROVIDER_NAMES = ['Ollama', 'LMStudio'];
   const [modelSearchQuery, setModelSearchQuery] = useState('');
   const [debouncedModelSearchQuery, setDebouncedModelSearchQuery] = useState('');
   const [isModelDropdownOpen, setIsModelDropdownOpen] = useState(false);
@@ -134,13 +136,17 @@ export const ModelSelector = ({
   type ConnectionStatus = 'unknown' | 'connected' | 'disconnected';
 
   const [localProviderStatus, setLocalProviderStatus] = useState<Record<string, ConnectionStatus>>({});
+  const visibleProviderList = useMemo(
+    () => providerList.filter((entry) => !HIDDEN_PROVIDER_NAMES.includes(entry.name)),
+    [providerList],
+  );
 
   // Check connectivity of local providers when provider list changes
   useEffect(() => {
     const checkLocalProviders = async () => {
       const statuses: Record<string, 'connected' | 'disconnected'> = {};
 
-      for (const p of providerList) {
+      for (const p of visibleProviderList) {
         if (!LOCAL_PROVIDERS.includes(p.name)) {
           continue;
         }
@@ -155,7 +161,7 @@ export const ModelSelector = ({
     };
 
     checkLocalProviders();
-  }, [providerList, modelList]);
+  }, [visibleProviderList, modelList]);
 
   // Debounce search queries
   useEffect(() => {
@@ -193,7 +199,9 @@ export const ModelSelector = ({
   }, []);
 
   const filteredModels = useMemo(() => {
-    const baseModels = [...modelList].filter((e) => e.provider === provider?.name && e.name);
+    const baseModels = [...modelList]
+      .filter((e) => e.provider === provider?.name && e.name)
+      .filter((entry) => (provider?.name === 'OpenRouter' ? isOpenRouterAllowedModel(entry.name) : true));
 
     return baseModels
       .filter((model) => {
@@ -234,10 +242,10 @@ export const ModelSelector = ({
 
   const filteredProviders = useMemo(() => {
     if (!debouncedProviderSearchQuery) {
-      return providerList;
+      return visibleProviderList;
     }
 
-    return providerList
+    return visibleProviderList
       .map((provider) => {
         const match = fuzzyMatch(debouncedProviderSearchQuery, provider.name);
         return {
@@ -249,7 +257,7 @@ export const ModelSelector = ({
       })
       .filter((provider) => provider.searchMatches)
       .sort((a, b) => b.searchScore - a.searchScore);
-  }, [providerList, debouncedProviderSearchQuery]);
+  }, [visibleProviderList, debouncedProviderSearchQuery]);
 
   // Reset free models filter when provider changes
   useEffect(() => {
@@ -414,12 +422,12 @@ export const ModelSelector = ({
   }, [focusedProviderIndex]);
 
   useEffect(() => {
-    if (providerList.length === 0) {
+    if (visibleProviderList.length === 0) {
       return;
     }
 
-    if (provider && !providerList.some((p) => p.name === provider.name)) {
-      const firstEnabledProvider = providerList[0];
+    if (provider && !visibleProviderList.some((p) => p.name === provider.name)) {
+      const firstEnabledProvider = visibleProviderList[0];
       setProvider?.(firstEnabledProvider);
 
       const firstModel = modelList.find((m) => m.provider === firstEnabledProvider.name);
@@ -428,11 +436,11 @@ export const ModelSelector = ({
         setModel?.(firstModel.name);
       }
     }
-  }, [providerList, provider, setProvider, modelList, setModel]);
+  }, [visibleProviderList, provider, setProvider, modelList, setModel]);
 
-  if (providerList.length === 0) {
+  if (visibleProviderList.length === 0) {
     return (
-      <div className="mb-2 p-4 rounded-lg border border-bolt-elements-borderColor bg-bolt-elements-prompt-background text-bolt-elements-textPrimary">
+      <div className="mb-2 p-4 rounded-lg border border-Astro-elements-borderColor bg-Astro-elements-prompt-background text-Astro-elements-textPrimary">
         <p className="text-center">
           No providers are currently enabled. Please enable at least one provider in the settings to start using the
           chat.
@@ -447,11 +455,11 @@ export const ModelSelector = ({
       <div className="relative flex w-full" onKeyDown={handleProviderKeyDown} ref={providerDropdownRef}>
         <div
           className={classNames(
-            'w-full p-2 rounded-lg border border-bolt-elements-borderColor',
-            'bg-bolt-elements-prompt-background text-bolt-elements-textPrimary',
-            'focus-within:outline-none focus-within:ring-2 focus-within:ring-bolt-elements-focus',
+            'w-full px-3 py-2.5 rounded-xl border border-Astro-elements-borderColor/80',
+            'bg-Astro-elements-background-depth-2 text-Astro-elements-textPrimary',
+            'focus-within:outline-none focus-within:ring-2 focus-within:ring-Astro-elements-focus',
             'transition-all cursor-pointer',
-            isProviderDropdownOpen ? 'ring-2 ring-bolt-elements-focus' : undefined,
+            isProviderDropdownOpen ? 'ring-2 ring-Astro-elements-focus' : undefined,
           )}
           onClick={() => setIsProviderDropdownOpen(!isProviderDropdownOpen)}
           onKeyDown={(e) => {
@@ -476,7 +484,7 @@ export const ModelSelector = ({
                       ? 'bg-green-500'
                       : localProviderStatus[provider.name] === 'disconnected'
                         ? 'bg-red-400'
-                        : 'bg-bolt-elements-textTertiary',
+                        : 'bg-Astro-elements-textTertiary',
                   )}
                   title={
                     localProviderStatus[provider.name] === 'connected'
@@ -491,7 +499,7 @@ export const ModelSelector = ({
             </div>
             <div
               className={classNames(
-                'i-ph:caret-down w-4 h-4 text-bolt-elements-textSecondary opacity-75',
+                'i-ph:caret-down w-4 h-4 text-Astro-elements-textSecondary opacity-75',
                 isProviderDropdownOpen ? 'rotate-180' : undefined,
               )}
             />
@@ -500,7 +508,7 @@ export const ModelSelector = ({
 
         {isProviderDropdownOpen && (
           <div
-            className="absolute z-20 w-full mt-1 py-1 rounded-lg border border-bolt-elements-borderColor bg-bolt-elements-background-depth-2 shadow-lg"
+            className="absolute z-30 w-full bottom-full mb-1 py-1 rounded-lg border border-Astro-elements-borderColor bg-Astro-elements-background-depth-2 shadow-lg"
             role="listbox"
             id="provider-listbox"
           >
@@ -511,12 +519,12 @@ export const ModelSelector = ({
                   type="text"
                   value={providerSearchQuery}
                   onChange={(e) => setProviderSearchQuery(e.target.value)}
-                  placeholder="Search providers... (⌘K to clear)"
+                  placeholder="Search providers... (Ctrl+K to clear)"
                   className={classNames(
                     'w-full pl-8 pr-8 py-1.5 rounded-md text-sm',
-                    'bg-bolt-elements-background-depth-2 border border-bolt-elements-borderColor',
-                    'text-bolt-elements-textPrimary placeholder:text-bolt-elements-textTertiary',
-                    'focus:outline-none focus:ring-2 focus:ring-bolt-elements-focus',
+                    'bg-Astro-elements-background-depth-2 border border-Astro-elements-borderColor',
+                    'text-Astro-elements-textPrimary placeholder:text-Astro-elements-textTertiary',
+                    'focus:outline-none focus:ring-2 focus:ring-Astro-elements-focus',
                     'transition-all',
                   )}
                   onClick={(e) => e.stopPropagation()}
@@ -524,7 +532,7 @@ export const ModelSelector = ({
                   aria-label="Search providers"
                 />
                 <div className="absolute left-2.5 top-1/2 -translate-y-1/2">
-                  <span className="i-ph:magnifying-glass text-bolt-elements-textTertiary" />
+                  <span className="i-ph:magnifying-glass text-Astro-elements-textTertiary" />
                 </div>
                 {providerSearchQuery && (
                   <button
@@ -533,10 +541,10 @@ export const ModelSelector = ({
                       e.stopPropagation();
                       clearProviderSearch();
                     }}
-                    className="absolute right-2.5 top-1/2 -translate-y-1/2 p-0.5 rounded hover:bg-bolt-elements-background-depth-3 transition-colors"
+                    className="absolute right-2.5 top-1/2 -translate-y-1/2 p-0.5 rounded hover:bg-Astro-elements-background-depth-3 transition-colors"
                     aria-label="Clear search"
                   >
-                    <span className="i-ph:x text-bolt-elements-textTertiary text-xs" />
+                    <span className="i-ph:x text-Astro-elements-textTertiary text-xs" />
                   </button>
                 )}
               </div>
@@ -547,26 +555,26 @@ export const ModelSelector = ({
                 'max-h-60 overflow-y-auto',
                 'sm:scrollbar-none',
                 '[&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar]:h-2',
-                '[&::-webkit-scrollbar-thumb]:bg-bolt-elements-borderColor',
-                '[&::-webkit-scrollbar-thumb]:hover:bg-bolt-elements-borderColorHover',
+                '[&::-webkit-scrollbar-thumb]:bg-Astro-elements-borderColor',
+                '[&::-webkit-scrollbar-thumb]:hover:bg-Astro-elements-borderColorHover',
                 '[&::-webkit-scrollbar-thumb]:rounded-full',
-                '[&::-webkit-scrollbar-track]:bg-bolt-elements-background-depth-2',
+                '[&::-webkit-scrollbar-track]:bg-Astro-elements-background-depth-2',
                 '[&::-webkit-scrollbar-track]:rounded-full',
                 'sm:[&::-webkit-scrollbar]:w-1.5 sm:[&::-webkit-scrollbar]:h-1.5',
-                'sm:hover:[&::-webkit-scrollbar-thumb]:bg-bolt-elements-borderColor/50',
-                'sm:hover:[&::-webkit-scrollbar-thumb:hover]:bg-bolt-elements-borderColor',
+                'sm:hover:[&::-webkit-scrollbar-thumb]:bg-Astro-elements-borderColor/50',
+                'sm:hover:[&::-webkit-scrollbar-thumb:hover]:bg-Astro-elements-borderColor',
                 'sm:[&::-webkit-scrollbar-track]:bg-transparent',
               )}
             >
               {filteredProviders.length === 0 ? (
                 <div className="px-3 py-3 text-sm">
-                  <div className="text-bolt-elements-textTertiary mb-1">
+                  <div className="text-Astro-elements-textTertiary mb-1">
                     {debouncedProviderSearchQuery
                       ? `No providers match "${debouncedProviderSearchQuery}"`
                       : 'No providers found'}
                   </div>
                   {debouncedProviderSearchQuery && (
-                    <div className="text-xs text-bolt-elements-textTertiary">
+                    <div className="text-xs text-Astro-elements-textTertiary">
                       Try searching for provider names like "OpenAI", "Anthropic", or "Google"
                     </div>
                   )}
@@ -580,13 +588,13 @@ export const ModelSelector = ({
                     aria-selected={provider?.name === providerOption.name}
                     className={classNames(
                       'px-3 py-2 text-sm cursor-pointer',
-                      'hover:bg-bolt-elements-background-depth-3',
-                      'text-bolt-elements-textPrimary',
+                      'hover:bg-Astro-elements-background-depth-3',
+                      'text-Astro-elements-textPrimary',
                       'outline-none',
                       provider?.name === providerOption.name || focusedProviderIndex === index
-                        ? 'bg-bolt-elements-background-depth-2'
+                        ? 'bg-Astro-elements-background-depth-2'
                         : undefined,
-                      focusedProviderIndex === index ? 'ring-1 ring-inset ring-bolt-elements-focus' : undefined,
+                      focusedProviderIndex === index ? 'ring-1 ring-inset ring-Astro-elements-focus' : undefined,
                     )}
                     onClick={(e) => {
                       e.stopPropagation();
@@ -616,7 +624,7 @@ export const ModelSelector = ({
                               ? 'bg-green-500'
                               : localProviderStatus[providerOption.name] === 'disconnected'
                                 ? 'bg-red-400'
-                                : 'bg-bolt-elements-textTertiary',
+                                : 'bg-Astro-elements-textTertiary',
                           )}
                         />
                       )}
@@ -638,11 +646,11 @@ export const ModelSelector = ({
       <div className="relative flex w-full min-w-[70%]" onKeyDown={handleModelKeyDown} ref={modelDropdownRef}>
         <div
           className={classNames(
-            'w-full p-2 rounded-lg border border-bolt-elements-borderColor',
-            'bg-bolt-elements-prompt-background text-bolt-elements-textPrimary',
-            'focus-within:outline-none focus-within:ring-2 focus-within:ring-bolt-elements-focus',
+            'w-full px-3 py-2.5 rounded-xl border border-Astro-elements-borderColor/80',
+            'bg-Astro-elements-background-depth-2 text-Astro-elements-textPrimary',
+            'focus-within:outline-none focus-within:ring-2 focus-within:ring-Astro-elements-focus',
             'transition-all cursor-pointer',
-            isModelDropdownOpen ? 'ring-2 ring-bolt-elements-focus' : undefined,
+            isModelDropdownOpen ? 'ring-2 ring-Astro-elements-focus' : undefined,
           )}
           onClick={() => setIsModelDropdownOpen(!isModelDropdownOpen)}
           onKeyDown={(e) => {
@@ -661,7 +669,7 @@ export const ModelSelector = ({
             <div className="truncate">{modelList.find((m) => m.name === model)?.label || 'Select model'}</div>
             <div
               className={classNames(
-                'i-ph:caret-down w-4 h-4 text-bolt-elements-textSecondary opacity-75',
+                'i-ph:caret-down w-4 h-4 text-Astro-elements-textSecondary opacity-75',
                 isModelDropdownOpen ? 'rotate-180' : undefined,
               )}
             />
@@ -670,7 +678,7 @@ export const ModelSelector = ({
 
         {isModelDropdownOpen && (
           <div
-            className="absolute z-10 w-full mt-1 py-1 rounded-lg border border-bolt-elements-borderColor bg-bolt-elements-background-depth-2 shadow-lg"
+            className="absolute z-30 w-full bottom-full mb-1 py-1 rounded-lg border border-Astro-elements-borderColor bg-Astro-elements-background-depth-2 shadow-lg"
             role="listbox"
             id="model-listbox"
           >
@@ -686,17 +694,17 @@ export const ModelSelector = ({
                     }}
                     className={classNames(
                       'flex items-center gap-1.5 px-2 py-1 rounded-md text-xs font-medium transition-all',
-                      'hover:bg-bolt-elements-background-depth-3',
+                      'hover:bg-Astro-elements-background-depth-3',
                       showFreeModelsOnly
                         ? 'bg-purple-500/20 text-purple-400 border border-purple-500/30'
-                        : 'bg-bolt-elements-background-depth-3 text-bolt-elements-textSecondary border border-bolt-elements-borderColor',
+                        : 'bg-Astro-elements-background-depth-3 text-Astro-elements-textSecondary border border-Astro-elements-borderColor',
                     )}
                   >
                     <span className="i-ph:gift text-xs" />
                     Free models only
                   </button>
                   {showFreeModelsOnly && (
-                    <span className="text-xs text-bolt-elements-textTertiary">
+                    <span className="text-xs text-Astro-elements-textTertiary">
                       {filteredModels.length} free model{filteredModels.length !== 1 ? 's' : ''}
                     </span>
                   )}
@@ -705,7 +713,7 @@ export const ModelSelector = ({
 
               {/* Search Result Count */}
               {debouncedModelSearchQuery && filteredModels.length > 0 && (
-                <div className="text-xs text-bolt-elements-textTertiary px-1">
+                <div className="text-xs text-Astro-elements-textTertiary px-1">
                   {filteredModels.length} model{filteredModels.length !== 1 ? 's' : ''} found
                   {filteredModels.length > 5 && ' (showing best matches)'}
                 </div>
@@ -718,12 +726,12 @@ export const ModelSelector = ({
                   type="text"
                   value={modelSearchQuery}
                   onChange={(e) => setModelSearchQuery(e.target.value)}
-                  placeholder="Search models... (⌘K to clear)"
+                  placeholder="Search models... (Ctrl+K to clear)"
                   className={classNames(
                     'w-full pl-8 pr-8 py-1.5 rounded-md text-sm',
-                    'bg-bolt-elements-background-depth-2 border border-bolt-elements-borderColor',
-                    'text-bolt-elements-textPrimary placeholder:text-bolt-elements-textTertiary',
-                    'focus:outline-none focus:ring-2 focus:ring-bolt-elements-focus',
+                    'bg-Astro-elements-background-depth-2 border border-Astro-elements-borderColor',
+                    'text-Astro-elements-textPrimary placeholder:text-Astro-elements-textTertiary',
+                    'focus:outline-none focus:ring-2 focus:ring-Astro-elements-focus',
                     'transition-all',
                   )}
                   onClick={(e) => e.stopPropagation()}
@@ -731,7 +739,7 @@ export const ModelSelector = ({
                   aria-label="Search models"
                 />
                 <div className="absolute left-2.5 top-1/2 -translate-y-1/2">
-                  <span className="i-ph:magnifying-glass text-bolt-elements-textTertiary" />
+                  <span className="i-ph:magnifying-glass text-Astro-elements-textTertiary" />
                 </div>
                 {modelSearchQuery && (
                   <button
@@ -740,10 +748,10 @@ export const ModelSelector = ({
                       e.stopPropagation();
                       clearModelSearch();
                     }}
-                    className="absolute right-2.5 top-1/2 -translate-y-1/2 p-0.5 rounded hover:bg-bolt-elements-background-depth-3 transition-colors"
+                    className="absolute right-2.5 top-1/2 -translate-y-1/2 p-0.5 rounded hover:bg-Astro-elements-background-depth-3 transition-colors"
                     aria-label="Clear search"
                   >
-                    <span className="i-ph:x text-bolt-elements-textTertiary text-xs" />
+                    <span className="i-ph:x text-Astro-elements-textTertiary text-xs" />
                   </button>
                 )}
               </div>
@@ -754,49 +762,49 @@ export const ModelSelector = ({
                 'max-h-60 overflow-y-auto',
                 'sm:scrollbar-none',
                 '[&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar]:h-2',
-                '[&::-webkit-scrollbar-thumb]:bg-bolt-elements-borderColor',
-                '[&::-webkit-scrollbar-thumb]:hover:bg-bolt-elements-borderColorHover',
+                '[&::-webkit-scrollbar-thumb]:bg-Astro-elements-borderColor',
+                '[&::-webkit-scrollbar-thumb]:hover:bg-Astro-elements-borderColorHover',
                 '[&::-webkit-scrollbar-thumb]:rounded-full',
-                '[&::-webkit-scrollbar-track]:bg-bolt-elements-background-depth-2',
+                '[&::-webkit-scrollbar-track]:bg-Astro-elements-background-depth-2',
                 '[&::-webkit-scrollbar-track]:rounded-full',
                 'sm:[&::-webkit-scrollbar]:w-1.5 sm:[&::-webkit-scrollbar]:h-1.5',
-                'sm:hover:[&::-webkit-scrollbar-thumb]:bg-bolt-elements-borderColor/50',
-                'sm:hover:[&::-webkit-scrollbar-thumb:hover]:bg-bolt-elements-borderColor',
+                'sm:hover:[&::-webkit-scrollbar-thumb]:bg-Astro-elements-borderColor/50',
+                'sm:hover:[&::-webkit-scrollbar-thumb:hover]:bg-Astro-elements-borderColor',
                 'sm:[&::-webkit-scrollbar-track]:bg-transparent',
               )}
             >
               {modelLoading === 'all' || modelLoading === provider?.name ? (
                 <div className="px-3 py-3 text-sm">
-                  <div className="flex items-center gap-2 text-bolt-elements-textTertiary">
+                  <div className="flex items-center gap-2 text-Astro-elements-textTertiary">
                     <span className="i-ph:spinner animate-spin" />
                     Loading models...
                   </div>
                 </div>
               ) : filteredModels.length === 0 ? (
                 <div className="px-3 py-3 text-sm">
-                  <div className="text-bolt-elements-textTertiary mb-1">
+                  <div className="text-Astro-elements-textTertiary mb-1">
                     {debouncedModelSearchQuery
                       ? `No models match "${debouncedModelSearchQuery}"${showFreeModelsOnly ? ' (free only)' : ''}`
                       : showFreeModelsOnly
                         ? 'No free models available'
                         : provider?.name && LOCAL_PROVIDERS.includes(provider.name)
-                          ? `No models found — is ${provider.name} running?`
+                          ? `No models found - is ${provider.name} running?`
                           : 'No models available'}
                   </div>
                   {!debouncedModelSearchQuery && provider?.name && LOCAL_PROVIDERS.includes(provider.name) && (
-                    <div className="text-xs text-bolt-elements-textTertiary mt-1">
+                    <div className="text-xs text-Astro-elements-textTertiary mt-1">
                       Make sure {provider.name} is running and has at least one model loaded.
                       {provider.name === 'Ollama' && ' Try: ollama pull llama3.2'}
                       {provider.name === 'LMStudio' && ' Load a model in LM Studio first.'}
                     </div>
                   )}
                   {debouncedModelSearchQuery && (
-                    <div className="text-xs text-bolt-elements-textTertiary">
+                    <div className="text-xs text-Astro-elements-textTertiary">
                       Try searching for model names, context sizes (e.g., "128k", "1M"), or capabilities
                     </div>
                   )}
                   {showFreeModelsOnly && !debouncedModelSearchQuery && (
-                    <div className="text-xs text-bolt-elements-textTertiary">
+                    <div className="text-xs text-Astro-elements-textTertiary">
                       Try disabling the "Free models only" filter to see all available models
                     </div>
                   )}
@@ -810,13 +818,13 @@ export const ModelSelector = ({
                     aria-selected={model === modelOption.name}
                     className={classNames(
                       'px-3 py-2 text-sm cursor-pointer',
-                      'hover:bg-bolt-elements-background-depth-3',
-                      'text-bolt-elements-textPrimary',
+                      'hover:bg-Astro-elements-background-depth-3',
+                      'text-Astro-elements-textPrimary',
                       'outline-none',
                       model === modelOption.name || focusedModelIndex === index
-                        ? 'bg-bolt-elements-background-depth-2'
+                        ? 'bg-Astro-elements-background-depth-2'
                         : undefined,
-                      focusedModelIndex === index ? 'ring-1 ring-inset ring-bolt-elements-focus' : undefined,
+                      focusedModelIndex === index ? 'ring-1 ring-inset ring-Astro-elements-focus' : undefined,
                     )}
                     onClick={(e) => {
                       e.stopPropagation();
@@ -837,7 +845,7 @@ export const ModelSelector = ({
                           />
                         </div>
                         <div className="flex items-center gap-2 mt-0.5">
-                          <span className="text-xs text-bolt-elements-textTertiary">
+                          <span className="text-xs text-Astro-elements-textTertiary">
                             {formatContextSize(modelOption.maxTokenAllowed)} tokens
                           </span>
                           {debouncedModelSearchQuery && (modelOption as any).searchScore > 70 && (
@@ -866,3 +874,4 @@ export const ModelSelector = ({
     </div>
   );
 };
+

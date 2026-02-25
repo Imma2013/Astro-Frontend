@@ -1,4 +1,4 @@
-import { json } from '@remix-run/cloudflare';
+﻿import { json } from '@remix-run/cloudflare';
 import { withSecurity } from '~/lib/security';
 
 interface GitLabBranch {
@@ -40,7 +40,7 @@ async function gitlabBranchesLoader({ request }: { request: Request }) {
       headers: {
         Authorization: `Bearer ${token}`,
         Accept: 'application/json',
-        'User-Agent': 'bolt.diy-app',
+        'User-Agent': 'Astro.diy-app',
       },
     });
 
@@ -72,7 +72,7 @@ async function gitlabBranchesLoader({ request }: { request: Request }) {
       headers: {
         Authorization: `Bearer ${token}`,
         Accept: 'application/json',
-        'User-Agent': 'bolt.diy-app',
+        'User-Agent': 'Astro.diy-app',
       },
     });
 
@@ -141,3 +141,4 @@ async function gitlabBranchesLoader({ request }: { request: Request }) {
 }
 
 export const action = withSecurity(gitlabBranchesLoader);
+

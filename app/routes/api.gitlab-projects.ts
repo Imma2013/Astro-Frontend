@@ -1,4 +1,4 @@
-import { json } from '@remix-run/cloudflare';
+﻿import { json } from '@remix-run/cloudflare';
 import { withSecurity } from '~/lib/security';
 import type { GitLabProjectInfo } from '~/types/GitLab';
 
@@ -32,7 +32,7 @@ async function gitlabProjectsLoader({ request }: { request: Request }) {
       headers: {
         Authorization: `Bearer ${token}`,
         Accept: 'application/json',
-        'User-Agent': 'bolt.diy-app',
+        'User-Agent': 'Astro.diy-app',
       },
     });
 
@@ -103,3 +103,4 @@ async function gitlabProjectsLoader({ request }: { request: Request }) {
 }
 
 export const action = withSecurity(gitlabProjectsLoader);
+

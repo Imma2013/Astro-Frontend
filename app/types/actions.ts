@@ -1,4 +1,4 @@
-import type { Change } from 'diff';
+﻿import type { Change } from 'diff';
 
 export type ActionType = 'file' | 'shell' | 'supabase';
 
@@ -30,9 +30,9 @@ export interface SupabaseAction extends BaseAction {
   projectId?: string;
 }
 
-export type BoltAction = FileAction | ShellAction | StartAction | BuildAction | SupabaseAction;
+export type AstroAction = FileAction | ShellAction | StartAction | BuildAction | SupabaseAction;
 
-export type BoltActionData = BoltAction | BaseAction;
+export type AstroActionData = AstroAction | BaseAction;
 
 export interface ActionAlert {
   type: string;
@@ -80,6 +80,7 @@ export interface FileHistory {
     content: string;
   }[];
 
-  // Novo campo para rastrear a origem das mudanças
+  // Novo campo para rastrear a origem das mudanÃ§as
   changeSource?: 'user' | 'auto-save' | 'external';
 }
+

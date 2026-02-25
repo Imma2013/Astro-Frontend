@@ -1,4 +1,4 @@
-import type { Message } from 'ai';
+﻿import type { Message } from 'ai';
 import { generateId } from './fileUtils';
 
 export interface ProjectCommands {
@@ -116,12 +116,12 @@ export function createCommandsMessage(commands: ProjectCommands): Message | null
 
   if (commands.setupCommand) {
     commandString += `
-<boltAction type="shell">${commands.setupCommand}</boltAction>`;
+<AstroAction type="shell">${commands.setupCommand}</AstroAction>`;
   }
 
   if (commands.startCommand) {
     commandString += `
-<boltAction type="start">${commands.startCommand}</boltAction>
+<AstroAction type="start">${commands.startCommand}</AstroAction>
 `;
   }
 
@@ -129,17 +129,17 @@ export function createCommandsMessage(commands: ProjectCommands): Message | null
     role: 'assistant',
     content: `
 ${commands.followupMessage ? `\n\n${commands.followupMessage}` : ''}
-<boltArtifact id="project-setup" title="Project Setup">
+<AstroArtifact id="project-setup" title="Project Setup">
 ${commandString}
-</boltArtifact>`,
+</AstroArtifact>`,
     id: generateId(),
     createdAt: new Date(),
   };
 }
 
-export function escapeBoltArtifactTags(input: string) {
-  // Regular expression to match boltArtifact tags and their content
-  const regex = /(<boltArtifact[^>]*>)([\s\S]*?)(<\/boltArtifact>)/g;
+export function escapeAstroArtifactTags(input: string) {
+  // Regular expression to match AstroArtifact tags and their content
+  const regex = /(<AstroArtifact[^>]*>)([\s\S]*?)(<\/AstroArtifact>)/g;
 
   return input.replace(regex, (match, openTag, content, closeTag) => {
     // Escape the opening tag
@@ -153,9 +153,9 @@ export function escapeBoltArtifactTags(input: string) {
   });
 }
 
-export function escapeBoltAActionTags(input: string) {
-  // Regular expression to match boltArtifact tags and their content
-  const regex = /(<boltAction[^>]*>)([\s\S]*?)(<\/boltAction>)/g;
+export function escapeAstroAActionTags(input: string) {
+  // Regular expression to match AstroArtifact tags and their content
+  const regex = /(<AstroAction[^>]*>)([\s\S]*?)(<\/AstroAction>)/g;
 
   return input.replace(regex, (match, openTag, content, closeTag) => {
     // Escape the opening tag
@@ -169,8 +169,8 @@ export function escapeBoltAActionTags(input: string) {
   });
 }
 
-export function escapeBoltTags(input: string) {
-  return escapeBoltArtifactTags(escapeBoltAActionTags(input));
+export function escapeAstroTags(input: string) {
+  return escapeAstroArtifactTags(escapeAstroAActionTags(input));
 }
 
 // We have this seperate function to simplify the restore snapshot process in to one single artifact.
@@ -184,14 +184,15 @@ export function createCommandActionsString(commands: ProjectCommands): string {
 
   if (commands.setupCommand) {
     commandString += `
-<boltAction type="shell">${commands.setupCommand}</boltAction>`;
+<AstroAction type="shell">${commands.setupCommand}</AstroAction>`;
   }
 
   if (commands.startCommand) {
     commandString += `
-<boltAction type="start">${commands.startCommand}</boltAction>
+<AstroAction type="start">${commands.startCommand}</AstroAction>
 `;
   }
 
   return commandString;
 }
+

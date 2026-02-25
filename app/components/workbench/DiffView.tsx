@@ -1,4 +1,4 @@
-import { memo, useMemo, useState, useEffect, useCallback } from 'react';
+﻿import { memo, useMemo, useState, useEffect, useCallback } from 'react';
 import { useStore } from '@nanostores/react';
 import { workbenchStore } from '~/lib/stores/workbench';
 import type { FileMap } from '~/lib/stores/files';
@@ -39,7 +39,7 @@ interface FullscreenButtonProps {
 const FullscreenButton = memo(({ onClick, isFullscreen }: FullscreenButtonProps) => (
   <button
     onClick={onClick}
-    className="ml-4 p-1 rounded hover:bg-bolt-elements-background-depth-3 text-bolt-elements-textTertiary hover:text-bolt-elements-textPrimary transition-colors"
+    className="ml-4 p-1 rounded hover:bg-Astro-elements-background-depth-3 text-Astro-elements-textTertiary hover:text-Astro-elements-textPrimary transition-colors"
     title={isFullscreen ? 'Exit Fullscreen' : 'Enter Fullscreen'}
   >
     <div className={isFullscreen ? 'i-ph:corners-in' : 'i-ph:corners-out'} />
@@ -53,7 +53,7 @@ const FullscreenOverlay = memo(({ isFullscreen, children }: { isFullscreen: bool
 
   return (
     <div className="fixed inset-0 z-[9999] bg-black/50 flex items-center justify-center p-6">
-      <div className="w-full h-full max-w-[90vw] max-h-[90vh] bg-bolt-elements-background-depth-2 rounded-lg border border-bolt-elements-borderColor shadow-xl overflow-hidden">
+      <div className="w-full h-full max-w-[90vw] max-h-[90vh] bg-Astro-elements-background-depth-2 rounded-lg border border-Astro-elements-borderColor shadow-xl overflow-hidden">
         {children}
       </div>
     </div>
@@ -312,9 +312,9 @@ const processChanges = (beforeCode: string, afterCode: string) => {
 };
 
 const lineNumberStyles =
-  'w-9 shrink-0 pl-2 py-1 text-left font-mono text-bolt-elements-textTertiary border-r border-bolt-elements-borderColor bg-bolt-elements-background-depth-1';
+  'w-9 shrink-0 pl-2 py-1 text-left font-mono text-Astro-elements-textTertiary border-r border-Astro-elements-borderColor bg-Astro-elements-background-depth-1';
 const lineContentStyles =
-  'px-1 py-1 font-mono whitespace-pre flex-1 group-hover:bg-bolt-elements-background-depth-2 text-bolt-elements-textPrimary';
+  'px-1 py-1 font-mono whitespace-pre flex-1 group-hover:bg-Astro-elements-background-depth-2 text-Astro-elements-textPrimary';
 const diffPanelStyles = 'h-full overflow-auto diff-panel-content';
 
 // Updated color styles for better consistency
@@ -327,14 +327,14 @@ const diffLineStyles = {
 const changeColorStyles = {
   added: 'text-green-700 dark:text-green-500 bg-green-500/10 dark:bg-green-500/20',
   removed: 'text-red-700 dark:text-red-500 bg-red-500/10 dark:bg-red-500/20',
-  unchanged: 'text-bolt-elements-textPrimary',
+  unchanged: 'text-Astro-elements-textPrimary',
 };
 
 const renderContentWarning = (type: 'binary' | 'error') => (
   <div className="h-full flex items-center justify-center p-4">
-    <div className="text-center text-bolt-elements-textTertiary">
+    <div className="text-center text-Astro-elements-textTertiary">
       <div className={`i-ph:${type === 'binary' ? 'file-x' : 'warning-circle'} text-4xl text-red-400 mb-2 mx-auto`} />
-      <p className="font-medium text-bolt-elements-textPrimary">
+      <p className="font-medium text-Astro-elements-textPrimary">
         {type === 'binary' ? 'Binary file detected' : 'Error processing file'}
       </p>
       <p className="text-sm mt-1">
@@ -357,13 +357,13 @@ const NoChangesView = memo(
     theme: string;
   }) => (
     <div className="h-full flex flex-col items-center justify-center p-4">
-      <div className="text-center text-bolt-elements-textTertiary">
+      <div className="text-center text-Astro-elements-textTertiary">
         <div className="i-ph:files text-4xl text-green-400 mb-2 mx-auto" />
-        <p className="font-medium text-bolt-elements-textPrimary">Files are identical</p>
+        <p className="font-medium text-Astro-elements-textPrimary">Files are identical</p>
         <p className="text-sm mt-1">Both versions match exactly</p>
       </div>
-      <div className="mt-4 w-full max-w-2xl bg-bolt-elements-background-depth-1 rounded-lg border border-bolt-elements-borderColor overflow-hidden">
-        <div className="p-2 text-xs font-bold text-bolt-elements-textTertiary border-b border-bolt-elements-borderColor">
+      <div className="mt-4 w-full max-w-2xl bg-Astro-elements-background-depth-1 rounded-lg border border-Astro-elements-borderColor overflow-hidden">
+        <div className="p-2 text-xs font-bold text-Astro-elements-textTertiary border-b border-Astro-elements-borderColor">
           Current Content
         </div>
         <div className="overflow-auto max-h-96">
@@ -394,12 +394,12 @@ const NoChangesView = memo(
   ),
 );
 
-// Otimização do processamento de diferenças com memoização
+// OtimizaÃ§Ã£o do processamento de diferenÃ§as com memoizaÃ§Ã£o
 const useProcessChanges = (beforeCode: string, afterCode: string) => {
   return useMemo(() => processChanges(beforeCode, afterCode), [beforeCode, afterCode]);
 };
 
-// Componente otimizado para renderização de linhas de código
+// Componente otimizado para renderizaÃ§Ã£o de linhas de cÃ³digo
 const CodeLine = memo(
   ({
     lineNumber,
@@ -456,7 +456,7 @@ const CodeLine = memo(
       <div className="flex group min-w-fit">
         <div className={lineNumberStyles}>{lineNumber + 1}</div>
         <div className={`${lineContentStyles} ${bgColor}`}>
-          <span className="mr-2 text-bolt-elements-textTertiary">
+          <span className="mr-2 text-Astro-elements-textTertiary">
             {type === 'added' && <span className="text-green-700 dark:text-green-500">+</span>}
             {type === 'removed' && <span className="text-red-700 dark:text-red-500">-</span>}
             {type === 'unchanged' && ' '}
@@ -468,7 +468,7 @@ const CodeLine = memo(
   },
 );
 
-// Componente para exibir informações sobre o arquivo
+// Componente para exibir informaÃ§Ãµes sobre o arquivo
 const FileInfo = memo(
   ({
     filename,
@@ -516,7 +516,7 @@ const FileInfo = memo(
     const showStats = additions > 0 || deletions > 0;
 
     return (
-      <div className="flex items-center bg-bolt-elements-background-depth-1 p-2 text-sm text-bolt-elements-textPrimary shrink-0">
+      <div className="flex items-center bg-Astro-elements-background-depth-1 p-2 text-sm text-Astro-elements-textPrimary shrink-0">
         <div className="i-ph:file mr-2 h-4 w-4 shrink-0" />
         <span className="truncate">{filename}</span>
         <span className="ml-auto shrink-0 flex items-center gap-2">
@@ -529,7 +529,7 @@ const FileInfo = memo(
                 </div>
               )}
               <span className="text-yellow-600 dark:text-yellow-400">Modified</span>
-              <span className="text-bolt-elements-textTertiary text-xs">{new Date().toLocaleTimeString()}</span>
+              <span className="text-Astro-elements-textTertiary text-xs">{new Date().toLocaleTimeString()}</span>
             </>
           ) : (
             <span className="text-green-700 dark:text-green-400">No Changes</span>
@@ -619,7 +619,7 @@ const InlineDiffComparison = memo(({ beforeCode, afterCode, filename, language }
   if (!highlighter) {
     return (
       <div className="h-full flex items-center justify-center">
-        <div className="text-bolt-elements-textTertiary">Loading diff...</div>
+        <div className="text-Astro-elements-textTertiary">Loading diff...</div>
       </div>
     );
   }
@@ -682,13 +682,13 @@ export const DiffView = memo(({ fileHistory, setFileHistory }: DiffViewProps) =>
       const existingHistory = fileHistory[selectedFile];
       const currentContent = currentDocument.value;
 
-      // Normalizar o conteúdo para comparação
+      // Normalizar o conteÃºdo para comparaÃ§Ã£o
       const normalizedCurrentContent = currentContent.replace(/\r\n/g, '\n').trim();
       const normalizedOriginalContent = (existingHistory?.originalContent || file.content)
         .replace(/\r\n/g, '\n')
         .trim();
 
-      // Se não há histórico existente, criar um novo apenas se houver diferenças
+      // Se nÃ£o hÃ¡ histÃ³rico existente, criar um novo apenas se houver diferenÃ§as
       if (!existingHistory) {
         if (normalizedCurrentContent !== normalizedOriginalContent) {
           const newChanges = diffLines(file.content, currentContent);
@@ -712,22 +712,22 @@ export const DiffView = memo(({ fileHistory, setFileHistory }: DiffViewProps) =>
         return;
       }
 
-      // Se já existe histórico, verificar se há mudanças reais desde a última versão
+      // Se jÃ¡ existe histÃ³rico, verificar se hÃ¡ mudanÃ§as reais desde a Ãºltima versÃ£o
       const lastVersion = existingHistory.versions[existingHistory.versions.length - 1];
       const normalizedLastContent = lastVersion?.content.replace(/\r\n/g, '\n').trim();
 
       if (normalizedCurrentContent === normalizedLastContent) {
-        return; // Não criar novo histórico se o conteúdo é o mesmo
+        return; // NÃ£o criar novo histÃ³rico se o conteÃºdo Ã© o mesmo
       }
 
-      // Verificar se há mudanças significativas usando diffFiles
+      // Verificar se hÃ¡ mudanÃ§as significativas usando diffFiles
       const relativePath = extractRelativePath(selectedFile);
       const unifiedDiff = diffFiles(relativePath, existingHistory.originalContent, currentContent);
 
       if (unifiedDiff) {
         const newChanges = diffLines(existingHistory.originalContent, currentContent);
 
-        // Verificar se as mudanças são significativas
+        // Verificar se as mudanÃ§as sÃ£o significativas
         const hasSignificantChanges = newChanges.some(
           (change) => (change.added || change.removed) && change.value.trim().length > 0,
         );
@@ -736,14 +736,14 @@ export const DiffView = memo(({ fileHistory, setFileHistory }: DiffViewProps) =>
           const newHistory: FileHistory = {
             originalContent: existingHistory.originalContent,
             lastModified: Date.now(),
-            changes: [...existingHistory.changes, ...newChanges].slice(-100), // Limitar histórico de mudanças
+            changes: [...existingHistory.changes, ...newChanges].slice(-100), // Limitar histÃ³rico de mudanÃ§as
             versions: [
               ...existingHistory.versions,
               {
                 timestamp: Date.now(),
                 content: currentContent,
               },
-            ].slice(-10), // Manter apenas as 10 últimas versões
+            ].slice(-10), // Manter apenas as 10 Ãºltimas versÃµes
             changeSource: 'auto-save',
           };
 
@@ -755,7 +755,7 @@ export const DiffView = memo(({ fileHistory, setFileHistory }: DiffViewProps) =>
 
   if (!selectedFile || !currentDocument) {
     return (
-      <div className="flex w-full h-full justify-center items-center bg-bolt-elements-background-depth-1 text-bolt-elements-textPrimary">
+      <div className="flex w-full h-full justify-center items-center bg-Astro-elements-background-depth-1 text-Astro-elements-textPrimary">
         Select a file to view differences
       </div>
     );
@@ -785,7 +785,7 @@ export const DiffView = memo(({ fileHistory, setFileHistory }: DiffViewProps) =>
   } catch (error) {
     console.error('DiffView render error:', error);
     return (
-      <div className="flex w-full h-full justify-center items-center bg-bolt-elements-background-depth-1 text-red-400">
+      <div className="flex w-full h-full justify-center items-center bg-Astro-elements-background-depth-1 text-red-400">
         <div className="text-center">
           <div className="i-ph:warning-circle text-4xl mb-2" />
           <p>Failed to render diff view</p>
@@ -794,3 +794,4 @@ export const DiffView = memo(({ fileHistory, setFileHistory }: DiffViewProps) =>
     );
   }
 });
+

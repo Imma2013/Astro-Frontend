@@ -40,7 +40,9 @@
     "electron:build:mac": "rm -rf dist && pnpm electron:build:renderer && pnpm electron:build:deps && electron-builder --mac",
     "electron:build:win": "rm -rf dist && pnpm electron:build:renderer && pnpm electron:build:deps && electron-builder --win",
     "electron:build:linux": "rm -rf dist && pnpm electron:build:renderer && pnpm electron:build:deps && electron-builder --linux",
-    "electron:build:dist": "rm -rf dist && pnpm electron:build:renderer && pnpm electron:build:deps && electron-builder --mwl"
+    "electron:build:dist": "rm -rf dist && pnpm electron:build:renderer && pnpm electron:build:deps && electron-builder --mwl",
+    "setup:cloudflare": "powershell -ExecutionPolicy Bypass -File scripts/setup/cloudflare-pages.ps1",
+    "setup:supabase": "powershell -ExecutionPolicy Bypass -File scripts/setup/supabase-platform.ps1"
   },
   "engines": {
     "node": ">=18.18.0"
@@ -101,6 +103,8 @@
     "@remix-run/node": "^2.15.2",
     "@remix-run/react": "^2.15.2",
     "@tanstack/react-virtual": "^3.13.0",
+    "@tauri-apps/api": "^2.10.1",
+    "@tauri-apps/plugin-fs": "^2.4.5",
     "@types/react-beautiful-dnd": "^13.1.8",
     "@uiw/codemirror-theme-vscode": "^4.23.6",
     "@unocss/reset": "^0.61.9",
@@ -169,6 +173,7 @@
     "@iconify/types": "^2.0.0",
     "@remix-run/dev": "^2.15.2",
     "@remix-run/serve": "^2.15.2",
+    "@tauri-apps/cli": "^2.10.0",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.2.0",
     "@types/diff": "^5.2.3",

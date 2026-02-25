@@ -1,6 +1,6 @@
-# Welcome to bolt diy
+﻿# Welcome to Astro diy
 
-bolt.diy allows you to choose the LLM that you use for each prompt! Currently, you can use models from 19 providers including OpenAI, Anthropic, Ollama, OpenRouter, Google/Gemini, LMStudio, Mistral, xAI, HuggingFace, DeepSeek, Groq, Cohere, Together AI, Perplexity AI, Hyperbolic, Moonshot AI (Kimi), Amazon Bedrock, GitHub Models, and more - with easy extensibility to add any other model supported by the Vercel AI SDK! See the instructions below for running this locally and extending it to include more models.
+Astro.diy allows you to choose the LLM that you use for each prompt! Currently, you can use models from 19 providers including OpenAI, Anthropic, Ollama, OpenRouter, Google/Gemini, LMStudio, Mistral, xAI, HuggingFace, DeepSeek, Groq, Cohere, Together AI, Perplexity AI, Hyperbolic, Moonshot AI (Kimi), Amazon Bedrock, GitHub Models, and more - with easy extensibility to add any other model supported by the Vercel AI SDK! See the instructions below for running this locally and extending it to include more models.
 
 ## Table of Contents
 
@@ -33,7 +33,7 @@ bolt.diy allows you to choose the LLM that you use for each prompt! Currently, y
 
 [Join the community!](https://thinktank.ottomator.ai)
 
-Also [this pinned post in our community](https://thinktank.ottomator.ai/t/videos-tutorial-helpful-content/3243) has a bunch of incredible resources for running and deploying bolt.diy yourself!
+Also [this pinned post in our community](https://thinktank.ottomator.ai/t/videos-tutorial-helpful-content/3243) has a bunch of incredible resources for running and deploying Astro.diy yourself!
 
 ---
 
@@ -77,26 +77,26 @@ If you're new to installing software from GitHub, don't worry! If you encounter 
 
 ### Clone the Repository
 
-Alternatively, you can download the latest version of the project directly from the [Releases Page](https://github.com/stackblitz-labs/bolt.diy/releases/latest). Simply download the .zip file, extract it, and proceed with the setup instructions below. If you are comfertiable using git then run the command below.
+Alternatively, you can download the latest version of the project directly from the [Releases Page](https://github.com/stackblitz-labs/Astro.diy/releases/latest). Simply download the .zip file, extract it, and proceed with the setup instructions below. If you are comfertiable using git then run the command below.
 
 Clone the repository using Git:
 
 ```bash
-git clone https://github.com/stackblitz-labs/bolt.diy
-cd bolt.diy
+git clone https://github.com/stackblitz-labs/Astro.diy
+cd Astro.diy
 ```
 
 ---
 
 ### Entering API Keys
 
-There are two ways to configure your API keys in bolt.diy:
+There are two ways to configure your API keys in Astro.diy:
 
 #### 1. Set API Keys in the `.env.local` File
 
 When setting up the application, you will need to add your API keys for the LLMs you wish to use. You can do this by renaming the `.env.example` file to `.env.local` and adding your API keys there.
 
-- On **Mac**, you can find the file at `[your name]/bolt.diy/.env.example`.
+- On **Mac**, you can find the file at `[your name]/Astro.diy/.env.example`.
 - On **Windows/Linux**, the path will be similar.
 
 If you can't see the file, it's likely because hidden files are not being shown. On **Mac**, open a Terminal window and enter the following command to show hidden files:
@@ -125,7 +125,7 @@ Once you've set your keys, you can proceed with running the app. You will set th
 
 Alternatively, you can configure your API keys directly in the application using the modern settings interface:
 
-1. **Open Settings**: Click the settings icon (⚙️) in the sidebar to access the settings panel
+1. **Open Settings**: Click the settings icon (âš™ï¸) in the sidebar to access the settings panel
 2. **Navigate to Providers**: Select the "Providers" tab from the settings menu
 3. **Choose Provider Type**: Switch between "Cloud Providers" and "Local Providers" tabs
 4. **Select Provider**: Browse the grid of available providers and click on the provider card you want to configure
@@ -183,7 +183,7 @@ Once you've configured your keys, the application will be ready to use the selec
    Alternatively, use Docker commands directly:
 
    ```bash
-   docker build . --target bolt-ai-development
+   docker build . --target Astro-ai-development
    ```
 
 2. **Run the Container**:  
@@ -199,7 +199,7 @@ Once you've configured your keys, the application will be ready to use the selec
 
 ### Update Your Local Version to the Latest
 
-To keep your local version of bolt.diy up to date with the latest changes, follow these steps for your operating system:
+To keep your local version of Astro.diy up to date with the latest changes, follow these steps for your operating system:
 
 #### 1. **Navigate to your project folder**
 
@@ -234,13 +234,13 @@ pnpm install
   pnpm run dev
   ```
 
-This ensures that you're running the latest version of bolt.diy and can take advantage of all the newest features and bug fixes.
+This ensures that you're running the latest version of Astro.diy and can take advantage of all the newest features and bug fixes.
 
 ---
 
 ## Adding New LLMs
 
-bolt.diy supports a modular architecture for adding new LLM providers and models. The system is designed to be easily extensible while maintaining consistency across all providers.
+Astro.diy supports a modular architecture for adding new LLM providers and models. The system is designed to be easily extensible while maintaining consistency across all providers.
 
 ### Understanding the Provider Architecture
 
@@ -360,7 +360,7 @@ Each provider can have its own configuration options:
 ### Testing Your New Provider
 
 1. **Restart the development server** after making changes
-2. **Check the provider appears** in the Settings → Providers section
+2. **Check the provider appears** in the Settings â†’ Providers section
 3. **Configure API keys** in the provider settings
 4. **Test the models** in a chat session
 
@@ -378,11 +378,11 @@ The modular architecture makes it easy to add new providers while maintaining co
 
 ## MCP (Model Context Protocol) Integration
 
-bolt.diy supports MCP (Model Context Protocol) servers to extend AI capabilities with external tools and services. MCP allows you to connect various tools and services that the AI can use during conversations.
+Astro.diy supports MCP (Model Context Protocol) servers to extend AI capabilities with external tools and services. MCP allows you to connect various tools and services that the AI can use during conversations.
 
 ### Setting up MCP Servers
 
-1. Navigate to Settings → MCP tab
+1. Navigate to Settings â†’ MCP tab
 2. Add MCP server configurations
 3. Configure server endpoints and authentication
 4. Enable/disable servers as needed
@@ -400,11 +400,11 @@ The MCP integration enhances the AI's ability to perform complex tasks by giving
 
 ## Git Integration and Version Control
 
-bolt.diy provides comprehensive Git integration for version control, collaboration, and project management.
+Astro.diy provides comprehensive Git integration for version control, collaboration, and project management.
 
 ### GitHub Integration
 
-1. **Connect your GitHub account** in Settings → Connections → GitHub
+1. **Connect your GitHub account** in Settings â†’ Connections â†’ GitHub
 2. **Import existing repositories** by URL or from your connected account
 3. **Push projects directly to GitHub** with automatic repository creation
 4. **Sync changes** between local development and remote repositories
@@ -427,18 +427,18 @@ bolt.diy provides comprehensive Git integration for version control, collaborati
 
 ## Deployment Options
 
-bolt.diy provides one-click deployment to popular hosting platforms, making it easy to share your projects with the world.
+Astro.diy provides one-click deployment to popular hosting platforms, making it easy to share your projects with the world.
 
 ### Supported Platforms
 
 #### Vercel Deployment
-1. Connect your Vercel account in Settings → Connections → Vercel
+1. Connect your Vercel account in Settings â†’ Connections â†’ Vercel
 2. Click the deploy button in your project
-3. bolt.diy automatically builds and deploys your project
+3. Astro.diy automatically builds and deploys your project
 4. Get a live URL instantly with Vercel's global CDN
 
 #### Netlify Deployment
-1. Connect your Netlify account in Settings → Connections → Netlify
+1. Connect your Netlify account in Settings â†’ Connections â†’ Netlify
 2. Deploy with a single click
 3. Automatic build configuration and optimization
 4. Preview deployments for every change
@@ -461,13 +461,13 @@ bolt.diy provides one-click deployment to popular hosting platforms, making it e
 
 ## Supabase Integration
 
-bolt.diy integrates with Supabase to provide backend database functionality, authentication, and real-time features for your applications.
+Astro.diy integrates with Supabase to provide backend database functionality, authentication, and real-time features for your applications.
 
 ### Setting up Supabase
 
 1. Create a Supabase project at [supabase.com](https://supabase.com)
 2. Get your project URL and API keys from the Supabase dashboard
-3. Configure the connection in your bolt.diy project
+3. Configure the connection in your Astro.diy project
 4. Use the Supabase tools to interact with your database
 
 ### Database Features
@@ -493,7 +493,7 @@ Supabase integration makes it easy to build full-stack applications with a robus
 
 ## WebContainer and Live Preview
 
-bolt.diy uses WebContainer technology to provide a secure, isolated development environment with live preview capabilities.
+Astro.diy uses WebContainer technology to provide a secure, isolated development environment with live preview capabilities.
 
 ### WebContainer Features
 
@@ -526,7 +526,7 @@ The WebContainer integration provides a seamless development experience without 
 
 ## Project Templates
 
-bolt.diy comes with a comprehensive collection of starter templates to help you quickly bootstrap your projects. Choose from popular frameworks and technologies:
+Astro.diy comes with a comprehensive collection of starter templates to help you quickly bootstrap your projects. Choose from popular frameworks and technologies:
 
 ### Frontend Frameworks
 - **React + Vite** - Modern React setup with TypeScript
@@ -556,7 +556,7 @@ bolt.diy comes with a comprehensive collection of starter templates to help you 
 
 ### Getting Started with Templates
 
-1. Start a new project in bolt.diy
+1. Start a new project in Astro.diy
 2. Browse available templates in the starter selection
 3. Select your preferred technology stack
 4. The AI will scaffold your project with best practices
@@ -617,7 +617,7 @@ This will start the Remix Vite development server. You will need Google Chrome C
 ## Getting Help & Resources
 
 ### Help Icon in Sidebar
-bolt.diy includes a convenient help icon (?) in the sidebar that provides quick access to comprehensive documentation. Simply click the help icon to open the full documentation in a new tab.
+Astro.diy includes a convenient help icon (?) in the sidebar that provides quick access to comprehensive documentation. Simply click the help icon to open the full documentation in a new tab.
 
 The documentation includes:
 - **Complete setup guides** for all supported providers
@@ -633,14 +633,15 @@ The documentation includes:
 
 ## Tips and Tricks
 
-Here are some tips to get the most out of bolt.diy:
+Here are some tips to get the most out of Astro.diy:
 
-- **Be specific about your stack**: If you want to use specific frameworks or libraries (like Astro, Tailwind, ShadCN, or any other popular JavaScript framework), mention them in your initial prompt to ensure Bolt scaffolds the project accordingly.
+- **Be specific about your stack**: If you want to use specific frameworks or libraries (like Astro, Tailwind, ShadCN, or any other popular JavaScript framework), mention them in your initial prompt to ensure Astro scaffolds the project accordingly.
 
 - **Use the enhance prompt icon**: Before sending your prompt, try clicking the 'enhance' icon to have the AI model help you refine your prompt, then edit the results before submitting.
 
-- **Scaffold the basics first, then add features**: Make sure the basic structure of your application is in place before diving into more advanced functionality. This helps Bolt understand the foundation of your project and ensure everything is wired up right before building out more advanced functionality.
+- **Scaffold the basics first, then add features**: Make sure the basic structure of your application is in place before diving into more advanced functionality. This helps Astro understand the foundation of your project and ensure everything is wired up right before building out more advanced functionality.
 
-- **Batch simple instructions**: Save time by combining simple instructions into one message. For example, you can ask Bolt to change the color scheme, add mobile responsiveness, and restart the dev server, all in one go saving you time and reducing API credit consumption significantly.
+- **Batch simple instructions**: Save time by combining simple instructions into one message. For example, you can ask Astro to change the color scheme, add mobile responsiveness, and restart the dev server, all in one go saving you time and reducing API credit consumption significantly.
 
 - **Access documentation quickly**: Use the help icon (?) in the sidebar for instant access to guides, troubleshooting, and best practices.
+

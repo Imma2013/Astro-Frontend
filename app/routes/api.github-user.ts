@@ -1,4 +1,4 @@
-import { json } from '@remix-run/cloudflare';
+﻿import { json } from '@remix-run/cloudflare';
 import { getApiKeysFromCookie } from '~/lib/api/cookies';
 import { withSecurity } from '~/lib/security';
 
@@ -26,7 +26,7 @@ async function githubUserLoader({ request, context }: { request: Request; contex
       headers: {
         Accept: 'application/vnd.github.v3+json',
         Authorization: `Bearer ${githubToken}`,
-        'User-Agent': 'bolt.diy-app',
+        'User-Agent': 'Astro.diy-app',
       },
     });
 
@@ -117,7 +117,7 @@ async function githubUserAction({ request, context }: { request: Request; contex
         headers: {
           Accept: 'application/vnd.github.v3+json',
           Authorization: `Bearer ${githubToken}`,
-          'User-Agent': 'bolt.diy-app',
+          'User-Agent': 'Astro.diy-app',
         },
       });
 
@@ -166,7 +166,7 @@ async function githubUserAction({ request, context }: { request: Request; contex
         headers: {
           Accept: 'application/vnd.github.v3+json',
           Authorization: `Bearer ${githubToken}`,
-          'User-Agent': 'bolt.diy-app',
+          'User-Agent': 'Astro.diy-app',
         },
       });
 
@@ -214,7 +214,7 @@ async function githubUserAction({ request, context }: { request: Request; contex
           headers: {
             Accept: 'application/vnd.github.v3+json',
             Authorization: `Bearer ${githubToken}`,
-            'User-Agent': 'bolt.diy-app',
+            'User-Agent': 'Astro.diy-app',
           },
         },
       );
@@ -285,3 +285,4 @@ export const action = withSecurity(githubUserAction, {
   rateLimit: true,
   allowedMethods: ['POST'],
 });
+

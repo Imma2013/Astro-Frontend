@@ -1,4 +1,4 @@
-@use '../z-index';
+﻿@use '../z-index';
 
 .Toastify__toast-container {
   @extend .z-toast;
@@ -7,17 +7,18 @@
 .Toastify__toast {
   --at-apply: shadow-md;
 
-  background-color: var(--bolt-elements-bg-depth-2);
-  color: var(--bolt-elements-textPrimary);
-  border: 1px solid var(--bolt-elements-borderColor);
+  background-color: var(--Astro-elements-bg-depth-2);
+  color: var(--Astro-elements-textPrimary);
+  border: 1px solid var(--Astro-elements-borderColor);
 }
 
 .Toastify__close-button {
-  color: var(--bolt-elements-item-contentDefault);
+  color: var(--Astro-elements-item-contentDefault);
   opacity: 1;
   transition: none;
 
   &:hover {
-    color: var(--bolt-elements-item-contentActive);
+    color: var(--Astro-elements-item-contentActive);
   }
 }
+

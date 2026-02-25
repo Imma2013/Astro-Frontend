@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { CheckCircle, XCircle, Loader2, AlertCircle } from 'lucide-react';
 import { classNames } from '~/utils/classNames';
 
@@ -34,8 +34,8 @@ function HealthStatusBadge({ status, responseTime, className }: HealthStatusBadg
         };
       default:
         return {
-          color: 'text-bolt-elements-textTertiary',
-          bgColor: 'bg-bolt-elements-background-depth-3 border-bolt-elements-borderColor',
+          color: 'text-Astro-elements-textTertiary',
+          bgColor: 'bg-Astro-elements-background-depth-3 border-Astro-elements-borderColor',
           Icon: AlertCircle,
           label: 'Unknown',
         };
@@ -62,3 +62,4 @@ function HealthStatusBadge({ status, responseTime, className }: HealthStatusBadg
 }
 
 export default HealthStatusBadge;
+

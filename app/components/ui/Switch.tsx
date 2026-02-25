@@ -1,4 +1,4 @@
-import { memo } from 'react';
+﻿import { memo } from 'react';
 import * as SwitchPrimitive from '@radix-ui/react-switch';
 import { classNames } from '~/utils/classNames';
 
@@ -12,11 +12,11 @@ export const Switch = memo(({ className, onCheckedChange, checked }: SwitchProps
   return (
     <SwitchPrimitive.Root
       className={classNames(
-        'relative h-6 w-11 cursor-pointer rounded-full bg-bolt-elements-button-primary-background',
+        'relative h-6 w-11 cursor-pointer rounded-full bg-Astro-elements-button-primary-background',
         'transition-colors duration-200 ease-in-out',
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2',
         'disabled:cursor-not-allowed disabled:opacity-50',
-        'data-[state=checked]:bg-bolt-elements-item-contentAccent',
+        'data-[state=checked]:bg-Astro-elements-item-contentAccent',
         className,
       )}
       checked={checked}
@@ -35,3 +35,4 @@ export const Switch = memo(({ className, onCheckedChange, checked }: SwitchProps
     </SwitchPrimitive.Root>
   );
 });
+

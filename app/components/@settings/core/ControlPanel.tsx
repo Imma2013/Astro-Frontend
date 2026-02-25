@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+﻿import { useState, useEffect, useMemo } from 'react';
 import { useStore } from '@nanostores/react';
 import * as RadixDialog from '@radix-ui/react-dialog';
 import { classNames } from '~/utils/classNames';
@@ -37,6 +37,7 @@ interface ControlPanelProps {
 
 // Beta status for experimental features
 const BETA_TABS = new Set<TabType>(['local-providers', 'mcp']);
+const TERMINAL_ONLY_INFRA_TABS = new Set<TabType>(['github', 'gitlab', 'supabase', 'vercel', 'netlify']);
 
 const BetaLabel = () => (
   <div className="absolute top-2 right-2 px-1.5 py-0.5 rounded-full bg-purple-500/10 dark:bg-purple-500/20">
@@ -79,6 +80,10 @@ export const ControlPanel = ({ open, onClose }: ControlPanelProps) => {
     return tabConfiguration.userTabs
       .filter((tab) => {
         if (!tab?.id) {
+          return false;
+        }
+
+        if (TERMINAL_ONLY_INFRA_TABS.has(tab.id as TabType)) {
           return false;
         }
 
@@ -236,9 +241,9 @@ export const ControlPanel = ({ open, onClose }: ControlPanelProps) => {
             <div
               className={classNames(
                 'w-[1200px] h-[90vh]',
-                'bg-bolt-elements-background-depth-1',
+                'bg-Astro-elements-background-depth-1',
                 'rounded-2xl shadow-2xl',
-                'border border-bolt-elements-borderColor',
+                'border border-Astro-elements-borderColor',
                 'flex flex-col overflow-hidden',
                 'relative',
                 'transform transition-all duration-200 ease-out',
@@ -343,3 +348,4 @@ export const ControlPanel = ({ open, onClose }: ControlPanelProps) => {
     </RadixDialog.Root>
   );
 };
+

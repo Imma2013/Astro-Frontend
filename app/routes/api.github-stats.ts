@@ -1,4 +1,4 @@
-import { json } from '@remix-run/cloudflare';
+﻿import { json } from '@remix-run/cloudflare';
 import { getApiKeysFromCookie } from '~/lib/api/cookies';
 import { withSecurity } from '~/lib/security';
 import type { GitHubUserResponse, GitHubStats } from '~/types/GitHub';
@@ -27,7 +27,7 @@ async function githubStatsLoader({ request, context }: { request: Request; conte
       headers: {
         Accept: 'application/vnd.github.v3+json',
         Authorization: `Bearer ${githubToken}`,
-        'User-Agent': 'bolt.diy-app',
+        'User-Agent': 'Astro.diy-app',
       },
     });
 
@@ -53,7 +53,7 @@ async function githubStatsLoader({ request, context }: { request: Request; conte
           headers: {
             Accept: 'application/vnd.github.v3+json',
             Authorization: `Bearer ${githubToken}`,
-            'User-Agent': 'bolt.diy-app',
+            'User-Agent': 'Astro.diy-app',
           },
         },
       );
@@ -80,7 +80,7 @@ async function githubStatsLoader({ request, context }: { request: Request; conte
             headers: {
               Accept: 'application/vnd.github.v3+json',
               Authorization: `Bearer ${githubToken}`,
-              'User-Agent': 'bolt.diy-app',
+              'User-Agent': 'Astro.diy-app',
             },
           });
 
@@ -196,3 +196,4 @@ export const loader = withSecurity(githubStatsLoader, {
   rateLimit: true,
   allowedMethods: ['GET'],
 });
+

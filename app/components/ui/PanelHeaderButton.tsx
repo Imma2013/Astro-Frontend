@@ -1,4 +1,4 @@
-import { memo } from 'react';
+﻿import { memo } from 'react';
 import { classNames } from '~/utils/classNames';
 
 interface PanelHeaderButtonProps {
@@ -14,7 +14,7 @@ export const PanelHeaderButton = memo(
     return (
       <button
         className={classNames(
-          'flex items-center shrink-0 gap-1.5 px-1.5 rounded-md py-0.5 text-bolt-elements-item-contentDefault bg-transparent enabled:hover:text-bolt-elements-item-contentActive enabled:hover:bg-bolt-elements-item-backgroundActive disabled:cursor-not-allowed',
+          'flex items-center shrink-0 gap-1.5 px-1.5 rounded-md py-0.5 text-Astro-elements-item-contentDefault bg-transparent enabled:hover:text-Astro-elements-item-contentActive enabled:hover:bg-Astro-elements-item-backgroundActive disabled:cursor-not-allowed',
           {
             [classNames('opacity-30', disabledClassName)]: disabled,
           },
@@ -34,3 +34,4 @@ export const PanelHeaderButton = memo(
     );
   },
 );
+

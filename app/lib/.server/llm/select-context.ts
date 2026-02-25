@@ -1,9 +1,9 @@
-import { generateText, type CoreTool, type GenerateTextResult, type Message } from 'ai';
+﻿import { generateText, type CoreTool, type GenerateTextResult, type Message } from 'ai';
 import ignore from 'ignore';
 import type { IProviderSetting } from '~/types/model';
 import { IGNORE_PATTERNS, type FileMap } from './constants';
 import { DEFAULT_MODEL, DEFAULT_PROVIDER, PROVIDER_LIST } from '~/utils/constants';
-import { createFilesContext, extractCurrentContext, extractPropertiesFromMessage, simplifyBoltActions } from './utils';
+import { createFilesContext, extractCurrentContext, extractPropertiesFromMessage, simplifyAstroActions } from './utils';
 import { createScopedLogger } from '~/utils/logger';
 import { LLMManager } from '~/lib/modules/llm/manager';
 
@@ -36,9 +36,9 @@ export async function selectContext(props: {
     } else if (message.role == 'assistant') {
       let content = message.content;
 
-      content = simplifyBoltActions(content);
+      content = simplifyAstroActions(content);
 
-      content = content.replace(/<div class=\\"__boltThought__\\">.*?<\/div>/s, '');
+      content = content.replace(/<div class=\\"__AstroThought__\\">.*?<\/div>/s, '');
       content = content.replace(/<think>.*?<\/think>/s, '');
 
       return { ...message, content };
@@ -225,7 +225,7 @@ export async function selectContext(props: {
   logger.info(`Total files: ${totalFiles}`);
 
   if (totalFiles == 0) {
-    throw new Error(`Bolt failed to select files`);
+    throw new Error(`Astro failed to select files`);
   }
 
   return filteredFiles;
@@ -242,3 +242,4 @@ export function getFilePaths(files: FileMap) {
 
   return filePaths;
 }
+

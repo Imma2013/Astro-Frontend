@@ -1,4 +1,4 @@
-import { useStore } from '@nanostores/react';
+﻿import { useStore } from '@nanostores/react';
 import { memo, useMemo } from 'react';
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
 import * as Tabs from '@radix-ui/react-tabs';
@@ -84,16 +84,16 @@ export const EditorPanel = memo(
       <PanelGroup direction="vertical">
         <Panel defaultSize={showTerminal ? DEFAULT_EDITOR_SIZE : 100} minSize={20}>
           <PanelGroup direction="horizontal">
-            <Panel defaultSize={20} minSize={15} collapsible className="border-r border-bolt-elements-borderColor">
+            <Panel defaultSize={20} minSize={15} collapsible className="border-r border-Astro-elements-borderColor">
               <div className="h-full">
                 <Tabs.Root defaultValue="files" className="flex flex-col h-full">
-                  <PanelHeader className="w-full text-sm font-medium text-bolt-elements-textSecondary px-1">
+                  <PanelHeader className="w-full text-sm font-medium text-Astro-elements-textSecondary px-1">
                     <div className="h-full flex-shrink-0 flex items-center justify-between w-full">
                       <Tabs.List className="h-full flex-shrink-0 flex items-center">
                         <Tabs.Trigger
                           value="files"
                           className={classNames(
-                            'h-full bg-transparent hover:bg-bolt-elements-background-depth-3 py-0.5 px-2 rounded-lg text-sm font-medium text-bolt-elements-textTertiary hover:text-bolt-elements-textPrimary data-[state=active]:text-bolt-elements-textPrimary',
+                            'h-full bg-transparent hover:bg-Astro-elements-background-depth-3 py-0.5 px-2 rounded-lg text-sm font-medium text-Astro-elements-textTertiary hover:text-Astro-elements-textPrimary data-[state=active]:text-Astro-elements-textPrimary',
                           )}
                         >
                           Files
@@ -101,7 +101,7 @@ export const EditorPanel = memo(
                         <Tabs.Trigger
                           value="search"
                           className={classNames(
-                            'h-full bg-transparent hover:bg-bolt-elements-background-depth-3 py-0.5 px-2 rounded-lg text-sm font-medium text-bolt-elements-textTertiary hover:text-bolt-elements-textPrimary data-[state=active]:text-bolt-elements-textPrimary',
+                            'h-full bg-transparent hover:bg-Astro-elements-background-depth-3 py-0.5 px-2 rounded-lg text-sm font-medium text-Astro-elements-textTertiary hover:text-Astro-elements-textPrimary data-[state=active]:text-Astro-elements-textPrimary',
                           )}
                         >
                           Search
@@ -109,7 +109,7 @@ export const EditorPanel = memo(
                         <Tabs.Trigger
                           value="locks"
                           className={classNames(
-                            'h-full bg-transparent hover:bg-bolt-elements-background-depth-3 py-0.5 px-2 rounded-lg text-sm font-medium text-bolt-elements-textTertiary hover:text-bolt-elements-textPrimary data-[state=active]:text-bolt-elements-textPrimary',
+                            'h-full bg-transparent hover:bg-Astro-elements-background-depth-3 py-0.5 px-2 rounded-lg text-sm font-medium text-Astro-elements-textTertiary hover:text-Astro-elements-textPrimary data-[state=active]:text-Astro-elements-textPrimary',
                           )}
                         >
                           Locks
@@ -184,3 +184,4 @@ export const EditorPanel = memo(
     );
   },
 );
+

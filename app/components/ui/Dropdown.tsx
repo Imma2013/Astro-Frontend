@@ -1,4 +1,4 @@
-import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
+﻿import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { type ReactNode } from 'react';
 import { classNames } from '~/utils/classNames';
 
@@ -19,8 +19,8 @@ export const DropdownItem = ({ children, onSelect, className }: DropdownItemProp
   <DropdownMenu.Item
     className={classNames(
       'relative flex items-center gap-2 px-3 py-2 rounded-lg text-sm',
-      'text-bolt-elements-textPrimary hover:text-bolt-elements-textPrimary',
-      'hover:bg-bolt-elements-background-depth-3',
+      'text-Astro-elements-textPrimary hover:text-Astro-elements-textPrimary',
+      'hover:bg-Astro-elements-background-depth-3',
       'transition-colors cursor-pointer',
       'outline-none',
       className,
@@ -31,7 +31,7 @@ export const DropdownItem = ({ children, onSelect, className }: DropdownItemProp
   </DropdownMenu.Item>
 );
 
-export const DropdownSeparator = () => <DropdownMenu.Separator className="h-px bg-bolt-elements-borderColor my-1" />;
+export const DropdownSeparator = () => <DropdownMenu.Separator className="h-px bg-Astro-elements-borderColor my-1" />;
 
 export const Dropdown = ({ trigger, children, align = 'end', sideOffset = 5 }: DropdownProps) => {
   return (
@@ -42,8 +42,8 @@ export const Dropdown = ({ trigger, children, align = 'end', sideOffset = 5 }: D
         <DropdownMenu.Content
           className={classNames(
             'min-w-[220px] rounded-lg p-2',
-            'bg-bolt-elements-background-depth-2',
-            'border border-bolt-elements-borderColor',
+            'bg-Astro-elements-background-depth-2',
+            'border border-Astro-elements-borderColor',
             'shadow-lg',
             'animate-in fade-in-80 zoom-in-95',
             'data-[side=bottom]:slide-in-from-top-2',
@@ -61,3 +61,4 @@ export const Dropdown = ({ trigger, children, align = 'end', sideOffset = 5 }: D
     </DropdownMenu.Root>
   );
 };
+

@@ -1,4 +1,4 @@
-import { toast } from 'react-toastify';
+﻿import { toast } from 'react-toastify';
 import { useStore } from '@nanostores/react';
 import { workbenchStore } from '~/lib/stores/workbench';
 import { webcontainer } from '~/lib/webcontainer';
@@ -149,12 +149,12 @@ export function useGitLabDeploy() {
       });
 
       // Show success toast notification
-      toast.success(`🚀 GitLab deployment preparation completed successfully!`);
+      toast.success(`ðŸš€ GitLab deployment preparation completed successfully!`);
 
       return {
         success: true,
         files: fileContents,
-        projectName: artifact.title || 'bolt-project',
+        projectName: artifact.title || 'Astro-project',
       };
     } catch (err) {
       console.error('GitLab deploy error:', err);
@@ -172,3 +172,4 @@ export function useGitLabDeploy() {
     isConnected: !!getLocalStorage('gitlab_connection')?.user,
   };
 }
+

@@ -1,4 +1,4 @@
-import { memo, useEffect, useRef } from 'react';
+﻿import { memo, useEffect, useRef } from 'react';
 import type { PreviewInfo } from '~/lib/stores/previews';
 
 interface PortDropdownProps {
@@ -49,7 +49,7 @@ export const PortDropdown = memo(
       <div className="relative z-port-dropdown" ref={dropdownRef}>
         {/* Display the active port if available, otherwise show the plug icon */}
         <button
-          className="flex items-center group-focus-within:text-bolt-elements-preview-addressBar-text bg-white group-focus-within:bg-bolt-elements-preview-addressBar-background dark:bg-bolt-elements-preview-addressBar-backgroundHover rounded-full px-2 py-1 gap-1.5"
+          className="flex items-center group-focus-within:text-Astro-elements-preview-addressBar-text bg-white group-focus-within:bg-Astro-elements-preview-addressBar-background dark:bg-Astro-elements-preview-addressBar-backgroundHover rounded-full px-2 py-1 gap-1.5"
           onClick={() => setIsDropdownOpen(!isDropdownOpen)}
         >
           <span className="i-ph:plug text-base"></span>
@@ -58,14 +58,14 @@ export const PortDropdown = memo(
           ) : null}
         </button>
         {isDropdownOpen && (
-          <div className="absolute left-0 mt-2 bg-bolt-elements-background-depth-2 border border-bolt-elements-borderColor rounded shadow-sm min-w-[140px] dropdown-animation">
-            <div className="px-4 py-2 border-b border-bolt-elements-borderColor text-sm font-semibold text-bolt-elements-textPrimary">
+          <div className="absolute left-0 mt-2 bg-Astro-elements-background-depth-2 border border-Astro-elements-borderColor rounded shadow-sm min-w-[140px] dropdown-animation">
+            <div className="px-4 py-2 border-b border-Astro-elements-borderColor text-sm font-semibold text-Astro-elements-textPrimary">
               Ports
             </div>
             {sortedPreviews.map((preview) => (
               <div
                 key={preview.port}
-                className="flex items-center px-4 py-2 cursor-pointer hover:bg-bolt-elements-item-backgroundActive"
+                className="flex items-center px-4 py-2 cursor-pointer hover:bg-Astro-elements-item-backgroundActive"
                 onClick={() => {
                   setActivePreviewIndex(preview.index);
                   setIsDropdownOpen(false);
@@ -75,8 +75,8 @@ export const PortDropdown = memo(
                 <span
                   className={
                     activePreviewIndex === preview.index
-                      ? 'text-bolt-elements-item-contentAccent'
-                      : 'text-bolt-elements-item-contentDefault group-hover:text-bolt-elements-item-contentActive'
+                      ? 'text-Astro-elements-item-contentAccent'
+                      : 'text-Astro-elements-item-contentDefault group-hover:text-Astro-elements-item-contentActive'
                   }
                 >
                   {preview.port}
@@ -89,3 +89,4 @@ export const PortDropdown = memo(
     );
   },
 );
+

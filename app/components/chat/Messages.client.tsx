@@ -1,4 +1,4 @@
-import type { Message } from 'ai';
+﻿import type { Message } from 'ai';
 import { Fragment } from 'react';
 import { classNames } from '~/utils/classNames';
 import { AssistantMessage } from './AssistantMessage';
@@ -94,9 +94,10 @@ export const Messages = forwardRef<HTMLDivElement, MessagesProps>(
             })
           : null}
         {isStreaming && (
-          <div className="text-center w-full  text-bolt-elements-item-contentAccent i-svg-spinners:3-dots-fade text-4xl mt-4"></div>
+          <div className="text-center w-full  text-Astro-elements-item-contentAccent i-svg-spinners:3-dots-fade text-4xl mt-4"></div>
         )}
       </div>
     );
   },
 );
+

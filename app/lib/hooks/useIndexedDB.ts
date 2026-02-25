@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 
 /**
  * Hook to initialize and provide access to the IndexedDB database
@@ -13,7 +13,7 @@ export function useIndexedDB() {
       try {
         setIsLoading(true);
 
-        const request = indexedDB.open('boltDB', 1);
+        const request = indexedDB.open('AstroDB', 1);
 
         request.onupgradeneeded = (event) => {
           const db = (event.target as IDBOpenDBRequest).result;
@@ -56,3 +56,4 @@ export function useIndexedDB() {
 
   return { db, isLoading, error };
 }
+

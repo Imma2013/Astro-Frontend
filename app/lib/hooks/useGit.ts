@@ -1,4 +1,4 @@
-import type { WebContainer } from '@webcontainer/api';
+﻿import type { WebContainer } from '@webcontainer/api';
 import { useCallback, useEffect, useRef, useState, type MutableRefObject } from 'react';
 import { webcontainer as webcontainerPromise } from '~/lib/webcontainer';
 import git, { type GitAuth, type PromiseFsClient } from 'isomorphic-git';
@@ -65,7 +65,7 @@ export function useGit() {
       const headers: {
         [x: string]: string;
       } = {
-        'User-Agent': 'bolt.diy',
+        'User-Agent': 'Astro.diy',
       };
 
       const auth = lookupSavedPassword(url);
@@ -443,3 +443,4 @@ const pathUtils = {
     return relativeParts.length === 0 ? '.' : relativeParts.join('/');
   },
 };
+

@@ -1,10 +1,10 @@
-.BaseChat {
+﻿.BaseChat {
   &[data-chat-visible='false'] {
     --workbench-inner-width: 100%;
     --workbench-left: 0;
 
     .Chat {
-      --at-apply: bolt-ease-cubic-bezier;
+      --at-apply: Astro-ease-cubic-bezier;
       transition-property: transform, opacity;
       transition-duration: 0.3s;
       will-change: transform, opacity;
@@ -45,3 +45,4 @@
   fill: url(#shine-gradient);
   mix-blend-mode: overlay;
 }
+

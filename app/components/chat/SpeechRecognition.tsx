@@ -1,4 +1,4 @@
-import { IconButton } from '~/components/ui/IconButton';
+﻿import { IconButton } from '~/components/ui/IconButton';
 import { classNames } from '~/utils/classNames';
 import React from 'react';
 
@@ -18,7 +18,7 @@ export const SpeechRecognitionButton = ({
       title={isListening ? 'Stop listening' : 'Start speech recognition'}
       disabled={disabled}
       className={classNames('transition-all', {
-        'text-bolt-elements-item-contentAccent': isListening,
+        'text-Astro-elements-item-contentAccent': isListening,
       })}
       onClick={isListening ? onStop : onStart}
     >
@@ -26,3 +26,4 @@ export const SpeechRecognitionButton = ({
     </IconButton>
   );
 };
+

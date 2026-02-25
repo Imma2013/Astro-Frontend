@@ -1,4 +1,4 @@
-import ignore from 'ignore';
+﻿import ignore from 'ignore';
 
 // Common patterns to ignore, similar to .gitignore
 export const IGNORE_PATTERNS = [
@@ -106,16 +106,17 @@ export const detectProjectType = async (
 
 export const filesToArtifacts = (files: { [path: string]: { content: string } }, id: string): string => {
   return `
-<boltArtifact id="${id}" title="User Updated Files">
+<AstroArtifact id="${id}" title="User Updated Files">
 ${Object.keys(files)
   .map(
     (filePath) => `
-<boltAction type="file" filePath="${filePath}">
+<AstroAction type="file" filePath="${filePath}">
 ${files[filePath].content}
-</boltAction>
+</AstroAction>
 `,
   )
   .join('\n')}
-</boltArtifact>
+</AstroArtifact>
   `;
 };
+

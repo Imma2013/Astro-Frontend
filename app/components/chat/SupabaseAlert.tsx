@@ -1,9 +1,10 @@
-import { AnimatePresence, motion } from 'framer-motion';
+﻿import { AnimatePresence, motion } from 'framer-motion';
 import type { SupabaseAlert } from '~/types/actions';
 import { classNames } from '~/utils/classNames';
 import { supabaseConnection } from '~/lib/stores/supabase';
 import { useStore } from '@nanostores/react';
 import { useState } from 'react';
+import { toast } from 'react-toastify';
 
 interface Props {
   alert: SupabaseAlert;
@@ -30,6 +31,24 @@ export function SupabaseChatAlert({ alert, clearAlert, postMessage }: Props) {
   const handleConnectClick = () => {
     // Dispatch an event to open the Supabase connection dialog
     document.dispatchEvent(new CustomEvent('open-supabase-connection'));
+  };
+
+  const copyDeployCommands = async () => {
+    const projectRef = connection.selectedProjectId || '<PROJECT_REF>';
+    const commands = [
+      '# Supabase production deploy (run locally in your terminal)',
+      'supabase login',
+      `supabase link --project-ref ${projectRef}`,
+      'supabase db push',
+      'supabase functions deploy hello --no-verify-jwt',
+    ].join('\n');
+
+    try {
+      await navigator.clipboard.writeText(commands);
+      toast.success('Supabase deploy commands copied');
+    } catch {
+      toast.error('Failed to copy commands');
+    }
   };
 
   // Determine if we should show the Connect button or Apply Changes button
@@ -99,7 +118,7 @@ export function SupabaseChatAlert({ alert, clearAlert, postMessage }: Props) {
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -20 }}
         transition={{ duration: 0.3 }}
-        className="max-w-chat rounded-lg border-l-2 border-l-[#098F5F] border border-bolt-elements-borderColor bg-bolt-elements-background-depth-2"
+        className="max-w-chat rounded-lg border-l-2 border-l-[#098F5F] border border-Astro-elements-borderColor bg-Astro-elements-background-depth-2"
       >
         {/* Header */}
         <div className="p-4 pb-2">
@@ -112,28 +131,28 @@ export function SupabaseChatAlert({ alert, clearAlert, postMessage }: Props) {
         {/* SQL Content */}
         <div className="px-4">
           {!isConnected ? (
-            <div className="p-3 rounded-md bg-bolt-elements-background-depth-3">
-              <span className="text-sm text-bolt-elements-textPrimary">
+            <div className="p-3 rounded-md bg-Astro-elements-background-depth-3">
+              <span className="text-sm text-Astro-elements-textPrimary">
                 You must first connect to Supabase and select a project.
               </span>
             </div>
           ) : (
             <>
               <div
-                className="flex items-center p-2 rounded-md bg-bolt-elements-background-depth-3 cursor-pointer"
+                className="flex items-center p-2 rounded-md bg-Astro-elements-background-depth-3 cursor-pointer"
                 onClick={() => setIsCollapsed(!isCollapsed)}
               >
-                <div className="i-ph:database text-bolt-elements-textPrimary mr-2"></div>
-                <span className="text-sm text-bolt-elements-textPrimary flex-grow">
+                <div className="i-ph:database text-Astro-elements-textPrimary mr-2"></div>
+                <span className="text-sm text-Astro-elements-textPrimary flex-grow">
                   {description || 'Create table and setup auth'}
                 </span>
                 <div
-                  className={`i-ph:caret-up text-bolt-elements-textPrimary transition-transform ${isCollapsed ? 'rotate-180' : ''}`}
+                  className={`i-ph:caret-up text-Astro-elements-textPrimary transition-transform ${isCollapsed ? 'rotate-180' : ''}`}
                 ></div>
               </div>
 
               {!isCollapsed && content && (
-                <div className="mt-2 p-3 bg-bolt-elements-background-depth-4 rounded-md overflow-auto max-h-60 font-mono text-xs text-bolt-elements-textSecondary">
+                <div className="mt-2 p-3 bg-Astro-elements-background-depth-4 rounded-md overflow-auto max-h-60 font-mono text-xs text-Astro-elements-textSecondary">
                   <pre>{cleanSqlContent(content)}</pre>
                 </div>
               )}
@@ -143,7 +162,7 @@ export function SupabaseChatAlert({ alert, clearAlert, postMessage }: Props) {
 
         {/* Message and Actions */}
         <div className="p-4">
-          <p className="text-sm text-bolt-elements-textSecondary mb-4">{message}</p>
+          <p className="text-sm text-Astro-elements-textSecondary mb-4">{message}</p>
 
           <div className="flex gap-2">
             {showConnectButton ? (
@@ -178,6 +197,20 @@ export function SupabaseChatAlert({ alert, clearAlert, postMessage }: Props) {
               </button>
             )}
             <button
+              onClick={copyDeployCommands}
+              disabled={isExecuting}
+              className={classNames(
+                `px-3 py-2 rounded-md text-sm font-medium`,
+                'bg-Astro-elements-background-depth-3',
+                'hover:bg-Astro-elements-background-depth-4',
+                'focus:outline-none',
+                'text-Astro-elements-textPrimary',
+                isExecuting ? 'opacity-70 cursor-not-allowed' : '',
+              )}
+            >
+              Copy Deploy Commands
+            </button>
+            <button
               onClick={clearAlert}
               disabled={isExecuting}
               className={classNames(
@@ -197,3 +230,4 @@ export function SupabaseChatAlert({ alert, clearAlert, postMessage }: Props) {
     </AnimatePresence>
   );
 }
+

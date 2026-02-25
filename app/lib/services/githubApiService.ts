@@ -1,4 +1,4 @@
-import type {
+﻿import type {
   GitHubUserResponse,
   GitHubRepoInfo,
   GitHubBranch,
@@ -52,7 +52,7 @@ export class GitHubApiServiceClass {
       headers: {
         Accept: 'application/vnd.github.v3+json',
         Authorization: `${this._config.tokenType === 'classic' ? 'token' : 'Bearer'} ${this._config.token}`,
-        'User-Agent': 'Bolt.diy',
+        'User-Agent': 'Astro.diy',
         ...options.headers,
       },
       ...options,
@@ -138,7 +138,7 @@ export class GitHubApiServiceClass {
       headers: {
         Accept: 'application/vnd.github.v3+json',
         Authorization: `${this._config.tokenType === 'classic' ? 'token' : 'Bearer'} ${this._config.token}`,
-        'User-Agent': 'Bolt.diy',
+        'User-Agent': 'Astro.diy',
       },
     });
 
@@ -166,7 +166,7 @@ export class GitHubApiServiceClass {
       headers: {
         Accept: 'application/vnd.github.v3+json',
         Authorization: `${this._config.tokenType === 'classic' ? 'token' : 'Bearer'} ${this._config.token}`,
-        'User-Agent': 'Bolt.diy',
+        'User-Agent': 'Astro.diy',
       },
     });
 
@@ -194,7 +194,7 @@ export class GitHubApiServiceClass {
       headers: {
         Accept: 'application/vnd.github.v3+json',
         Authorization: `${this._config.tokenType === 'classic' ? 'token' : 'Bearer'} ${this._config.token}`,
-        'User-Agent': 'Bolt.diy',
+        'User-Agent': 'Astro.diy',
       },
     });
 
@@ -448,3 +448,4 @@ export class GitHubApiServiceClass {
 
 // Export an instance of the service
 export const gitHubApiService = new GitHubApiServiceClass();
+

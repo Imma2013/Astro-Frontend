@@ -1,10 +1,10 @@
-# Contribution Guidelines
+﻿# Contribution Guidelines
 
-Welcome! This guide provides all the details you need to contribute effectively to the project. Thank you for helping us make **bolt.diy** a better tool for developers worldwide. 💡
+Welcome! This guide provides all the details you need to contribute effectively to the project. Thank you for helping us make **Astro.diy** a better tool for developers worldwide. ðŸ’¡
 
 ---
 
-## 📋 Table of Contents
+## ðŸ“‹ Table of Contents
 
 1. [Code of Conduct](#code-of-conduct)
 2. [How Can I Contribute?](#how-can-i-contribute)
@@ -18,34 +18,34 @@ Welcome! This guide provides all the details you need to contribute effectively 
 
 ---
 
-## 🛡️ Code of Conduct
+## ðŸ›¡ï¸ Code of Conduct
 
 This project is governed by our **Code of Conduct**. By participating, you agree to uphold this code. Report unacceptable behavior to the project maintainers.
 
 ---
 
-## 🛠️ How Can I Contribute?
+## ðŸ› ï¸ How Can I Contribute?
 
-### 1️⃣ Reporting Bugs or Feature Requests
+### 1ï¸âƒ£ Reporting Bugs or Feature Requests
 
 - Check the [issue tracker](#) to avoid duplicates.
 - Use issue templates (if available).
 - Provide detailed, relevant information and steps to reproduce bugs.
 
-### 2️⃣ Code Contributions
+### 2ï¸âƒ£ Code Contributions
 
 1. Fork the repository.
 2. Create a feature or fix branch.
 3. Write and test your code.
 4. Submit a pull request (PR).
 
-### 3️⃣ Join as a Core Contributor
+### 3ï¸âƒ£ Join as a Core Contributor
 
 Interested in maintaining and growing the project? Fill out our [Contributor Application Form](https://forms.gle/TBSteXSDCtBDwr5m7).
 
 ---
 
-## ✅ Pull Request Guidelines
+## âœ… Pull Request Guidelines
 
 ### PR Checklist
 
@@ -63,7 +63,7 @@ Interested in maintaining and growing the project? Fill out our [Contributor App
 
 ---
 
-## 📏 Coding Standards
+## ðŸ“ Coding Standards
 
 ### General Guidelines
 
@@ -74,13 +74,13 @@ Interested in maintaining and growing the project? Fill out our [Contributor App
 
 ---
 
-## 🖥️ Development Setup
+## ðŸ–¥ï¸ Development Setup
 
-### 1️⃣ Initial Setup
+### 1ï¸âƒ£ Initial Setup
 
 - Clone the repository:
   ```bash
-  git clone https://github.com/stackblitz-labs/bolt.diy.git
+  git clone https://github.com/stackblitz-labs/Astro.diy.git
   ```
 - Install dependencies:
   ```bash
@@ -110,7 +110,7 @@ Interested in maintaining and growing the project? Fill out our [Contributor App
 
 **Note**: Never commit your `.env.local` or `.env` files to version control. They're already in `.gitignore`.
 
-### 2️⃣ Run Development Server
+### 2ï¸âƒ£ Run Development Server
 
 ```bash
 pnpm run dev
@@ -120,7 +120,7 @@ pnpm run dev
 
 ---
 
-## 🧪 Testing
+## ðŸ§ª Testing
 
 Run the test suite with:
 
@@ -130,7 +130,7 @@ pnpm test
 
 ---
 
-## 🚀 Deployment
+## ðŸš€ Deployment
 
 ### Deploy to Cloudflare Pages
 
@@ -142,13 +142,13 @@ Ensure you have required permissions and that Wrangler is configured.
 
 ---
 
-## 🐳 Docker Deployment
+## ðŸ³ Docker Deployment
 
 This section outlines the methods for deploying the application using Docker. The processes for **Development** and **Production** are provided separately for clarity.
 
 ---
 
-### 🧑‍💻 Development Environment
+### ðŸ§‘â€ðŸ’» Development Environment
 
 #### Build Options
 
@@ -162,7 +162,7 @@ npm run dockerbuild
 **Option 2: Direct Docker Build Command**
 
 ```bash
-docker build . --target bolt-ai-development
+docker build . --target Astro-ai-development
 ```
 
 **Option 3: Docker Compose Profile**
@@ -174,12 +174,12 @@ docker compose --profile development up
 #### Running the Development Container
 
 ```bash
-docker run -p 5173:5173 --env-file .env.local bolt-ai:development
+docker run -p 5173:5173 --env-file .env.local Astro-ai:development
 ```
 
 ---
 
-### 🏭 Production Environment
+### ðŸ­ Production Environment
 
 #### Build Options
 
@@ -193,7 +193,7 @@ npm run dockerbuild:prod
 **Option 2: Direct Docker Build Command**
 
 ```bash
-docker build . --target bolt-ai-production
+docker build . --target Astro-ai-production
 ```
 
 **Option 3: Docker Compose Profile**
@@ -205,7 +205,7 @@ docker compose --profile production up
 #### Running the Production Container
 
 ```bash
-docker run -p 5173:5173 --env-file .env.local bolt-ai:production
+docker run -p 5173:5173 --env-file .env.local Astro-ai:production
 ```
 
 ---
@@ -224,7 +224,7 @@ For an easy deployment process, use [Coolify](https://github.com/coollabsio/cool
 
 ---
 
-## 🛠️ VS Code Dev Containers Integration
+## ðŸ› ï¸ VS Code Dev Containers Integration
 
 The `docker-compose.yaml` configuration is compatible with **VS Code Dev Containers**, making it easy to set up a development environment directly in Visual Studio Code.
 
@@ -237,7 +237,7 @@ The `docker-compose.yaml` configuration is compatible with **VS Code Dev Contain
 
 ---
 
-## 🔑 Environment Variables
+## ðŸ”‘ Environment Variables
 
 Ensure `.env.local` is configured correctly with:
 
@@ -249,3 +249,4 @@ Example for the `DEFAULT_NUM_CTX` variable:
 ```bash
 DEFAULT_NUM_CTX=24576 # Uses 32GB VRAM
 ```
+

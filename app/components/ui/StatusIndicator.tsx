@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { classNames } from '~/utils/classNames';
 
 // Status types supported by the component
@@ -78,7 +78,7 @@ export function StatusIndicator({ status, size = 'md', pulse = false, label, cla
       {label && (
         <span
           className={classNames(
-            'text-bolt-elements-textSecondary dark:text-bolt-elements-textSecondary-dark',
+            'text-Astro-elements-textSecondary dark:text-Astro-elements-textSecondary-dark',
             textSizeClass,
           )}
         >
@@ -88,3 +88,4 @@ export function StatusIndicator({ status, size = 'md', pulse = false, label, cla
     </div>
   );
 }
+

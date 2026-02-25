@@ -1,8 +1,10 @@
 import { json } from '@remix-run/cloudflare';
 import type { ActionFunctionArgs } from '@remix-run/cloudflare';
 import { isAllowedUrl } from '~/utils/url';
+import type { AstroDeploymentMode, AstroWebSearchProvider } from '~/types/astro';
 
 const MAX_CONTENT_LENGTH = 8000;
+const MAX_RESULTS = 6;
 
 const FETCH_HEADERS = {
   'User-Agent':
@@ -10,6 +12,26 @@ const FETCH_HEADERS = {
   Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
   'Accept-Language': 'en-US,en;q=0.5',
 };
+
+interface UrlSearchRequest {
+  mode?: 'url' | 'query';
+  url?: string;
+  query?: string;
+  provider?: AstroWebSearchProvider;
+  endpoint?: string;
+  apiKey?: string;
+  deploymentMode?: AstroDeploymentMode;
+}
+
+interface UnifiedSearchResult {
+  title?: string;
+  snippet?: string;
+  url: string;
+}
+
+function trimContent(value: string): string {
+  return value.length > MAX_CONTENT_LENGTH ? `${value.slice(0, MAX_CONTENT_LENGTH)}...` : value;
+}
 
 function extractTitle(html: string): string {
   const match = html.match(/<title[^>]*>([^<]+)<\/title>/i);
@@ -23,7 +45,6 @@ function extractMetaDescription(html: string): string {
     return match[1].trim();
   }
 
-  // Try reverse attribute order
   const altMatch = html.match(/<meta[^>]*content=["']([^"']*)["'][^>]*name=["']description["'][^>]*>/i);
 
   return altMatch ? altMatch[1].trim() : '';
@@ -47,13 +68,195 @@ function extractTextContent(html: string): string {
     .trim();
 }
 
+function normalizeEndpoint(provider: AstroWebSearchProvider, endpoint?: string): string {
+  if (endpoint?.trim()) {
+    return endpoint.trim().replace(/\/$/, '');
+  }
+
+  if (provider === 'tavily') {
+    return 'https://api.tavily.com';
+  }
+
+  if (provider === 'exa') {
+    return 'https://api.exa.ai';
+  }
+
+  return 'http://localhost:8080';
+}
+
+function summarizeSearchResults(query: string, provider: AstroWebSearchProvider, results: UnifiedSearchResult[]) {
+  const sources = results.map((result) => ({
+    title: result.title,
+    url: result.url,
+  }));
+
+  const lines = results
+    .map((result, index) => `${index + 1}. ${result.title || result.url}\n${result.snippet || ''}\nSource: ${result.url}`)
+    .join('\n\n');
+
+  return {
+    title: `Web results for: ${query}`,
+    description: `Provider: ${provider}`,
+    content: trimContent(lines),
+    sources,
+  };
+}
+
+async function searchWithSearxng(query: string, endpoint: string): Promise<UnifiedSearchResult[]> {
+  const searchUrl = new URL(`${endpoint}/search`);
+  searchUrl.searchParams.set('q', query);
+  searchUrl.searchParams.set('format', 'json');
+  searchUrl.searchParams.set('language', 'en-US');
+
+  const response = await fetch(searchUrl.toString(), {
+    headers: { Accept: 'application/json' },
+    signal: AbortSignal.timeout(10_000),
+  });
+
+  if (!response.ok) {
+    throw new Error(`SearXNG request failed: ${response.status} ${response.statusText}`);
+  }
+
+  const data = (await response.json()) as {
+    results?: Array<{ title?: string; content?: string; url?: string }>;
+  };
+
+  return (data.results || [])
+    .filter((item) => item.url)
+    .slice(0, MAX_RESULTS)
+    .map((item) => ({
+      title: item.title,
+      snippet: item.content,
+      url: item.url as string,
+    }));
+}
+
+async function searchWithTavily(query: string, endpoint: string, apiKey: string): Promise<UnifiedSearchResult[]> {
+  if (!apiKey) {
+    throw new Error('Tavily requires an API key. Set it in Settings > Astro Runtime.');
+  }
+
+  const response = await fetch(`${endpoint}/search`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${apiKey}`,
+    },
+    body: JSON.stringify({
+      query,
+      search_depth: 'basic',
+      max_results: MAX_RESULTS,
+      include_answer: false,
+    }),
+    signal: AbortSignal.timeout(10_000),
+  });
+
+  if (!response.ok) {
+    throw new Error(`Tavily request failed: ${response.status} ${response.statusText}`);
+  }
+
+  const data = (await response.json()) as {
+    results?: Array<{ title?: string; content?: string; url?: string }>;
+  };
+
+  return (data.results || [])
+    .filter((item) => item.url)
+    .slice(0, MAX_RESULTS)
+    .map((item) => ({
+      title: item.title,
+      snippet: item.content,
+      url: item.url as string,
+    }));
+}
+
+async function searchWithExa(query: string, endpoint: string, apiKey: string): Promise<UnifiedSearchResult[]> {
+  if (!apiKey) {
+    throw new Error('Exa requires an API key. Set it in Settings > Astro Runtime.');
+  }
+
+  const response = await fetch(`${endpoint}/search`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': apiKey,
+    },
+    body: JSON.stringify({
+      query,
+      numResults: MAX_RESULTS,
+      type: 'auto',
+      contents: {
+        text: true,
+      },
+    }),
+    signal: AbortSignal.timeout(10_000),
+  });
+
+  if (!response.ok) {
+    throw new Error(`Exa request failed: ${response.status} ${response.statusText}`);
+  }
+
+  const data = (await response.json()) as {
+    results?: Array<{ title?: string; text?: string; url?: string }>;
+  };
+
+  return (data.results || [])
+    .filter((item) => item.url)
+    .slice(0, MAX_RESULTS)
+    .map((item) => ({
+      title: item.title,
+      snippet: item.text,
+      url: item.url as string,
+    }));
+}
+
+async function runQuerySearch(params: { provider: AstroWebSearchProvider; query: string; endpoint: string; apiKey: string }) {
+  const { provider, query, endpoint, apiKey } = params;
+
+  if (provider === 'tavily') {
+    return searchWithTavily(query, endpoint, apiKey);
+  }
+
+  if (provider === 'exa') {
+    return searchWithExa(query, endpoint, apiKey);
+  }
+
+  return searchWithSearxng(query, endpoint);
+}
+
 export async function action({ request }: ActionFunctionArgs) {
   if (request.method !== 'POST') {
     return json({ error: 'Method not allowed' }, { status: 405 });
   }
 
   try {
-    const { url } = (await request.json()) as { url?: string };
+    const payload = (await request.json()) as UrlSearchRequest;
+    const mode = payload.mode || 'url';
+
+    if (mode === 'query') {
+      const query = payload.query?.trim();
+
+      if (!query) {
+        return json({ error: 'Search query is required' }, { status: 400 });
+      }
+
+      const provider = payload.provider || 'searxng';
+      const deploymentMode = payload.deploymentMode || 'local-only';
+      const effectiveProvider = deploymentMode === 'local-only' ? 'searxng' : provider;
+      const endpoint = normalizeEndpoint(effectiveProvider, payload.endpoint);
+      const apiKey = deploymentMode === 'local-only' ? '' : payload.apiKey?.trim() || '';
+      const results = await runQuerySearch({ provider: effectiveProvider, query, endpoint, apiKey });
+
+      if (!results.length) {
+        return json({ error: 'No web results found for this query' }, { status: 404 });
+      }
+
+      return json({
+        success: true,
+        data: summarizeSearchResults(query, effectiveProvider, results),
+      });
+    }
+
+    const url = payload.url;
 
     if (!url || typeof url !== 'string') {
       return json({ error: 'URL is required' }, { status: 400 });
@@ -88,7 +291,7 @@ export async function action({ request }: ActionFunctionArgs) {
       data: {
         title,
         description,
-        content: content.length > MAX_CONTENT_LENGTH ? content.slice(0, MAX_CONTENT_LENGTH) + '...' : content,
+        content: trimContent(content),
         sourceUrl: url,
       },
     });
@@ -99,6 +302,6 @@ export async function action({ request }: ActionFunctionArgs) {
 
     console.error('Web search error:', error);
 
-    return json({ error: error instanceof Error ? error.message : 'Failed to fetch URL' }, { status: 500 });
+    return json({ error: error instanceof Error ? error.message : 'Failed to fetch web context' }, { status: 500 });
   }
 }
