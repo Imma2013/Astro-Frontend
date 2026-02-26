@@ -3,6 +3,7 @@ import { startTransition } from 'react';
 import { hydrateRoot } from 'react-dom/client';
 import { initAstroHardware } from '~/lib/hardware/initAstroHardware';
 import { initializeAstroStorage } from '~/lib/storage/astroStorage';
+import 'virtual:uno.css';
 
 startTransition(() => {
   hydrateRoot(document.getElementById('root')!, <RemixBrowser />);

@@ -22,7 +22,12 @@ export default function Index() {
       <Header />
       <ClientOnly fallback={<BaseChat />}>
         {() => {
-          const isTauri = typeof window !== 'undefined' && ('__TAURI_INTERNALS__' in window || '__TAURI__' in window);
+          const isTauri = typeof window !== 'undefined' && (
+            '__TAURI_INTERNALS__' in window || 
+            '__TAURI__' in window || 
+            window.location.hostname === 'tauri.localhost' ||
+            window.location.protocol === 'tauri:'
+          );
           
           if (isTauri) {
             return (
