@@ -4,7 +4,6 @@ import { Links, Meta, Outlet, Scripts, ScrollRestoration } from '@remix-run/reac
 import tailwindReset from '@unocss/reset/tailwind-compat.css?url';
 import { themeStore } from './lib/stores/theme';
 import { stripIndents } from './utils/stripIndent';
-import { createHead } from 'remix-island';
 import { useEffect } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
@@ -61,16 +60,6 @@ const inlineThemeCode = stripIndents`
   }
 `;
 
-export const Head = createHead(() => (
-  <>
-    <meta charSet="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <Meta />
-    <Links />
-    <script dangerouslySetInnerHTML={{ __html: inlineThemeCode }} />
-  </>
-));
-
 export function Layout({ children }: { children: React.ReactNode }) {
   const theme = useStore(themeStore);
 
@@ -79,36 +68,47 @@ export function Layout({ children }: { children: React.ReactNode }) {
   }, [theme]);
 
   return (
-    <>
-      <ClientOnly>{() => <DndProvider backend={HTML5Backend}>{children}</DndProvider>}</ClientOnly>
-      <ToastContainer
-        closeButton={({ closeToast }) => {
-          return (
-            <button className="Toastify__close-button" onClick={closeToast}>
-              <div className="i-ph:x text-lg" />
-            </button>
-          );
-        }}
-        icon={({ type }) => {
-          switch (type) {
-            case 'success': {
-              return <div className="i-ph:check-bold text-Astro-elements-icon-success text-2xl" />;
-            }
-            case 'error': {
-              return <div className="i-ph:warning-circle-bold text-Astro-elements-icon-error text-2xl" />;
-            }
-          }
+    <html lang="en" data-theme={theme}>
+      <head>
+        <meta charSet="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <Meta />
+        <Links />
+        <script dangerouslySetInnerHTML={{ __html: inlineThemeCode }} />
+      </head>
+      <body>
+        <div id="root" className="w-full h-full">
+          <ClientOnly>{() => <DndProvider backend={HTML5Backend}>{children}</DndProvider>}</ClientOnly>
+          <ToastContainer
+            closeButton={({ closeToast }) => {
+              return (
+                <button className="Toastify__close-button" onClick={closeToast}>
+                  <div className="i-ph:x text-lg" />
+                </button>
+              );
+            }}
+            icon={({ type }) => {
+              switch (type) {
+                case 'success': {
+                  return <div className="i-ph:check-bold text-Astro-elements-icon-success text-2xl" />;
+                }
+                case 'error': {
+                  return <div className="i-ph:warning-circle-bold text-Astro-elements-icon-error text-2xl" />;
+                }
+              }
 
-          return undefined;
-        }}
-        position="bottom-right"
-        pauseOnFocusLoss
-        transition={toastAnimation}
-        autoClose={3000}
-      />
-      <ScrollRestoration />
-      <Scripts />
-    </>
+              return undefined;
+            }}
+            position="bottom-right"
+            pauseOnFocusLoss
+            transition={toastAnimation}
+            autoClose={3000}
+          />
+          <ScrollRestoration />
+          <Scripts />
+        </div>
+      </body>
+    </html>
   );
 }
 
