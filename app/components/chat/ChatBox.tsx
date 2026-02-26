@@ -634,39 +634,42 @@ export const ChatBox: React.FC<ChatBoxProps> = (props) => {
                             <div className="flex flex-col gap-3">
                               <div className="flex items-center justify-between">
                                 <div className="font-medium text-Astro-elements-textSecondary">
-                                  {localSettingsMode === 'simple' ? 'Local Models (Native)' : 'Advanced Local Settings'}
+                                  {localSettingsMode === 'simple' ? 'Astro Native AI' : 'Advanced Local Settings'}
                                 </div>
                                 <button
                                   type="button"
                                   onClick={() => setLocalSettingsMode(localSettingsMode === 'simple' ? 'advanced' : 'simple')}
-                                  className="text-[10px] text-purple-400 hover:underline uppercase tracking-wider font-bold"
+                                  className="text-[10px] text-Astro-elements-textTertiary hover:text-purple-400 transition-colors uppercase tracking-widest font-bold border border-Astro-elements-borderColor/30 px-1.5 py-0.5 rounded bg-Astro-elements-background-depth-3"
                                 >
-                                  {localSettingsMode === 'simple' ? 'Power User?' : 'Back to Simple'}
+                                  {localSettingsMode === 'simple' ? 'Manual Mode' : 'Exit Manual'}
                                 </button>
                               </div>
 
                               {localSettingsMode === 'simple' ? (
                                 <>
                                   <p className="text-xs text-Astro-elements-textTertiary leading-relaxed">
-                                    Astro runs a native AI engine directly on your computer for total privacy and speed. 
-                                    No setup required. Just download once and use offline forever.
+                                    Astro is running natively on your computer for maximum privacy and performance. 
+                                    Everything stays on your machine.
                                   </p>
                                   
                                   <div className="flex flex-col gap-2 mt-2">
-                                    <div className="text-xs font-medium">Selected Model: <span className="text-purple-400">{props.model || 'None'}</span></div>
+                                    <div className="text-xs font-medium flex items-center gap-1.5">
+                                      <div className="i-ph:brain-duotone text-purple-400" />
+                                      Current Brain: <span className="text-purple-400 font-bold">{props.model?.split('-')[0] || 'None'}</span>
+                                    </div>
                                     <button
                                       type="button"
                                       onClick={handleDownloadLocalModel}
                                       disabled={isDownloadingModel}
                                       className={classNames(
-                                        'w-full flex items-center justify-center gap-2 rounded-lg border py-2 text-xs font-medium transition-colors shadow-sm',
+                                        'w-full flex items-center justify-center gap-2 rounded-lg border py-2.5 text-xs font-bold transition-all shadow-sm active:scale-[0.98]',
                                         isDownloadingModel
                                           ? 'border-Astro-elements-borderColor bg-Astro-elements-background-depth-3 text-Astro-elements-textTertiary cursor-not-allowed'
-                                          : 'border-purple-500/30 bg-purple-500/10 text-purple-400 hover:bg-purple-500/20',
+                                          : 'border-purple-500/40 bg-purple-500/10 text-purple-400 hover:bg-purple-500/20 hover:border-purple-500/60',
                                       )}
                                     >
-                                      <div className={isDownloadingModel ? "i-ph:spinner animate-spin text-sm" : "i-ph:download text-sm"} />
-                                      {isDownloadingModel ? (downloadStatus || 'Downloading...') : 'Download & Load Selected Model'}
+                                      <div className={isDownloadingModel ? "i-ph:spinner animate-spin text-sm" : "i-ph:lightning-fill text-sm"} />
+                                      {isDownloadingModel ? (downloadStatus || 'Downloading...') : 'Download & Start AI Engine'}
                                     </button>
                                     
                                     {recommendedModel.modelId && props.model !== recommendedModel.modelId && (
@@ -675,14 +678,14 @@ export const ChatBox: React.FC<ChatBoxProps> = (props) => {
                                         onClick={handleDownloadRecommendedModel}
                                         disabled={isDownloadingModel}
                                         className={classNames(
-                                          'w-full flex items-center justify-center gap-2 rounded-lg border border-Astro-elements-borderColor/50 py-2 text-xs font-medium transition-colors mt-1',
+                                          'w-full flex items-center justify-center gap-2 rounded-lg border border-Astro-elements-borderColor/50 py-2 text-[10px] font-medium transition-colors mt-1',
                                           isDownloadingModel
                                             ? 'opacity-50 cursor-not-allowed'
                                             : 'bg-Astro-elements-background-depth-3 text-Astro-elements-textSecondary hover:bg-Astro-elements-background-depth-4 hover:text-Astro-elements-textPrimary',
                                         )}
                                       >
-                                        <div className="i-ph:lightning text-sm text-yellow-500" />
-                                        Switch to Recommended: {recommendedModel.modelId.split('-').slice(0, 2).join('-')}
+                                        <div className="i-ph:sparkle text-xs text-yellow-500" />
+                                        Switch to Recommended Brain
                                       </button>
                                     )}
                                   </div>
@@ -690,7 +693,7 @@ export const ChatBox: React.FC<ChatBoxProps> = (props) => {
                               ) : (
                                 <>
                                   <p className="text-[11px] text-Astro-elements-textTertiary mb-1">
-                                    Use external providers like Ollama or LM Studio. Ensure they are running on your machine.
+                                    Manual control for Ollama, LM Studio, or custom local endpoints.
                                   </p>
                                   <ModelSelector
                                     key={props.provider?.name + ':' + props.modelList.length}
@@ -703,9 +706,6 @@ export const ChatBox: React.FC<ChatBoxProps> = (props) => {
                                     apiKeys={props.apiKeys}
                                     modelLoading={props.isModelLoading}
                                   />
-                                  <p className="text-[10px] text-Astro-elements-textTertiary italic">
-                                    Tip: Set your custom API base URLs in the main Settings tab.
-                                  </p>
                                 </>
                               )}
                               
