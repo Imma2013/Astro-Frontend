@@ -110,7 +110,6 @@ export const ModelSelector = ({
   providerList,
   modelLoading,
 }: ModelSelectorProps) => {
-  const HIDDEN_PROVIDER_NAMES = ['Ollama', 'LMStudio'];
   const [modelSearchQuery, setModelSearchQuery] = useState('');
   const [debouncedModelSearchQuery, setDebouncedModelSearchQuery] = useState('');
   const [isModelDropdownOpen, setIsModelDropdownOpen] = useState(false);
@@ -132,13 +131,7 @@ export const ModelSelector = ({
   const [localProviderStatus, setLocalProviderStatus] = useState<Record<string, ConnectionStatus>>({});
 
   const visibleProviderList = useMemo(() => {
-    const isTauri = typeof window !== 'undefined' && (window as any).__TAURI_INTERNALS__;
-
     return (providerList || []).filter((entry) => {
-      if (HIDDEN_PROVIDER_NAMES.includes(entry.name)) {
-        return false;
-      }
-
       if (entry.name === 'WebLLM') {
         return false;
       }

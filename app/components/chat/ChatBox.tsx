@@ -202,6 +202,8 @@ export const ChatBox: React.FC<ChatBoxProps> = (props) => {
 
     setModelAccessMode(nextMode);
   };
+  const [localSettingsMode, setLocalSettingsMode] = React.useState<'simple' | 'advanced'>('simple');
+
   const handleDownloadLocalModel = async () => {
     if (isDownloadingModel) {
       return;
@@ -630,48 +632,82 @@ export const ChatBox: React.FC<ChatBoxProps> = (props) => {
                         <>
                           <div className="mt-2 rounded-lg border border-Astro-elements-borderColor/60 bg-Astro-elements-background-depth-1/80 p-3 text-sm text-Astro-elements-textPrimary">
                             <div className="flex flex-col gap-3">
-                              <div className="font-medium text-Astro-elements-textSecondary">
-                                Local Models (Native High-Performance)
-                              </div>
-                              <p className="text-xs text-Astro-elements-textTertiary leading-relaxed">
-                                Astro runs a native AI engine directly on your computer for total privacy and speed. 
-                                No setup required. Just download once and use offline forever.
-                              </p>
-                              
-                              <div className="flex flex-col gap-2 mt-2">
-                                <div className="text-xs font-medium">Selected Model: <span className="text-purple-400">{props.model || 'None'}</span></div>
+                              <div className="flex items-center justify-between">
+                                <div className="font-medium text-Astro-elements-textSecondary">
+                                  {localSettingsMode === 'simple' ? 'Local Models (Native)' : 'Advanced Local Settings'}
+                                </div>
                                 <button
                                   type="button"
-                                  onClick={handleDownloadLocalModel}
-                                  disabled={isDownloadingModel}
-                                  className={classNames(
-                                    'w-full flex items-center justify-center gap-2 rounded-lg border py-2 text-xs font-medium transition-colors shadow-sm',
-                                    isDownloadingModel
-                                      ? 'border-Astro-elements-borderColor bg-Astro-elements-background-depth-3 text-Astro-elements-textTertiary cursor-not-allowed'
-                                      : 'border-purple-500/30 bg-purple-500/10 text-purple-400 hover:bg-purple-500/20',
-                                  )}
+                                  onClick={() => setLocalSettingsMode(localSettingsMode === 'simple' ? 'advanced' : 'simple')}
+                                  className="text-[10px] text-purple-400 hover:underline uppercase tracking-wider font-bold"
                                 >
-                                  <div className={isDownloadingModel ? "i-ph:spinner animate-spin text-sm" : "i-ph:download text-sm"} />
-                                  {isDownloadingModel ? (downloadStatus || 'Downloading...') : 'Download & Load Selected Model'}
+                                  {localSettingsMode === 'simple' ? 'Power User?' : 'Back to Simple'}
                                 </button>
-                                
-                                {recommendedModel.modelId && props.model !== recommendedModel.modelId && (
-                                  <button
-                                    type="button"
-                                    onClick={handleDownloadRecommendedModel}
-                                    disabled={isDownloadingModel}
-                                    className={classNames(
-                                      'w-full flex items-center justify-center gap-2 rounded-lg border border-Astro-elements-borderColor/50 py-2 text-xs font-medium transition-colors mt-1',
-                                      isDownloadingModel
-                                        ? 'opacity-50 cursor-not-allowed'
-                                        : 'bg-Astro-elements-background-depth-3 text-Astro-elements-textSecondary hover:bg-Astro-elements-background-depth-4 hover:text-Astro-elements-textPrimary',
-                                    )}
-                                  >
-                                    <div className="i-ph:lightning text-sm text-yellow-500" />
-                                    Switch to Recommended: {recommendedModel.modelId.split('-').slice(0, 2).join('-')}
-                                  </button>
-                                )}
                               </div>
+
+                              {localSettingsMode === 'simple' ? (
+                                <>
+                                  <p className="text-xs text-Astro-elements-textTertiary leading-relaxed">
+                                    Astro runs a native AI engine directly on your computer for total privacy and speed. 
+                                    No setup required. Just download once and use offline forever.
+                                  </p>
+                                  
+                                  <div className="flex flex-col gap-2 mt-2">
+                                    <div className="text-xs font-medium">Selected Model: <span className="text-purple-400">{props.model || 'None'}</span></div>
+                                    <button
+                                      type="button"
+                                      onClick={handleDownloadLocalModel}
+                                      disabled={isDownloadingModel}
+                                      className={classNames(
+                                        'w-full flex items-center justify-center gap-2 rounded-lg border py-2 text-xs font-medium transition-colors shadow-sm',
+                                        isDownloadingModel
+                                          ? 'border-Astro-elements-borderColor bg-Astro-elements-background-depth-3 text-Astro-elements-textTertiary cursor-not-allowed'
+                                          : 'border-purple-500/30 bg-purple-500/10 text-purple-400 hover:bg-purple-500/20',
+                                      )}
+                                    >
+                                      <div className={isDownloadingModel ? "i-ph:spinner animate-spin text-sm" : "i-ph:download text-sm"} />
+                                      {isDownloadingModel ? (downloadStatus || 'Downloading...') : 'Download & Load Selected Model'}
+                                    </button>
+                                    
+                                    {recommendedModel.modelId && props.model !== recommendedModel.modelId && (
+                                      <button
+                                        type="button"
+                                        onClick={handleDownloadRecommendedModel}
+                                        disabled={isDownloadingModel}
+                                        className={classNames(
+                                          'w-full flex items-center justify-center gap-2 rounded-lg border border-Astro-elements-borderColor/50 py-2 text-xs font-medium transition-colors mt-1',
+                                          isDownloadingModel
+                                            ? 'opacity-50 cursor-not-allowed'
+                                            : 'bg-Astro-elements-background-depth-3 text-Astro-elements-textSecondary hover:bg-Astro-elements-background-depth-4 hover:text-Astro-elements-textPrimary',
+                                        )}
+                                      >
+                                        <div className="i-ph:lightning text-sm text-yellow-500" />
+                                        Switch to Recommended: {recommendedModel.modelId.split('-').slice(0, 2).join('-')}
+                                      </button>
+                                    )}
+                                  </div>
+                                </>
+                              ) : (
+                                <>
+                                  <p className="text-[11px] text-Astro-elements-textTertiary mb-1">
+                                    Use external providers like Ollama or LM Studio. Ensure they are running on your machine.
+                                  </p>
+                                  <ModelSelector
+                                    key={props.provider?.name + ':' + props.modelList.length}
+                                    model={props.model}
+                                    setModel={props.setModel}
+                                    modelList={props.modelList}
+                                    provider={props.provider}
+                                    setProvider={props.setProvider}
+                                    providerList={(localProviders as ProviderInfo[]) || (PROVIDER_LIST as ProviderInfo[])}
+                                    apiKeys={props.apiKeys}
+                                    modelLoading={props.isModelLoading}
+                                  />
+                                  <p className="text-[10px] text-Astro-elements-textTertiary italic">
+                                    Tip: Set your custom API base URLs in the main Settings tab.
+                                  </p>
+                                </>
+                              )}
                               
                               {(storageInfo.quotaMB || storageInfo.usageMB) &&
                               !(typeof window !== 'undefined' && (window as any).__TAURI_INTERNALS__) ? (
