@@ -1,23 +1,4 @@
-import { globSync } from 'fast-glob';
-import fs from 'node:fs/promises';
-import { basename } from 'node:path';
-import { defineConfig, presetIcons, presetUno, transformerDirectives } from 'unocss';
-
-const iconPaths = globSync('./icons/*.svg');
-
-const collectionName = 'astro';
-
-const customIconCollection = iconPaths.reduce(
-  (acc, iconPath) => {
-    const [iconName] = basename(iconPath).split('.');
-
-    acc[collectionName] ??= {};
-    acc[collectionName][iconName] = async () => fs.readFile(iconPath, 'utf8');
-
-    return acc;
-  },
-  {} as Record<string, Record<string, () => Promise<string>>>,
-);
+import { defineConfig, presetIcons, presetUno, presetWebFonts, transformerDirectives } from 'unocss';
 
 const BASE_COLORS = {
   white: '#FFFFFF',
@@ -97,136 +78,133 @@ const COLOR_PRIMITIVES = {
   },
 };
 
+const ELEMENTS = {
+  borderColor: 'var(--Astro-elements-borderColor)',
+  borderColorActive: 'var(--Astro-elements-borderColorActive)',
+  background: {
+    depth: {
+      1: 'var(--Astro-elements-bg-depth-1)',
+      2: 'var(--Astro-elements-bg-depth-2)',
+      3: 'var(--Astro-elements-bg-depth-3)',
+      4: 'var(--Astro-elements-bg-depth-4)',
+    },
+  },
+  textPrimary: 'var(--Astro-elements-textPrimary)',
+  textSecondary: 'var(--Astro-elements-textSecondary)',
+  textTertiary: 'var(--Astro-elements-textTertiary)',
+  code: {
+    background: 'var(--Astro-elements-code-background)',
+    text: 'var(--Astro-elements-code-text)',
+  },
+  button: {
+    primary: {
+      background: 'var(--Astro-elements-button-primary-background)',
+      backgroundHover: 'var(--Astro-elements-button-primary-backgroundHover)',
+      text: 'var(--Astro-elements-button-primary-text)',
+    },
+    secondary: {
+      background: 'var(--Astro-elements-button-secondary-background)',
+      backgroundHover: 'var(--Astro-elements-button-secondary-backgroundHover)',
+      text: 'var(--Astro-elements-button-secondary-text)',
+    },
+    danger: {
+      background: 'var(--Astro-elements-button-danger-background)',
+      backgroundHover: 'var(--Astro-elements-button-danger-backgroundHover)',
+      text: 'var(--Astro-elements-button-danger-text)',
+    },
+  },
+  item: {
+    contentDefault: 'var(--Astro-elements-item-contentDefault)',
+    contentActive: 'var(--Astro-elements-item-contentActive)',
+    contentAccent: 'var(--Astro-elements-item-contentAccent)',
+    contentDanger: 'var(--Astro-elements-item-contentDanger)',
+    backgroundDefault: 'var(--Astro-elements-item-backgroundDefault)',
+    backgroundActive: 'var(--Astro-elements-item-backgroundActive)',
+    backgroundAccent: 'var(--Astro-elements-item-backgroundAccent)',
+    backgroundDanger: 'var(--Astro-elements-item-backgroundDanger)',
+  },
+  actions: {
+    background: 'var(--Astro-elements-actions-background)',
+    code: {
+      background: 'var(--Astro-elements-actions-code-background)',
+    },
+  },
+  artifacts: {
+    background: 'var(--Astro-elements-artifacts-background)',
+    backgroundHover: 'var(--Astro-elements-artifacts-backgroundHover)',
+    borderColor: 'var(--Astro-elements-artifacts-borderColor)',
+    inlineCode: {
+      background: 'var(--Astro-elements-artifacts-inlineCode-background)',
+      text: 'var(--Astro-elements-artifacts-inlineCode-text)',
+    },
+  },
+  messages: {
+    background: 'var(--Astro-elements-messages-background)',
+    linkColor: 'var(--Astro-elements-messages-linkColor)',
+    code: {
+      background: 'var(--Astro-elements-messages-code-background)',
+    },
+    inlineCode: {
+      background: 'var(--Astro-elements-messages-inlineCode-background)',
+      text: 'var(--Astro-elements-messages-inlineCode-text)',
+    },
+  },
+  icon: {
+    success: 'var(--Astro-elements-icon-success)',
+    error: 'var(--Astro-elements-icon-error)',
+    primary: 'var(--Astro-elements-icon-primary)',
+    secondary: 'var(--Astro-elements-icon-secondary)',
+    tertiary: 'var(--Astro-elements-icon-tertiary)',
+  },
+  preview: {
+    addressBar: {
+      background: 'var(--Astro-elements-preview-addressBar-background)',
+      backgroundHover: 'var(--Astro-elements-preview-addressBar-backgroundHover)',
+      backgroundActive: 'var(--Astro-elements-preview-addressBar-backgroundActive)',
+      text: 'var(--Astro-elements-preview-addressBar-text)',
+      textActive: 'var(--Astro-elements-preview-addressBar-textActive)',
+    },
+  },
+  terminals: {
+    background: 'var(--Astro-elements-terminals-background)',
+    buttonBackground: 'var(--Astro-elements-terminals-buttonBackground)',
+  },
+  dividerColor: 'var(--Astro-elements-dividerColor)',
+  loader: {
+    background: 'var(--Astro-elements-loader-background)',
+    progress: 'var(--Astro-elements-loader-progress)',
+  },
+  prompt: {
+    background: 'var(--Astro-elements-prompt-background)',
+  },
+  sidebar: {
+    dropdownShadow: 'var(--Astro-elements-sidebar-dropdownShadow)',
+    buttonBackgroundDefault: 'var(--Astro-elements-sidebar-buttonBackgroundDefault)',
+    buttonBackgroundHover: 'var(--Astro-elements-sidebar-buttonBackgroundHover)',
+    buttonText: 'var(--Astro-elements-sidebar-buttonText)',
+  },
+  cta: {
+    background: 'var(--Astro-elements-cta-background)',
+    text: 'var(--Astro-elements-cta-text)',
+  },
+};
+
 export default defineConfig({
-  safelist: [...Object.keys(customIconCollection[collectionName] || {}).map((x) => `i-astro:${x}`)],
   shortcuts: {
     'astro-ease-cubic-bezier': 'ease-[cubic-bezier(0.4,0,0.2,1)]',
+    'bolt-ease-cubic-bezier': 'ease-[cubic-bezier(0.4,0,0.2,1)]',
     'transition-theme': 'transition-[background-color,border-color,color] duration-150 astro-ease-cubic-bezier',
     kdb: 'bg-Astro-elements-code-background text-Astro-elements-code-text py-1 px-1.5 rounded-md',
     'max-w-chat': 'max-w-[var(--chat-max-width)]',
   },
   rules: [
-    /**
-     * This shorthand doesn't exist in Tailwind and we overwrite it to avoid
-     * any conflicts with minified CSS classes.
-     */
     ['b', {}],
   ],
   theme: {
     colors: {
       ...COLOR_PRIMITIVES,
-      Astro: {
-        elements: {
-          borderColor: 'var(--Astro-elements-borderColor)',
-          borderColorActive: 'var(--Astro-elements-borderColorActive)',
-          background: {
-            depth: {
-              1: 'var(--Astro-elements-bg-depth-1)',
-              2: 'var(--Astro-elements-bg-depth-2)',
-              3: 'var(--Astro-elements-bg-depth-3)',
-              4: 'var(--Astro-elements-bg-depth-4)',
-            },
-          },
-          textPrimary: 'var(--Astro-elements-textPrimary)',
-          textSecondary: 'var(--Astro-elements-textSecondary)',
-          textTertiary: 'var(--Astro-elements-textTertiary)',
-          code: {
-            background: 'var(--Astro-elements-code-background)',
-            text: 'var(--Astro-elements-code-text)',
-          },
-          button: {
-            primary: {
-              background: 'var(--Astro-elements-button-primary-background)',
-              backgroundHover: 'var(--Astro-elements-button-primary-backgroundHover)',
-              text: 'var(--Astro-elements-button-primary-text)',
-            },
-            secondary: {
-              background: 'var(--Astro-elements-button-secondary-background)',
-              backgroundHover: 'var(--Astro-elements-button-secondary-backgroundHover)',
-              text: 'var(--Astro-elements-button-secondary-text)',
-            },
-            danger: {
-              background: 'var(--Astro-elements-button-danger-background)',
-              backgroundHover: 'var(--Astro-elements-button-danger-backgroundHover)',
-              text: 'var(--Astro-elements-button-danger-text)',
-            },
-          },
-          item: {
-            contentDefault: 'var(--Astro-elements-item-contentDefault)',
-            contentActive: 'var(--Astro-elements-item-contentActive)',
-            contentAccent: 'var(--Astro-elements-item-contentAccent)',
-            contentDanger: 'var(--Astro-elements-item-contentDanger)',
-            backgroundDefault: 'var(--Astro-elements-item-backgroundDefault)',
-            backgroundActive: 'var(--Astro-elements-item-backgroundActive)',
-            backgroundAccent: 'var(--Astro-elements-item-backgroundAccent)',
-            backgroundDanger: 'var(--Astro-elements-item-backgroundDanger)',
-          },
-          actions: {
-            background: 'var(--Astro-elements-actions-background)',
-            code: {
-              background: 'var(--Astro-elements-actions-code-background)',
-            },
-          },
-          artifacts: {
-            background: 'var(--Astro-elements-artifacts-background)',
-            backgroundHover: 'var(--Astro-elements-artifacts-backgroundHover)',
-            borderColor: 'var(--Astro-elements-artifacts-borderColor)',
-            inlineCode: {
-              background: 'var(--Astro-elements-artifacts-inlineCode-background)',
-              text: 'var(--Astro-elements-artifacts-inlineCode-text)',
-            },
-          },
-          messages: {
-            background: 'var(--Astro-elements-messages-background)',
-            linkColor: 'var(--Astro-elements-messages-linkColor)',
-            code: {
-              background: 'var(--Astro-elements-messages-code-background)',
-            },
-            inlineCode: {
-              background: 'var(--Astro-elements-messages-inlineCode-background)',
-              text: 'var(--Astro-elements-messages-inlineCode-text)',
-            },
-          },
-          icon: {
-            success: 'var(--Astro-elements-icon-success)',
-            error: 'var(--Astro-elements-icon-error)',
-            primary: 'var(--Astro-elements-icon-primary)',
-            secondary: 'var(--Astro-elements-icon-secondary)',
-            tertiary: 'var(--Astro-elements-icon-tertiary)',
-          },
-          preview: {
-            addressBar: {
-              background: 'var(--Astro-elements-preview-addressBar-background)',
-              backgroundHover: 'var(--Astro-elements-preview-addressBar-backgroundHover)',
-              backgroundActive: 'var(--Astro-elements-preview-addressBar-backgroundActive)',
-              text: 'var(--Astro-elements-preview-addressBar-text)',
-              textActive: 'var(--Astro-elements-preview-addressBar-textActive)',
-            },
-          },
-          terminals: {
-            background: 'var(--Astro-elements-terminals-background)',
-            buttonBackground: 'var(--Astro-elements-terminals-buttonBackground)',
-          },
-          dividerColor: 'var(--Astro-elements-dividerColor)',
-          loader: {
-            background: 'var(--Astro-elements-loader-background)',
-            progress: 'var(--Astro-elements-loader-progress)',
-          },
-          prompt: {
-            background: 'var(--Astro-elements-prompt-background)',
-          },
-          sidebar: {
-            dropdownShadow: 'var(--Astro-elements-sidebar-dropdownShadow)',
-            buttonBackgroundDefault: 'var(--Astro-elements-sidebar-buttonBackgroundDefault)',
-            buttonBackgroundHover: 'var(--Astro-elements-sidebar-buttonBackgroundHover)',
-            buttonText: 'var(--Astro-elements-sidebar-buttonText)',
-          },
-          cta: {
-            background: 'var(--Astro-elements-cta-background)',
-            text: 'var(--Astro-elements-cta-text)',
-          },
-        },
-      },
+      bolt: { elements: ELEMENTS },
+      Astro: { elements: ELEMENTS },
     },
   },
   transformers: [transformerDirectives()],
@@ -239,30 +217,26 @@ export default defineConfig({
     }),
     presetIcons({
       warn: true,
-      collections: {
-        ...customIconCollection,
-      },
       unit: 'em',
     }),
+    presetWebFonts({
+      provider: 'google',
+      fonts: {
+        sans: 'Inter',
+        mono: 'IBM Plex Mono',
+      },
+    }),
   ],
+  content: {
+    pipeline: {
+      include: [
+        /\.(vue|svelte|[jt]sx|mdx?|astro|elm|php|phtml|html)($|\?)/,
+        'app/**/*.{js,ts,jsx,tsx}',
+      ],
+    },
+  },
 });
 
-/**
- * Generates an alpha palette for a given hex color.
- *
- * @param hex - The hex color code (without alpha) to generate the palette from.
- * @returns An object where keys are opacity percentages and values are hex colors with alpha.
- *
- * Example:
- *
- * ```
- * {
- *   '1': '#FFFFFF03',
- *   '2': '#FFFFFF05',
- *   '3': '#FFFFFF08',
- * }
- * ```
- */
 function generateAlphaPalette(hex: string) {
   return [1, 2, 3, 4, 5, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100].reduce(
     (acc, opacity) => {

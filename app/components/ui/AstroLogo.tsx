@@ -10,7 +10,7 @@ export function AstroLogo({ className, textClassName, iconClassName }: AstroLogo
   return (
     <span className={classNames('inline-flex items-center gap-2.5 group cursor-default', className)}>
       <span className={classNames(
-        "relative flex h-8 w-8 items-center justify-center rounded-full bg-[#168AE6] shadow-md transition-all duration-300 group-hover:scale-105 group-hover:shadow-lg",
+        "relative flex h-8 w-8 min-w-8 min-h-8 items-center justify-center rounded-full bg-[#168AE6] shadow-md transition-all duration-300 group-hover:scale-105 group-hover:shadow-lg",
         iconClassName
       )}>
         <svg 
