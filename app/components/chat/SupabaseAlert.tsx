@@ -13,6 +13,10 @@ interface Props {
 }
 
 export function SupabaseChatAlert({ alert, clearAlert, postMessage }: Props) {
+  if (!alert) {
+    return null;
+  }
+
   const { content } = alert;
   const connection = useStore(supabaseConnection);
   const [isExecuting, setIsExecuting] = useState(false);

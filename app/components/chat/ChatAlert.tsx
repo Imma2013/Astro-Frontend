@@ -9,6 +9,10 @@ interface Props {
 }
 
 export default function ChatAlert({ alert, clearAlert, postMessage }: Props) {
+  if (!alert) {
+    return null;
+  }
+
   const { description, content, source } = alert;
 
   const isPreview = source === 'preview';

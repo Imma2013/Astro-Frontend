@@ -16,6 +16,10 @@ interface RepositoryStatsProps {
 }
 
 export function RepositoryStats({ stats, className, compact = false }: RepositoryStatsProps) {
+  if (!stats) {
+    return null;
+  }
+
   const { totalFiles, totalSize, languages, hasPackageJson, hasDependencies } = stats;
 
   return (

@@ -8,6 +8,10 @@ interface Props {
 }
 
 export default function LlmErrorAlert({ alert, clearAlert }: Props) {
+  if (!alert) {
+    return null;
+  }
+
   const { title, description, provider, errorType } = alert;
 
   const getErrorIcon = () => {

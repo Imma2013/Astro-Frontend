@@ -91,11 +91,13 @@ export const AssistantMessage = memo(
       codeContext = filteredAnnotations.find((annotation) => annotation.type === 'codeContext')?.files;
     }
 
-    const usage: {
-      completionTokens: number;
-      promptTokens: number;
-      totalTokens: number;
-    } = filteredAnnotations.find((annotation) => annotation.type === 'usage')?.value;
+    const usage:
+      | {
+          completionTokens: number;
+          promptTokens: number;
+          totalTokens: number;
+        }
+      | undefined = filteredAnnotations.find((annotation) => annotation.type === 'usage')?.value;
 
     const toolInvocations = parts?.filter((part) => part.type === 'tool-invocation');
     const toolCallAnnotations = filteredAnnotations.filter(

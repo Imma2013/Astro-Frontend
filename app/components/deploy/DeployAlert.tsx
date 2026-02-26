@@ -9,6 +9,10 @@ interface DeployAlertProps {
 }
 
 export default function DeployChatAlert({ alert, clearAlert, postMessage }: DeployAlertProps) {
+  if (!alert) {
+    return null;
+  }
+
   const { type, title, description, content, url, stage, buildStatus, deployStatus } = alert;
 
   // Determine if we should show the deployment progress
