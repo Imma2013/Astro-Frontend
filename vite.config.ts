@@ -19,6 +19,12 @@ export default defineConfig((config) => {
     resolve: {
       alias: {
         'react-dom/server': 'react-dom/server.browser',
+        'child_process': 'virtual:node-mock',
+        'fs': 'virtual:node-mock',
+        'path': 'virtual:node-mock',
+        'node:child_process': 'virtual:node-mock',
+        'node:fs': 'virtual:node-mock',
+        'node:path': 'virtual:node-mock',
       },
     },
     build: {
@@ -60,6 +66,7 @@ export default defineConfig((config) => {
       UnoCSS(),
       tsconfigPaths(),
       chrome129IssuePlugin(),
+      nodeMockPlugin(),
       config.mode === 'production' && optimizeCssModules({ apply: 'build' }),
     ],
     envPrefix: [
@@ -89,6 +96,36 @@ export default defineConfig((config) => {
     },
   };
 });
+
+function nodeMockPlugin() {
+  const virtualModuleId = 'virtual:node-mock';
+  const resolvedVirtualModuleId = '\0' + virtualModuleId;
+
+  return {
+    name: 'nodeMockPlugin',
+    resolveId(id: string) {
+      if (id === virtualModuleId) {
+        return resolvedVirtualModuleId;
+      }
+      return null;
+    },
+    load(id: string) {
+      if (id === resolvedVirtualModuleId) {
+        return `
+          export const spawn = () => ({ on: () => {}, stdout: { on: () => {} }, stderr: { on: () => {} }, kill: () => {} });
+          export const existsSync = () => false;
+          export const readFileSync = () => '';
+          export const writeFileSync = () => {};
+          export const basename = (path) => path.split(/[\\\\/]/).pop();
+          export const join = (...args) => args.join('/');
+          export const resolve = (...args) => args.join('/');
+          export default { spawn, existsSync, readFileSync, writeFileSync, basename, join, resolve };
+        `;
+      }
+      return null;
+    },
+  };
+}
 
 function chrome129IssuePlugin() {
   return {

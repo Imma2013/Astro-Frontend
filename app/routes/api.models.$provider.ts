@@ -1,2 +1,2 @@
-import { loader } from './api.models';
-export { loader };
+import { clientLoader } from './api.models';
+export { clientLoader };

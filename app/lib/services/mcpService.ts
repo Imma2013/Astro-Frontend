@@ -6,7 +6,6 @@ import {
   convertToCoreMessages,
   formatDataStreamPart,
 } from 'ai';
-import { Experimental_StdioMCPTransport } from 'ai/mcp-stdio';
 import { StreamableHTTPClientTransport } from '@modelcontextprotocol/sdk/client/streamableHttp.js';
 import { z } from 'zod';
 import type { ToolCallAnnotation } from '~/types/context';
@@ -199,6 +198,13 @@ export class MCPService {
     logger.debug(
       `Creating STDIO client for '${serverName}' with command: '${config.command}' ${config.args?.join(' ') || ''}`,
     );
+
+    if (typeof window !== 'undefined') {
+      throw new Error('STDIO MCP transport is not supported in the browser environment.');
+    }
+
+    // @ts-ignore
+    const { Experimental_StdioMCPTransport } = await import('ai/mcp-stdio');
 
     const client = await experimental_createMCPClient({ transport: new Experimental_StdioMCPTransport(config) });
 

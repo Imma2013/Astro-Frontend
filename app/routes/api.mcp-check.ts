@@ -1,16 +1,10 @@
-import { createScopedLogger } from '~/utils/logger';
-import { MCPService } from '~/lib/services/mcpService';
 
-const logger = createScopedLogger('api.mcp-check');
+import { json } from '@remix-run/react';
 
-export async function loader() {
-  try {
-    const mcpService = MCPService.getInstance();
-    const serverTools = await mcpService.checkServersAvailabilities();
+export const clientLoader = () => {
+  return json({ error: 'This API is not available in the local-only desktop app.' }, { status: 501 });
+};
 
-    return Response.json(serverTools);
-  } catch (error) {
-    logger.error('Error checking MCP servers:', error);
-    return Response.json({ error: 'Failed to check MCP servers' }, { status: 500 });
-  }
-}
+export const clientAction = () => {
+  return json({ error: 'This API is not available in the local-only desktop app.' }, { status: 501 });
+};

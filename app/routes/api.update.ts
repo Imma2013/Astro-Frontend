@@ -1,21 +1,10 @@
-import { json, type ActionFunction } from '@remix-run/cloudflare';
 
-export const action: ActionFunction = async ({ request }) => {
-  if (request.method !== 'POST') {
-    return json({ error: 'Method not allowed' }, { status: 405 });
-  }
+import { json } from '@remix-run/react';
 
-  return json(
-    {
-      error: 'Updates must be performed manually in a server environment',
-      instructions: [
-        '1. Navigate to the project directory',
-        '2. Run: git fetch upstream',
-        '3. Run: git pull upstream main',
-        '4. Run: pnpm install',
-        '5. Run: pnpm run build',
-      ],
-    },
-    { status: 400 },
-  );
+export const clientLoader = () => {
+  return json({ error: 'This API is not available in the local-only desktop app.' }, { status: 501 });
+};
+
+export const clientAction = () => {
+  return json({ error: 'This API is not available in the local-only desktop app.' }, { status: 501 });
 };

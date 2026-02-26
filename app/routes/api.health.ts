@@ -1,8 +1,10 @@
-import { json, type LoaderFunctionArgs } from '@remix-run/cloudflare';
 
-export const loader = async ({ request: _request }: LoaderFunctionArgs) => {
-  return json({
-    status: 'healthy',
-    timestamp: new Date().toISOString(),
-  });
+import { json } from '@remix-run/react';
+
+export const clientLoader = () => {
+  return json({ error: 'This API is not available in the local-only desktop app.' }, { status: 501 });
+};
+
+export const clientAction = () => {
+  return json({ error: 'This API is not available in the local-only desktop app.' }, { status: 501 });
 };

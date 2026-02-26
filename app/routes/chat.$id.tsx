@@ -1,7 +1,7 @@
-import { type ClientLoaderFunctionArgs } from '@remix-run/react';
+import { type ClientClientClientClientLoaderFunctionArgs } from '@remix-run/react';
 import { default as IndexRoute } from './_index';
 
-export function clientLoader({ params }: ClientLoaderFunctionArgs) {
+export function clientLoader({ params }: ClientClientClientClientLoaderFunctionArgs) {
   return { id: params?.id };
 }
 

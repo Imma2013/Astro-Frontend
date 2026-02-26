@@ -1,4 +1,4 @@
-import { json } from '@remix-run/cloudflare';
+import { json } from '@remix-run/react';
 import { LLMManager } from '~/lib/modules/llm/manager';
 import type { ModelInfo } from '~/lib/modules/llm/types';
 import type { ProviderInfo } from '~/types/model';
@@ -38,7 +38,7 @@ function getProviderInfo(llmManager: LLMManager) {
   return { providers: cachedProviders, defaultProvider: cachedDefaultProvider };
 }
 
-export async function loader({
+export async function clientLoader({
   request,
   params,
   context,
