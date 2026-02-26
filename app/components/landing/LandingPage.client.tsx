@@ -18,7 +18,7 @@ export function LandingPage() {
         throw new Error('Release not found yet. The developers might still be building it!');
       }
       
-      const release = await response.json();
+      const release = (await response.json()) as any;
       
       // Find the correct asset based on the platform
       let assetExtension = '';

@@ -130,10 +130,22 @@ export const ModelSelector = ({
   type ConnectionStatus = 'unknown' | 'connected' | 'disconnected';
 
   const [localProviderStatus, setLocalProviderStatus] = useState<Record<string, ConnectionStatus>>({});
-  const visibleProviderList = useMemo(
-    () => providerList.filter((entry) => !HIDDEN_PROVIDER_NAMES.includes(entry.name)),
-    [providerList],
-  );
+
+  const visibleProviderList = useMemo(() => {
+    const isTauri = typeof window !== 'undefined' && (window as any).__TAURI_INTERNALS__;
+
+    return (providerList || []).filter((entry) => {
+      if (HIDDEN_PROVIDER_NAMES.includes(entry.name)) {
+        return false;
+      }
+
+      if (isTauri && entry.name === 'WebLLM') {
+        return false;
+      }
+
+      return true;
+    });
+  }, [providerList]);
 
   // Check connectivity of local providers when provider list changes
   useEffect(() => {
@@ -191,16 +203,6 @@ export const ModelSelector = ({
 
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
-
-  const visibleProviderList = useMemo(() => {
-    const isTauri = typeof window !== 'undefined' && (window as any).__TAURI_INTERNALS__;
-    return (providerList || []).filter((p) => {
-      if (isTauri && p.name === 'WebLLM') {
-        return false;
-      }
-      return true;
-    });
-  }, [providerList]);
 
   const filteredModels = useMemo(() => {
     const baseModels = [...modelList]

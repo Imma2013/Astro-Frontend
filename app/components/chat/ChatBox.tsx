@@ -10,6 +10,7 @@ import { ScreenshotStateManager } from './ScreenshotStateManager';
 import { SendButton } from './SendButton.client';
 import { IconButton } from '~/components/ui/IconButton';
 import { toast } from 'react-toastify';
+import Cookies from 'js-cookie';
 import { SpeechRecognitionButton } from '~/components/chat/SpeechRecognition';
 import { ExpoQrModal } from '~/components/workbench/ExpoQrModal';
 import styles from './BaseChat.module.scss';
