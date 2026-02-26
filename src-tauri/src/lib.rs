@@ -67,6 +67,23 @@ async fn download_model(
 }
 
 #[tauri::command]
+async fn check_engine_health() -> Result<String, String> {
+    let client = Client::new();
+    let res = client
+        .get("http://127.0.0.1:8081/health")
+        .send()
+        .await
+        .map_err(|e| format!("Engine not responding: {}", e))?;
+
+    let body = res
+        .text()
+        .await
+        .map_err(|e| format!("Failed to read health response: {}", e))?;
+
+    Ok(body)
+}
+
+#[tauri::command]
 async fn start_engine(app: AppHandle, model_path: String) -> Result<(), String> {
     // Spawn the sidecar
     let sidecar_command = app
@@ -74,15 +91,21 @@ async fn start_engine(app: AppHandle, model_path: String) -> Result<(), String> 
         .sidecar("llama-server")
         .map_err(|e| format!("Failed to create sidecar command: {}", e))?;
 
-    // Arguments for llama-server
-    let (mut rx, _child) = sidecar_command
-        .args(["--model", &model_path, "--port", "8081", "--host", "127.0.0.1", "-c", "2048"])
+    // High-performance arguments for llama-server
+    // -ngl 99: Offload all layers to GPU if possible
+    // -t 16: Use 16 threads for processing
+    let (_rx, _child) = sidecar_command
+        .args([
+            "--model", &model_path, 
+            "--port", "8081", 
+            "--host", "127.0.0.1", 
+            "-c", "4096",
+            "--n-gpu-layers", "99",
+            "--threads", "16"
+        ])
         .spawn()
         .map_err(|e| format!("Failed to spawn sidecar: {}", e))?;
 
-    // In a real production app, you might want to listen to rx (the command events)
-    // to check when the server is fully "ready" or to log errors.
-    // For now, we spawn it and return success.
     Ok(())
 }
 
@@ -91,7 +114,7 @@ pub fn run() {
   tauri::Builder::default()
     .plugin(tauri_plugin_fs::init())
     .plugin(tauri_plugin_shell::init())
-    .invoke_handler(tauri::generate_handler![download_model, start_engine])
+    .invoke_handler(tauri::generate_handler![download_model, start_engine, check_engine_health])
     .setup(|app| {
       if cfg!(debug_assertions) {
         app.handle().plugin(

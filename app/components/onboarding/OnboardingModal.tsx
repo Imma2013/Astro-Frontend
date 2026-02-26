@@ -23,6 +23,8 @@ export function OnboardingModal() {
   const [profile, setProfile] = useState<HardwareProfile | null>(null);
   const [isDownloading, setIsDownloading] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [isWarmingUp, setIsWarmingUp] = useState(false);
+  const [warmupStatus, setWarmupStatus] = useState('Initializing...');
 
   useEffect(() => {
     const saved = localStorage.getItem('Astro_hardware_profile');
@@ -82,21 +84,51 @@ export function OnboardingModal() {
 
       console.log('Model successfully downloaded to:', filePath);
 
+      setIsDownloading(false);
+      setIsWarmingUp(true);
+      setWarmupStatus('Igniting Engine...');
+
       // Start the engine
       await invoke('start_engine', { modelPath: filePath });
-      console.log('Local AI engine started successfully on port 8081');
+      console.log('Local AI engine spawned. Starting health check loop...');
+
+      // POLL FOR READINESS
+      // A 32B model can take a few minutes to fully map to RAM
+      let isReady = false;
+      let attempts = 0;
+
+      while (!isReady && attempts < 300) { // 10 minute timeout
+        attempts++;
+        
+        try {
+          const healthJson = await invoke<string>('check_engine_health');
+          const health = JSON.parse(healthJson);
+
+          if (health.status === 'ok') {
+            isReady = true;
+            setWarmupStatus('Brain is Awake!');
+          } else {
+            setWarmupStatus(`Loading Model... (${attempts * 2}s)`);
+          }
+        } catch (e) {
+          // Connection refused usually means it's still booting
+          setWarmupStatus(`Engine Booting... (${attempts * 2}s)`);
+        }
+
+        if (!isReady) {
+          await new Promise(r => setTimeout(r, 2000));
+        }
+      }
 
       updateAstroSettings({
         onboardingCompleted: true,
         selectedModel: profile.recommendedModel,
       });
     } catch (error) {
-      console.error('Failed to download model:', error);
-
-      // Fallback or error handling could go here
-    } finally {
+      console.error('Failed to download or start model:', error);
       setIsDownloading(false);
-
+      setIsWarmingUp(false);
+    } finally {
       if (unlisten) {
         unlisten();
       }
@@ -167,6 +199,16 @@ export function OnboardingModal() {
                     />
                   </div>
                 </div>
+              ) : isWarmingUp ? (
+                <div className="w-full flex flex-col items-center gap-3 py-2">
+                  <div className="flex items-center gap-3 text-blue-400">
+                    <div className="i-svg-spinners:90-ring-with-bg text-2xl animate-spin"></div>
+                    <span className="text-sm font-bold tracking-wide uppercase">{warmupStatus}</span>
+                  </div>
+                  <p className="text-[11px] text-Astro-elements-textTertiary text-center">
+                    Large models take a few moments to load into RAM. This is a one-time warm-up.
+                  </p>
+                </div>
               ) : (
                 <button
                   onClick={handleDownloadAndStart}
@@ -177,7 +219,7 @@ export function OnboardingModal() {
                 </button>
               )}
 
-              {!isDownloading && (
+              {!isDownloading && !isWarmingUp && (
                 <button
                   onClick={handleSkip}
                   className="text-sm font-medium text-Astro-elements-textSecondary hover:text-Astro-elements-textPrimary transition-colors py-2"

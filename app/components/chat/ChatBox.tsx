@@ -277,6 +277,31 @@ export const ChatBox: React.FC<ChatBoxProps> = (props) => {
         setDownloadStatus('Starting Local Engine...');
         await tauri.invoke('start_engine', { modelPath: filePath });
 
+        // POLL FOR READINESS
+        let isReady = false;
+        let attempts = 0;
+
+        while (!isReady && attempts < 150) { // 5 minute timeout
+          attempts++;
+          
+          try {
+            const healthJson = await tauri.invoke<string>('check_engine_health');
+            const health = JSON.parse(healthJson);
+
+            if (health.status === 'ok') {
+              isReady = true;
+            } else {
+              setDownloadStatus(`Warming up Brain... (${attempts * 2}s)`);
+            }
+          } catch (e) {
+            setDownloadStatus(`Engine Booting... (${attempts * 2}s)`);
+          }
+
+          if (!isReady) {
+            await new Promise(r => setTimeout(r, 2000));
+          }
+        }
+
         setDownloadStatus('Local Engine Ready (Port 8081)');
 
         // Automatically switch to AstroLocal pointing to local sidecar
