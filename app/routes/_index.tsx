@@ -20,16 +20,17 @@ export default function Index() {
     <div className="flex flex-col h-full w-full bg-Astro-elements-background-depth-1">
       <BackgroundRays />
       <Header />
-      <ClientOnly fallback={<BaseChat />}>
-        {() => {
-          const isTauri = typeof window !== 'undefined' && (
-            '__TAURI_INTERNALS__' in window || 
-            '__TAURI__' in window || 
-            window.location.hostname === 'tauri.localhost' ||
-            window.location.protocol === 'tauri:'
-          );
-          
-          if (isTauri) {
+            <ClientOnly fallback={<BaseChat />}>
+              {() => {
+                const isTauri = typeof window !== 'undefined' && (
+                  '__TAURI_INTERNALS__' in window || 
+                  '__TAURI__' in window || 
+                  window.location.hostname === 'tauri.localhost' ||
+                  window.location.protocol === 'tauri:'
+                );
+      
+                if (isTauri) {
+      
             return (
               <>
                 <Chat />

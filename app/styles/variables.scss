@@ -1,148 +1,86 @@
-/* Color Tokens Light Theme */
+﻿/* Color Tokens Light Theme */
 :root,
 :root[data-theme='light'] {
-  --bolt-elements-borderColor: theme('colors.alpha.gray.10');
-  --bolt-elements-borderColorActive: theme('colors.accent.600');
-  --Astro-elements-borderColor: var(--bolt-elements-borderColor);
-  --Astro-elements-borderColorActive: var(--bolt-elements-borderColorActive);
+  --Astro-elements-borderColor: theme('colors.alpha.gray.10');
+  --Astro-elements-borderColorActive: theme('colors.accent.600');
 
-  --bolt-elements-bg-depth-1: theme('colors.white');
-  --bolt-elements-bg-depth-2: theme('colors.gray.50');
-  --bolt-elements-bg-depth-3: theme('colors.gray.200');
-  --bolt-elements-bg-depth-4: theme('colors.alpha.gray.5');
-  --Astro-elements-bg-depth-1: var(--bolt-elements-bg-depth-1);
-  --Astro-elements-bg-depth-2: var(--bolt-elements-bg-depth-2);
-  --Astro-elements-bg-depth-3: var(--bolt-elements-bg-depth-3);
-  --Astro-elements-bg-depth-4: var(--bolt-elements-bg-depth-4);
+  --Astro-elements-bg-depth-1: theme('colors.white');
+  --Astro-elements-bg-depth-2: theme('colors.gray.50');
+  --Astro-elements-bg-depth-3: theme('colors.gray.200');
+  --Astro-elements-bg-depth-4: theme('colors.alpha.gray.5');
 
-  --bolt-elements-textPrimary: theme('colors.gray.950');
-  --bolt-elements-textSecondary: theme('colors.gray.600');
-  --bolt-elements-textTertiary: theme('colors.gray.500');
-  --Astro-elements-textPrimary: var(--bolt-elements-textPrimary);
-  --Astro-elements-textSecondary: var(--bolt-elements-textSecondary);
-  --Astro-elements-textTertiary: var(--bolt-elements-textTertiary);
+  --Astro-elements-textPrimary: theme('colors.gray.950');
+  --Astro-elements-textSecondary: theme('colors.gray.600');
+  --Astro-elements-textTertiary: theme('colors.gray.500');
 
-  --bolt-elements-code-background: theme('colors.gray.100');
-  --bolt-elements-code-text: theme('colors.gray.950');
-  --Astro-elements-code-background: var(--bolt-elements-code-background);
-  --Astro-elements-code-text: var(--bolt-elements-code-text);
+  --Astro-elements-code-background: theme('colors.gray.100');
+  --Astro-elements-code-text: theme('colors.gray.950');
 
-  --bolt-elements-button-primary-background: theme('colors.alpha.accent.10');
-  --bolt-elements-button-primary-backgroundHover: theme('colors.alpha.accent.20');
-  --bolt-elements-button-primary-text: theme('colors.accent.500');
-  --Astro-elements-button-primary-background: var(--bolt-elements-button-primary-background);
-  --Astro-elements-button-primary-backgroundHover: var(--bolt-elements-button-primary-backgroundHover);
-  --Astro-elements-button-primary-text: var(--bolt-elements-button-primary-text);
+  --Astro-elements-button-primary-background: theme('colors.alpha.accent.10');
+  --Astro-elements-button-primary-backgroundHover: theme('colors.alpha.accent.20');
+  --Astro-elements-button-primary-text: theme('colors.accent.500');
 
-  --bolt-elements-button-secondary-background: theme('colors.alpha.gray.5');
-  --bolt-elements-button-secondary-backgroundHover: theme('colors.alpha.gray.10');
-  --bolt-elements-button-secondary-text: theme('colors.gray.950');
-  --Astro-elements-button-secondary-background: var(--bolt-elements-button-secondary-background);
-  --Astro-elements-button-secondary-backgroundHover: var(--bolt-elements-button-secondary-backgroundHover);
-  --Astro-elements-button-secondary-text: var(--bolt-elements-button-secondary-text);
+  --Astro-elements-button-secondary-background: theme('colors.alpha.gray.5');
+  --Astro-elements-button-secondary-backgroundHover: theme('colors.alpha.gray.10');
+  --Astro-elements-button-secondary-text: theme('colors.gray.950');
 
-  --bolt-elements-button-danger-background: theme('colors.alpha.red.10');
-  --bolt-elements-button-danger-backgroundHover: theme('colors.alpha.red.20');
-  --bolt-elements-button-danger-text: theme('colors.red.500');
-  --Astro-elements-button-danger-background: var(--bolt-elements-button-danger-background);
-  --Astro-elements-button-danger-backgroundHover: var(--bolt-elements-button-danger-backgroundHover);
-  --Astro-elements-button-danger-text: var(--bolt-elements-button-danger-text);
+  --Astro-elements-button-danger-background: theme('colors.alpha.red.10');
+  --Astro-elements-button-danger-backgroundHover: theme('colors.alpha.red.20');
+  --Astro-elements-button-danger-text: theme('colors.red.500');
 
-  --bolt-elements-item-contentDefault: theme('colors.alpha.gray.50');
-  --bolt-elements-item-contentActive: theme('colors.gray.950');
-  --bolt-elements-item-contentAccent: theme('colors.accent.700');
-  --bolt-elements-item-contentDanger: theme('colors.red.500');
-  --bolt-elements-item-backgroundDefault: rgba(0, 0, 0, 0);
-  --bolt-elements-item-backgroundActive: theme('colors.alpha.gray.5');
-  --bolt-elements-item-backgroundAccent: theme('colors.alpha.accent.10');
-  --bolt-elements-item-backgroundDanger: theme('colors.alpha.red.10');
-  --Astro-elements-item-contentDefault: var(--bolt-elements-item-contentDefault);
-  --Astro-elements-item-contentActive: var(--bolt-elements-item-contentActive);
-  --Astro-elements-item-contentAccent: var(--bolt-elements-item-contentAccent);
-  --Astro-elements-item-contentDanger: var(--bolt-elements-item-contentDanger);
-  --Astro-elements-item-backgroundDefault: var(--bolt-elements-item-backgroundDefault);
-  --Astro-elements-item-backgroundActive: var(--bolt-elements-item-backgroundActive);
-  --Astro-elements-item-backgroundAccent: var(--bolt-elements-item-backgroundAccent);
-  --Astro-elements-item-backgroundDanger: var(--bolt-elements-item-backgroundDanger);
+  --Astro-elements-item-contentDefault: theme('colors.alpha.gray.50');
+  --Astro-elements-item-contentActive: theme('colors.gray.950');
+  --Astro-elements-item-contentAccent: theme('colors.accent.700');
+  --Astro-elements-item-contentDanger: theme('colors.red.500');
+  --Astro-elements-item-backgroundDefault: rgba(0, 0, 0, 0);
+  --Astro-elements-item-backgroundActive: theme('colors.alpha.gray.5');
+  --Astro-elements-item-backgroundAccent: theme('colors.alpha.accent.10');
+  --Astro-elements-item-backgroundDanger: theme('colors.alpha.red.10');
 
-  --bolt-elements-loader-background: theme('colors.alpha.gray.10');
-  --bolt-elements-loader-progress: theme('colors.accent.500');
-  --Astro-elements-loader-background: var(--bolt-elements-loader-background);
-  --Astro-elements-loader-progress: var(--bolt-elements-loader-progress);
+  --Astro-elements-loader-background: theme('colors.alpha.gray.10');
+  --Astro-elements-loader-progress: theme('colors.accent.500');
 
-  --bolt-elements-artifacts-background: theme('colors.white');
-  --bolt-elements-artifacts-backgroundHover: theme('colors.alpha.gray.2');
-  --bolt-elements-artifacts-borderColor: var(--bolt-elements-borderColor);
-  --bolt-elements-artifacts-inlineCode-background: theme('colors.gray.100');
-  --bolt-elements-artifacts-inlineCode-text: var(--bolt-elements-textPrimary);
-  --Astro-elements-artifacts-background: var(--bolt-elements-artifacts-background);
-  --Astro-elements-artifacts-backgroundHover: var(--bolt-elements-artifacts-backgroundHover);
-  --Astro-elements-artifacts-borderColor: var(--bolt-elements-artifacts-borderColor);
-  --Astro-elements-artifacts-inlineCode-background: var(--bolt-elements-artifacts-inlineCode-background);
-  --Astro-elements-artifacts-inlineCode-text: var(--bolt-elements-artifacts-inlineCode-text);
+  --Astro-elements-artifacts-background: theme('colors.white');
+  --Astro-elements-artifacts-backgroundHover: theme('colors.alpha.gray.2');
+  --Astro-elements-artifacts-borderColor: var(--Astro-elements-borderColor);
+  --Astro-elements-artifacts-inlineCode-background: theme('colors.gray.100');
+  --Astro-elements-artifacts-inlineCode-text: var(--Astro-elements-textPrimary);
 
-  --bolt-elements-actions-background: theme('colors.white');
-  --bolt-elements-actions-code-background: theme('colors.gray.800');
-  --Astro-elements-actions-background: var(--bolt-elements-actions-background);
-  --Astro-elements-actions-code-background: var(--bolt-elements-actions-code-background);
+  --Astro-elements-actions-background: theme('colors.white');
+  --Astro-elements-actions-code-background: theme('colors.gray.800');
 
-  --bolt-elements-messages-background: theme('colors.gray.100');
-  --bolt-elements-messages-linkColor: theme('colors.accent.500');
-  --bolt-elements-messages-code-background: theme('colors.gray.800');
-  --bolt-elements-messages-inlineCode-background: theme('colors.gray.200');
-  --bolt-elements-messages-inlineCode-text: theme('colors.gray.800');
-  --Astro-elements-messages-background: var(--bolt-elements-messages-background);
-  --Astro-elements-messages-linkColor: var(--bolt-elements-messages-linkColor);
-  --Astro-elements-messages-code-background: var(--bolt-elements-messages-code-background);
-  --Astro-elements-messages-inlineCode-background: var(--bolt-elements-messages-inlineCode-background);
-  --Astro-elements-messages-inlineCode-text: var(--bolt-elements-messages-inlineCode-text);
+  --Astro-elements-messages-background: theme('colors.gray.100');
+  --Astro-elements-messages-linkColor: theme('colors.accent.500');
+  --Astro-elements-messages-code-background: theme('colors.gray.800');
+  --Astro-elements-messages-inlineCode-background: theme('colors.gray.200');
+  --Astro-elements-messages-inlineCode-text: theme('colors.gray.800');
 
-  --bolt-elements-icon-success: theme('colors.green.500');
-  --bolt-elements-icon-error: theme('colors.red.500');
-  --bolt-elements-icon-primary: theme('colors.gray.950');
-  --bolt-elements-icon-secondary: theme('colors.gray.600');
-  --bolt-elements-icon-tertiary: theme('colors.gray.500');
-  --Astro-elements-icon-success: var(--bolt-elements-icon-success);
-  --Astro-elements-icon-error: var(--bolt-elements-icon-error);
-  --Astro-elements-icon-primary: var(--bolt-elements-icon-primary);
-  --Astro-elements-icon-secondary: var(--bolt-elements-icon-secondary);
-  --Astro-elements-icon-tertiary: var(--bolt-elements-icon-tertiary);
+  --Astro-elements-icon-success: theme('colors.green.500');
+  --Astro-elements-icon-error: theme('colors.red.500');
+  --Astro-elements-icon-primary: theme('colors.gray.950');
+  --Astro-elements-icon-secondary: theme('colors.gray.600');
+  --Astro-elements-icon-tertiary: theme('colors.gray.500');
 
-  --bolt-elements-dividerColor: theme('colors.gray.100');
-  --Astro-elements-dividerColor: var(--bolt-elements-dividerColor);
+  --Astro-elements-dividerColor: theme('colors.gray.100');
 
-  --bolt-elements-prompt-background: theme('colors.alpha.white.80');
-  --Astro-elements-prompt-background: var(--bolt-elements-prompt-background);
+  --Astro-elements-prompt-background: theme('colors.alpha.white.80');
 
-  --bolt-elements-sidebar-dropdownShadow: theme('colors.alpha.gray.10');
-  --bolt-elements-sidebar-buttonBackgroundDefault: theme('colors.alpha.accent.10');
-  --bolt-elements-sidebar-buttonBackgroundHover: theme('colors.alpha.accent.20');
-  --bolt-elements-sidebar-buttonText: theme('colors.accent.700');
-  --Astro-elements-sidebar-dropdownShadow: var(--bolt-elements-sidebar-dropdownShadow);
-  --Astro-elements-sidebar-buttonBackgroundDefault: var(--bolt-elements-sidebar-buttonBackgroundDefault);
-  --Astro-elements-sidebar-buttonBackgroundHover: var(--bolt-elements-sidebar-buttonBackgroundHover);
-  --Astro-elements-sidebar-buttonText: var(--bolt-elements-sidebar-buttonText);
+  --Astro-elements-sidebar-dropdownShadow: theme('colors.alpha.gray.10');
+  --Astro-elements-sidebar-buttonBackgroundDefault: theme('colors.alpha.accent.10');
+  --Astro-elements-sidebar-buttonBackgroundHover: theme('colors.alpha.accent.20');
+  --Astro-elements-sidebar-buttonText: theme('colors.accent.700');
 
-  --bolt-elements-preview-addressBar-background: theme('colors.gray.100');
-  --bolt-elements-preview-addressBar-backgroundHover: theme('colors.alpha.gray.5');
-  --bolt-elements-preview-addressBar-backgroundActive: theme('colors.white');
-  --bolt-elements-preview-addressBar-text: var(--bolt-elements-textSecondary);
-  --bolt-elements-preview-addressBar-textActive: var(--bolt-elements-textPrimary);
-  --Astro-elements-preview-addressBar-background: var(--bolt-elements-preview-addressBar-background);
-  --Astro-elements-preview-addressBar-backgroundHover: var(--bolt-elements-preview-addressBar-backgroundHover);
-  --Astro-elements-preview-addressBar-backgroundActive: var(--bolt-elements-preview-addressBar-backgroundActive);
-  --Astro-elements-preview-addressBar-text: var(--bolt-elements-preview-addressBar-text);
-  --Astro-elements-preview-addressBar-textActive: var(--bolt-elements-preview-addressBar-textActive);
+  --Astro-elements-preview-addressBar-background: theme('colors.gray.100');
+  --Astro-elements-preview-addressBar-backgroundHover: theme('colors.alpha.gray.5');
+  --Astro-elements-preview-addressBar-backgroundActive: theme('colors.white');
+  --Astro-elements-preview-addressBar-text: var(--Astro-elements-textSecondary);
+  --Astro-elements-preview-addressBar-textActive: var(--Astro-elements-textPrimary);
 
-  --bolt-elements-terminals-background: theme('colors.white');
-  --bolt-elements-terminals-buttonBackground: var(--bolt-elements-bg-depth-4);
-  --Astro-elements-terminals-background: var(--bolt-elements-terminals-background);
-  --Astro-elements-terminals-buttonBackground: var(--bolt-elements-terminals-buttonBackground);
+  --Astro-elements-terminals-background: theme('colors.white');
+  --Astro-elements-terminals-buttonBackground: var(--Astro-elements-bg-depth-4);
 
-  --bolt-elements-cta-background: theme('colors.gray.100');
-  --bolt-elements-cta-text: theme('colors.gray.950');
-  --Astro-elements-cta-background: var(--bolt-elements-cta-background);
-  --Astro-elements-cta-text: var(--bolt-elements-cta-text);
+  --Astro-elements-cta-background: theme('colors.gray.100');
+  --Astro-elements-cta-text: theme('colors.gray.950');
 
   /* Terminal Colors */
   --Astro-terminal-background: var(--Astro-elements-terminals-background);
@@ -171,148 +109,86 @@
 /* Color Tokens Dark Theme */
 :root,
 :root[data-theme='dark'] {
-  --bolt-elements-borderColor: theme('colors.alpha.white.10');
-  --bolt-elements-borderColorActive: theme('colors.accent.500');
-  --Astro-elements-borderColor: var(--bolt-elements-borderColor);
-  --Astro-elements-borderColorActive: var(--bolt-elements-borderColorActive);
+  --Astro-elements-borderColor: theme('colors.alpha.white.10');
+  --Astro-elements-borderColorActive: theme('colors.accent.500');
 
-  --bolt-elements-bg-depth-1: theme('colors.gray.950');
-  --bolt-elements-bg-depth-2: theme('colors.gray.900');
-  --bolt-elements-bg-depth-3: theme('colors.gray.800');
-  --bolt-elements-bg-depth-4: theme('colors.alpha.white.5');
-  --Astro-elements-bg-depth-1: var(--bolt-elements-bg-depth-1);
-  --Astro-elements-bg-depth-2: var(--bolt-elements-bg-depth-2);
-  --Astro-elements-bg-depth-3: var(--bolt-elements-bg-depth-3);
-  --Astro-elements-bg-depth-4: var(--bolt-elements-bg-depth-4);
+  --Astro-elements-bg-depth-1: theme('colors.gray.950');
+  --Astro-elements-bg-depth-2: theme('colors.gray.900');
+  --Astro-elements-bg-depth-3: theme('colors.gray.800');
+  --Astro-elements-bg-depth-4: theme('colors.alpha.white.5');
 
-  --bolt-elements-textPrimary: theme('colors.white');
-  --bolt-elements-textSecondary: theme('colors.gray.400');
-  --bolt-elements-textTertiary: theme('colors.gray.500');
-  --Astro-elements-textPrimary: var(--bolt-elements-textPrimary);
-  --Astro-elements-textSecondary: var(--bolt-elements-textSecondary);
-  --Astro-elements-textTertiary: var(--bolt-elements-textTertiary);
+  --Astro-elements-textPrimary: theme('colors.white');
+  --Astro-elements-textSecondary: theme('colors.gray.400');
+  --Astro-elements-textTertiary: theme('colors.gray.500');
 
-  --bolt-elements-code-background: theme('colors.gray.800');
-  --bolt-elements-code-text: theme('colors.white');
-  --Astro-elements-code-background: var(--bolt-elements-code-background);
-  --Astro-elements-code-text: var(--bolt-elements-code-text);
+  --Astro-elements-code-background: theme('colors.gray.800');
+  --Astro-elements-code-text: theme('colors.white');
 
-  --bolt-elements-button-primary-background: theme('colors.alpha.accent.10');
-  --bolt-elements-button-primary-backgroundHover: theme('colors.alpha.accent.20');
-  --bolt-elements-button-primary-text: theme('colors.accent.500');
-  --Astro-elements-button-primary-background: var(--bolt-elements-button-primary-background);
-  --Astro-elements-button-primary-backgroundHover: var(--bolt-elements-button-primary-backgroundHover);
-  --Astro-elements-button-primary-text: var(--bolt-elements-button-primary-text);
+  --Astro-elements-button-primary-background: theme('colors.alpha.accent.10');
+  --Astro-elements-button-primary-backgroundHover: theme('colors.alpha.accent.20');
+  --Astro-elements-button-primary-text: theme('colors.accent.500');
 
-  --bolt-elements-button-secondary-background: theme('colors.alpha.white.5');
-  --bolt-elements-button-secondary-backgroundHover: theme('colors.alpha.white.10');
-  --bolt-elements-button-secondary-text: theme('colors.white');
-  --Astro-elements-button-secondary-background: var(--bolt-elements-button-secondary-background);
-  --Astro-elements-button-secondary-backgroundHover: var(--bolt-elements-button-secondary-backgroundHover);
-  --Astro-elements-button-secondary-text: var(--bolt-elements-button-secondary-text);
+  --Astro-elements-button-secondary-background: theme('colors.alpha.white.5');
+  --Astro-elements-button-secondary-backgroundHover: theme('colors.alpha.white.10');
+  --Astro-elements-button-secondary-text: theme('colors.white');
 
-  --bolt-elements-button-danger-background: theme('colors.alpha.red.10');
-  --bolt-elements-button-danger-backgroundHover: theme('colors.alpha.red.20');
-  --bolt-elements-button-danger-text: theme('colors.red.500');
-  --Astro-elements-button-danger-background: var(--bolt-elements-button-danger-background);
-  --Astro-elements-button-danger-backgroundHover: var(--bolt-elements-button-danger-backgroundHover);
-  --Astro-elements-button-danger-text: var(--bolt-elements-button-danger-text);
+  --Astro-elements-button-danger-background: theme('colors.alpha.red.10');
+  --Astro-elements-button-danger-backgroundHover: theme('colors.alpha.red.20');
+  --Astro-elements-button-danger-text: theme('colors.red.500');
 
-  --bolt-elements-item-contentDefault: theme('colors.alpha.white.50');
-  --bolt-elements-item-contentActive: theme('colors.white');
-  --bolt-elements-item-contentAccent: theme('colors.accent.500');
-  --bolt-elements-item-contentDanger: theme('colors.red.500');
-  --bolt-elements-item-backgroundDefault: rgba(255, 255, 255, 0);
-  --bolt-elements-item-backgroundActive: theme('colors.alpha.white.10');
-  --bolt-elements-item-backgroundAccent: theme('colors.alpha.accent.10');
-  --bolt-elements-item-backgroundDanger: theme('colors.alpha.red.10');
-  --Astro-elements-item-contentDefault: var(--bolt-elements-item-contentDefault);
-  --Astro-elements-item-contentActive: var(--bolt-elements-item-contentActive);
-  --Astro-elements-item-contentAccent: var(--bolt-elements-item-contentAccent);
-  --Astro-elements-item-contentDanger: var(--bolt-elements-item-contentDanger);
-  --Astro-elements-item-backgroundDefault: var(--bolt-elements-item-backgroundDefault);
-  --Astro-elements-item-backgroundActive: var(--bolt-elements-item-backgroundActive);
-  --Astro-elements-item-backgroundAccent: var(--bolt-elements-item-backgroundAccent);
-  --Astro-elements-item-backgroundDanger: var(--bolt-elements-item-backgroundDanger);
+  --Astro-elements-item-contentDefault: theme('colors.alpha.white.50');
+  --Astro-elements-item-contentActive: theme('colors.white');
+  --Astro-elements-item-contentAccent: theme('colors.accent.500');
+  --Astro-elements-item-contentDanger: theme('colors.red.500');
+  --Astro-elements-item-backgroundDefault: rgba(255, 255, 255, 0);
+  --Astro-elements-item-backgroundActive: theme('colors.alpha.white.10');
+  --Astro-elements-item-backgroundAccent: theme('colors.alpha.accent.10');
+  --Astro-elements-item-backgroundDanger: theme('colors.alpha.red.10');
 
-  --bolt-elements-loader-background: theme('colors.alpha.gray.10');
-  --bolt-elements-loader-progress: theme('colors.accent.500');
-  --Astro-elements-loader-background: var(--bolt-elements-loader-background);
-  --Astro-elements-loader-progress: var(--bolt-elements-loader-progress);
+  --Astro-elements-loader-background: theme('colors.alpha.gray.10');
+  --Astro-elements-loader-progress: theme('colors.accent.500');
 
-  --bolt-elements-artifacts-background: theme('colors.gray.900');
-  --bolt-elements-artifacts-backgroundHover: theme('colors.alpha.white.5');
-  --bolt-elements-artifacts-borderColor: var(--bolt-elements-borderColor);
-  --bolt-elements-artifacts-inlineCode-background: theme('colors.gray.800');
-  --bolt-elements-artifacts-inlineCode-text: theme('colors.white');
-  --Astro-elements-artifacts-background: var(--bolt-elements-artifacts-background);
-  --Astro-elements-artifacts-backgroundHover: var(--bolt-elements-artifacts-backgroundHover);
-  --Astro-elements-artifacts-borderColor: var(--bolt-elements-artifacts-borderColor);
-  --Astro-elements-artifacts-inlineCode-background: var(--bolt-elements-artifacts-inlineCode-background);
-  --Astro-elements-artifacts-inlineCode-text: var(--bolt-elements-artifacts-inlineCode-text);
+  --Astro-elements-artifacts-background: theme('colors.gray.900');
+  --Astro-elements-artifacts-backgroundHover: theme('colors.alpha.white.5');
+  --Astro-elements-artifacts-borderColor: var(--Astro-elements-borderColor);
+  --Astro-elements-artifacts-inlineCode-background: theme('colors.gray.800');
+  --Astro-elements-artifacts-inlineCode-text: theme('colors.white');
 
-  --bolt-elements-actions-background: theme('colors.gray.900');
-  --bolt-elements-actions-code-background: theme('colors.gray.800');
-  --Astro-elements-actions-background: var(--bolt-elements-actions-background);
-  --Astro-elements-actions-code-background: var(--bolt-elements-actions-code-background);
+  --Astro-elements-actions-background: theme('colors.gray.900');
+  --Astro-elements-actions-code-background: theme('colors.gray.800');
 
-  --bolt-elements-messages-background: theme('colors.gray.800');
-  --bolt-elements-messages-linkColor: theme('colors.accent.500');
-  --bolt-elements-messages-code-background: theme('colors.gray.900');
-  --bolt-elements-messages-inlineCode-background: theme('colors.gray.700');
-  --bolt-elements-messages-inlineCode-text: var(--bolt-elements-textPrimary);
-  --Astro-elements-messages-background: var(--bolt-elements-messages-background);
-  --Astro-elements-messages-linkColor: var(--bolt-elements-messages-linkColor);
-  --Astro-elements-messages-code-background: var(--bolt-elements-messages-code-background);
-  --Astro-elements-messages-inlineCode-background: var(--bolt-elements-messages-inlineCode-background);
-  --Astro-elements-messages-inlineCode-text: var(--bolt-elements-messages-inlineCode-text);
+  --Astro-elements-messages-background: theme('colors.gray.800');
+  --Astro-elements-messages-linkColor: theme('colors.accent.500');
+  --Astro-elements-messages-code-background: theme('colors.gray.900');
+  --Astro-elements-messages-inlineCode-background: theme('colors.gray.700');
+  --Astro-elements-messages-inlineCode-text: var(--Astro-elements-textPrimary);
 
-  --bolt-elements-icon-success: theme('colors.green.400');
-  --bolt-elements-icon-error: theme('colors.red.400');
-  --bolt-elements-icon-primary: theme('colors.gray.950');
-  --bolt-elements-icon-secondary: theme('colors.gray.600');
-  --bolt-elements-icon-tertiary: theme('colors.gray.500');
-  --Astro-elements-icon-success: var(--bolt-elements-icon-success);
-  --Astro-elements-icon-error: var(--bolt-elements-icon-error);
-  --Astro-elements-icon-primary: var(--bolt-elements-icon-primary);
-  --Astro-elements-icon-secondary: var(--bolt-elements-icon-secondary);
-  --Astro-elements-icon-tertiary: var(--bolt-elements-icon-tertiary);
+  --Astro-elements-icon-success: theme('colors.green.400');
+  --Astro-elements-icon-error: theme('colors.red.400');
+  --Astro-elements-icon-primary: theme('colors.gray.950');
+  --Astro-elements-icon-secondary: theme('colors.gray.600');
+  --Astro-elements-icon-tertiary: theme('colors.gray.500');
 
-  --bolt-elements-dividerColor: theme('colors.gray.100');
-  --Astro-elements-dividerColor: var(--bolt-elements-dividerColor);
+  --Astro-elements-dividerColor: theme('colors.gray.100');
 
-  --bolt-elements-prompt-background: theme('colors.alpha.gray.80');
-  --Astro-elements-prompt-background: var(--bolt-elements-prompt-background);
+  --Astro-elements-prompt-background: theme('colors.alpha.gray.80');
 
-  --bolt-elements-sidebar-dropdownShadow: theme('colors.alpha.gray.30');
-  --bolt-elements-sidebar-buttonBackgroundDefault: theme('colors.alpha.accent.10');
-  --bolt-elements-sidebar-buttonBackgroundHover: theme('colors.alpha.accent.20');
-  --bolt-elements-sidebar-buttonText: theme('colors.accent.500');
-  --Astro-elements-sidebar-dropdownShadow: var(--bolt-elements-sidebar-dropdownShadow);
-  --Astro-elements-sidebar-buttonBackgroundDefault: var(--bolt-elements-sidebar-buttonBackgroundDefault);
-  --Astro-elements-sidebar-buttonBackgroundHover: var(--bolt-elements-sidebar-buttonBackgroundHover);
-  --Astro-elements-sidebar-buttonText: var(--bolt-elements-sidebar-buttonText);
+  --Astro-elements-sidebar-dropdownShadow: theme('colors.alpha.gray.30');
+  --Astro-elements-sidebar-buttonBackgroundDefault: theme('colors.alpha.accent.10');
+  --Astro-elements-sidebar-buttonBackgroundHover: theme('colors.alpha.accent.20');
+  --Astro-elements-sidebar-buttonText: theme('colors.accent.500');
 
-  --bolt-elements-preview-addressBar-background: var(--bolt-elements-bg-depth-1);
-  --bolt-elements-preview-addressBar-backgroundHover: theme('colors.alpha.white.5');
-  --bolt-elements-preview-addressBar-backgroundActive: var(--bolt-elements-bg-depth-1);
-  --bolt-elements-preview-addressBar-text: var(--bolt-elements-textSecondary);
-  --bolt-elements-preview-addressBar-textActive: var(--bolt-elements-textPrimary);
-  --Astro-elements-preview-addressBar-background: var(--bolt-elements-preview-addressBar-background);
-  --Astro-elements-preview-addressBar-backgroundHover: var(--bolt-elements-preview-addressBar-backgroundHover);
-  --Astro-elements-preview-addressBar-backgroundActive: var(--bolt-elements-preview-addressBar-backgroundActive);
-  --Astro-elements-preview-addressBar-text: var(--bolt-elements-preview-addressBar-text);
-  --Astro-elements-preview-addressBar-textActive: var(--bolt-elements-preview-addressBar-textActive);
+  --Astro-elements-preview-addressBar-background: var(--Astro-elements-bg-depth-1);
+  --Astro-elements-preview-addressBar-backgroundHover: theme('colors.alpha.white.5');
+  --Astro-elements-preview-addressBar-backgroundActive: var(--Astro-elements-bg-depth-1);
+  --Astro-elements-preview-addressBar-text: var(--Astro-elements-textSecondary);
+  --Astro-elements-preview-addressBar-textActive: var(--Astro-elements-textPrimary);
 
-  --bolt-elements-terminals-background: var(--bolt-elements-bg-depth-1);
-  --bolt-elements-terminals-buttonBackground: var(--bolt-elements-bg-depth-3);
-  --Astro-elements-terminals-background: var(--bolt-elements-terminals-background);
-  --Astro-elements-terminals-buttonBackground: var(--bolt-elements-terminals-buttonBackground);
+  --Astro-elements-terminals-background: var(--Astro-elements-bg-depth-1);
+  --Astro-elements-terminals-buttonBackground: var(--Astro-elements-bg-depth-3);
 
-  --bolt-elements-cta-background: theme('colors.alpha.white.10');
-  --bolt-elements-cta-text: theme('colors.white');
-  --Astro-elements-cta-background: var(--bolt-elements-cta-background);
-  --Astro-elements-cta-text: var(--bolt-elements-cta-text);
+  --Astro-elements-cta-background: theme('colors.alpha.white.10');
+  --Astro-elements-cta-text: theme('colors.white');
 
   /* Terminal Colors */
   --Astro-terminal-background: var(--Astro-elements-terminals-background);
@@ -377,3 +253,4 @@
   --Astro-elements-terminal-color-brightCyan: var(--Astro-terminal-brightCyan);
   --Astro-elements-terminal-color-brightWhite: var(--Astro-terminal-brightWhite);
 }
+
