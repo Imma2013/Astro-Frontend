@@ -11,6 +11,10 @@ export const meta: MetaFunction = () => {
   return [{ title: 'Astro' }, { name: 'description', content: 'Talk with Astro, an AI assistant from StackBlitz' }];
 };
 
+export const clientLoader = () => {
+  return {};
+};
+
 export default function Index() {
   return (
     <div className="flex flex-col h-full w-full bg-Astro-elements-background-depth-1">

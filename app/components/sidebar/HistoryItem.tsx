@@ -25,7 +25,7 @@ export function HistoryItem({
   isSelected = false,
   onToggleSelection,
 }: HistoryItemProps) {
-  const { id: urlId } = useParams();
+  const { id: urlId } = useParams() || {};
   const isActiveChat = urlId === item.urlId;
 
   const { editing, handleChange, handleBlur, handleSubmit, handleKeyDown, currentDescription, toggleEditMode } =
