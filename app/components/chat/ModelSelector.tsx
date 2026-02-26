@@ -139,7 +139,7 @@ export const ModelSelector = ({
         return false;
       }
 
-      if (isTauri && entry.name === 'WebLLM') {
+      if (entry.name === 'WebLLM') {
         return false;
       }
 

@@ -35,7 +35,7 @@ import type { ElementInfo } from '~/components/workbench/Inspector';
 import LlmErrorAlert from './LLMApiAlert';
 
 const TEXTAREA_MIN_HEIGHT = 76;
-const LOCAL_PROVIDER_NAMES = ['WebLLM', 'OpenAILike', 'LMStudio'];
+const LOCAL_PROVIDER_NAMES = ['AstroLocal', 'OpenAILike', 'LMStudio'];
 const MANUAL_MODEL_LOCK_KEY = 'Astro_model_manual_lock';
 const AUTOSET_GUARD_KEY = 'Astro_model_autoset_in_progress';
 const MOBILE_UA_REGEX = /android|iphone|ipad|mobile/;
@@ -346,7 +346,7 @@ export const BaseChat = React.forwardRef<HTMLDivElement, BaseChatProps>(
           return;
         }
 
-        const providerOrder = ['WebLLM', 'LMStudio', 'OpenAILike'];
+        const providerOrder = ['AstroLocal', 'LMStudio', 'OpenAILike'];
         const selectedLocalProvider =
           providerOrder
             .map((providerName) => localProviders.find((candidate) => candidate.name === providerName))
@@ -398,7 +398,7 @@ export const BaseChat = React.forwardRef<HTMLDivElement, BaseChatProps>(
         return;
       }
 
-      const providerOrder = ['WebLLM', 'LMStudio', 'OpenAILike'];
+      const providerOrder = ['AstroLocal', 'LMStudio', 'OpenAILike'];
       const selectedLocalProvider =
         providerOrder
           .map((providerName) => localProviders.find((candidate) => candidate.name === providerName))

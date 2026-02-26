@@ -24,7 +24,7 @@ export interface Shortcuts {
 }
 
 export const URL_CONFIGURABLE_PROVIDERS = ['Ollama', 'LMStudio', 'OpenAILike'];
-export const LOCAL_PROVIDERS = ['WebLLM', 'OpenAILike', 'LMStudio', 'Ollama'];
+export const LOCAL_PROVIDERS = ['AstroLocal', 'OpenAILike', 'LMStudio', 'Ollama'];
 
 export type ProviderSetting = Record<string, IProviderConfig>;
 

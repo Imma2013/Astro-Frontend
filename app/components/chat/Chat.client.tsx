@@ -34,7 +34,7 @@ import { generateLocalWebLLMReply } from '~/lib/local/webllm.client';
 const logger = createScopedLogger('Chat');
 const MANUAL_MODEL_LOCK_KEY = 'Astro_model_manual_lock';
 const AUTOSET_GUARD_KEY = 'Astro_model_autoset_in_progress';
-const WEBLLM_PROVIDER_NAME = 'WebLLM';
+const ASTRO_LOCAL_PROVIDER_NAME = 'AstroLocal';
 const DESIGN_DNA_AUTOLOAD_SOURCES = ['/design-dna.md', '/context/design-dna.md'];
 
 export function Chat() {
@@ -469,9 +469,21 @@ export const ChatImpl = memo(
       }
 
       runAnimation();
-      const useLocalWebLLM = provider.name === WEBLLM_PROVIDER_NAME;
+      const useLocalInference = provider.name === ASTRO_LOCAL_PROVIDER_NAME;
 
-      if (useLocalWebLLM) {
+      if (useLocalInference) {
+        // If we are in Tauri, the AstroLocalProvider already handles native sidecar routing via the server entry.
+        // However, if we are in the browser, we fall back to client-side WebLLM.
+        const isTauri = typeof window !== 'undefined' && (window as any).__TAURI_INTERNALS__;
+
+        if (isTauri) {
+          append({
+            role: 'user',
+            content: finalMessageContent,
+          });
+          return;
+        }
+
         setFakeLoading(true);
 
         try {
@@ -489,7 +501,7 @@ export const ChatImpl = memo(
             userMessage: finalMessageContent,
             imageDataList,
             onProgress: (status) => {
-              logger.info(`WebLLM: ${status}`);
+              logger.info(`AstroLocal (Browser): ${status}`);
             },
           });
 
@@ -517,10 +529,10 @@ export const ChatImpl = memo(
               message: JSON.stringify({
                 message:
                   localError?.message ||
-                  'Local WebLLM failed. Check browser WebGPU support and try a smaller local model.',
+                  'Local AstroLocal failed. Check browser WebGPU support or ensure the desktop app engine is running.',
                 statusCode: 500,
                 isRetryable: true,
-                provider: WEBLLM_PROVIDER_NAME,
+                provider: ASTRO_LOCAL_PROVIDER_NAME,
               }),
             },
             'chat',

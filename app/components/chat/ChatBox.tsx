@@ -37,18 +37,15 @@ const getTauriApi = async () => {
 
 const MANUAL_MODEL_LOCK_KEY = 'Astro_model_manual_lock';
 const MODEL_ACCESS_MODE_KEY = 'Astro_model_access_mode';
-const LOCAL_PROVIDER_PREFERENCE =
-  typeof window !== 'undefined' && (window as any).__TAURI_INTERNALS__
-    ? ['OpenAILike', 'LMStudio', 'Ollama']
-    : ['WebLLM', 'OpenAILike', 'LMStudio', 'Ollama'];
+const LOCAL_PROVIDER_PREFERENCE = ['AstroLocal', 'OpenAILike', 'LMStudio', 'Ollama'];
 const CLOUD_PROVIDER_PREFERENCE = ['OpenAI', 'Anthropic', 'Google'];
-const WEBLLM_RECOMMENDATIONS = {
-  mobile: ['Phi-3.5-mini-instruct-q4f16_1-MLC', 'Llama-3.2-1B-Instruct-q4f16_1-MLC'],
-  eco: ['Phi-3.5-mini-instruct-q4f16_1-MLC', 'Llama-3.2-1B-Instruct-q4f16_1-MLC'],
-  starter: ['Qwen2.5-Coder-3B-Instruct-q4f16_1-MLC', 'Phi-3.5-mini-instruct-q4f16_1-MLC'],
-  pro: ['Qwen2.5-Coder-7B-Instruct-q4f16_1-MLC', 'Phi-3.5-mini-instruct-q4f16_1-MLC'],
-  god: ['Qwen2.5-Coder-7B-Instruct-q4f16_1-MLC', 'Phi-3.5-mini-instruct-q4f16_1-MLC'],
-  vision: ['Phi-3.5-vision-instruct-q4f16_1-MLC', 'Phi-3.5-vision-instruct-q3f16_1-MLC'],
+const ASTRO_LOCAL_RECOMMENDATIONS = {
+  mobile: ['Qwen2.5-Coder-3B-Instruct-q4_k_m', 'DeepSeek-Coder-V2-Lite-Instruct-q4_K_M'],
+  eco: ['Qwen2.5-Coder-3B-Instruct-q4_k_m'],
+  starter: ['Qwen2.5-Coder-7B-Instruct-q4_k_m'],
+  pro: ['Codestral-22B-v0.1-q4_K_M'],
+  god: ['Qwen2.5-Coder-32B-Instruct-q4_k_m'],
+  vision: ['Qwen2.5-Coder-7B-Instruct-q4_k_m'],
 } as const;
 
 interface ChatBoxProps {
@@ -97,10 +94,15 @@ interface ChatBoxProps {
 
 export const ChatBox: React.FC<ChatBoxProps> = (props) => {
   const [modelAccessMode, setModelAccessMode] = React.useState<'local' | 'cloud'>('local');
-  const localProviders = React.useMemo(
-    () => (props.providerList || []).filter((entry) => LOCAL_PROVIDERS.includes(entry.name)),
-    [props.providerList],
-  );
+  const localProviders = React.useMemo(() => {
+    const isTauri = typeof window !== 'undefined' && (window as any).__TAURI_INTERNALS__;
+    return (props.providerList || []).filter((entry) => {
+      if (isTauri && entry.name === 'WebLLM') {
+        return false;
+      }
+      return LOCAL_PROVIDERS.includes(entry.name);
+    });
+  }, [props.providerList]);
   const cloudProviders = React.useMemo(
     () => (props.providerList || []).filter((entry) => !LOCAL_PROVIDERS.includes(entry.name)),
     [props.providerList],
@@ -163,27 +165,13 @@ export const ChatBox: React.FC<ChatBoxProps> = (props) => {
     const tier: 'mobile' | 'eco' | 'starter' | 'pro' | 'god' =
       isMobile ? 'mobile' : profile?.tier === 'god-mode' ? 'god' : profile?.tier || 'starter';
     const preferenceList = hasVisionNeed
-      ? WEBLLM_RECOMMENDATIONS.vision
-      : WEBLLM_RECOMMENDATIONS[tier] || WEBLLM_RECOMMENDATIONS.starter;
+      ? ASTRO_LOCAL_RECOMMENDATIONS.vision
+      : ASTRO_LOCAL_RECOMMENDATIONS[tier] || ASTRO_LOCAL_RECOMMENDATIONS.starter;
 
-    getWebLLMModelCatalog()
-      .then((catalog) => {
-        const selected =
-          preferenceList
-            .map((modelId) => catalog.find((entry) => entry.modelId === modelId))
-            .find(Boolean) || catalog[0];
-
-        if (!selected) {
-          setRecommendedModel({});
-          return;
-        }
-
-        setRecommendedModel({
-          modelId: selected.modelId,
-          estimatedDownloadMB: selected.estimatedDownloadMB,
-        });
-      })
-      .catch(() => setRecommendedModel({}));
+    const recommendedId = preferenceList[0];
+    setRecommendedModel({
+      modelId: recommendedId,
+    });
   }, [modelAccessMode, props.imageDataList]);
 
   React.useEffect(() => {
@@ -272,22 +260,16 @@ export const ChatBox: React.FC<ChatBoxProps> = (props) => {
 
         setDownloadStatus('Local Engine Ready (Port 8080)');
 
-        // Automatically switch to OpenAILike pointing to local sidecar
-        const openAILikeProvider = (localProviders as ProviderInfo[]).find((entry) => entry.name === 'OpenAILike');
+        // Automatically switch to AstroLocal pointing to local sidecar
+        const astroLocalProvider = (localProviders as ProviderInfo[]).find((entry) => entry.name === 'AstroLocal');
 
-        if (openAILikeProvider) {
-          props.setProvider?.(openAILikeProvider);
-          props.onApiKeysChange('OpenAILike', 'sk-no-key-required');
+        if (astroLocalProvider) {
+          props.setProvider?.(astroLocalProvider);
+          
+          // AstroLocal doesn't need API keys or manual base URL settings in the UI
+          // since the provider handles http://127.0.0.1:8080/v1 internally for Tauri.
 
-          // Persist the base URL for OpenAILike to point to our sidecar
-          const currentProviders = Cookies.get('providers') ? JSON.parse(Cookies.get('providers')!) : {};
-          currentProviders.OpenAILike = {
-            ...currentProviders.OpenAILike,
-            OPENAI_LIKE_API_BASE_URL: 'http://127.0.0.1:8080/v1',
-          };
-          Cookies.set('providers', JSON.stringify(currentProviders), { expires: 30 });
-
-          toast.success('Native AI Engine started! High-performance mode active.');
+          toast.success('Astro Native Engine started! High-performance mode active.');
         }
       } catch (error: any) {
         setDownloadStatus(`Native error: ${error?.message || error}`);
@@ -303,18 +285,18 @@ export const ChatBox: React.FC<ChatBoxProps> = (props) => {
     }
 
     // BROWSER FALLBACK (WEBLLM)
-    if (props.provider?.name !== 'WebLLM') {
-      const webllmProvider = (localProviders as ProviderInfo[]).find((entry) => entry.name === 'WebLLM');
-      const firstWebllmModel = props.modelList.find((entry) => entry.provider === 'WebLLM')?.name;
+    if (props.provider?.name !== 'AstroLocal') {
+      const astroLocalProvider = (localProviders as ProviderInfo[]).find((entry) => entry.name === 'AstroLocal');
+      const firstAstroLocalModel = props.modelList.find((entry) => entry.provider === 'AstroLocal')?.name;
 
-      if (!webllmProvider || !firstWebllmModel) {
-        setDownloadStatus('WebLLM model list is unavailable. Refresh and try again.');
+      if (!astroLocalProvider || !firstAstroLocalModel) {
+        setDownloadStatus('AstroLocal model list is unavailable. Refresh and try again.');
         return;
       }
 
-      props.setProvider?.(webllmProvider);
-      props.setModel?.(firstWebllmModel);
-      setDownloadStatus('Switched to WebLLM. Click download once more.');
+      props.setProvider?.(astroLocalProvider);
+      props.setModel?.(firstAstroLocalModel);
+      setDownloadStatus('Switched to AstroLocal. Click download once more.');
       return;
     }
 
