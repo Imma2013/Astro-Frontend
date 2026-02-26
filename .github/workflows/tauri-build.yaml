@@ -77,10 +77,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tagName: ${{ github.ref_name }}
-          releaseName: 'Astro ${{ github.ref_name }}'
+          tagName: v__VERSION__
+          releaseName: 'Astro v__VERSION__'
           releaseBody: 'See the assets to download Astro for Windows, Mac, and Linux.'
-          releaseDraft: false
+          releaseDraft: true
           prerelease: false
           args: ${{ matrix.platform == 'macos-latest' && '--target universal-apple-darwin' || '' }}
         timeout-minutes: 120
