@@ -591,7 +591,7 @@ export const ChatBox: React.FC<ChatBoxProps> = (props) => {
                         </div>
                         <div className="grid grid-cols-2 gap-2 text-[11px] leading-4 text-Astro-elements-textTertiary">
                           <div className="rounded-md border border-Astro-elements-borderColor/60 bg-Astro-elements-background-depth-2 px-2 py-1.5">
-                            Local: free in-browser models (WebGPU, no API key).
+                            Local: High-performance native engine (No API key).
                           </div>
                           <div className="rounded-md border border-Astro-elements-borderColor/60 bg-Astro-elements-background-depth-2 px-2 py-1.5">
                             Cloud: BYO API key, paid usage limits apply.
@@ -631,11 +631,11 @@ export const ChatBox: React.FC<ChatBoxProps> = (props) => {
                           <div className="mt-2 rounded-lg border border-Astro-elements-borderColor/60 bg-Astro-elements-background-depth-1/80 p-3 text-sm text-Astro-elements-textPrimary">
                             <div className="flex flex-col gap-3">
                               <div className="font-medium text-Astro-elements-textSecondary">
-                                Local Models (No setup required)
+                                Local Models (Native High-Performance)
                               </div>
                               <p className="text-xs text-Astro-elements-textTertiary leading-relaxed">
-                                Astro runs completely in your browser for total privacy. No installations needed.
-                                These models download once and run offline.
+                                Astro runs a native AI engine directly on your computer for total privacy and speed. 
+                                No setup required. Just download once and use offline forever.
                               </p>
                               
                               <div className="flex flex-col gap-2 mt-2">
@@ -673,10 +673,11 @@ export const ChatBox: React.FC<ChatBoxProps> = (props) => {
                                 )}
                               </div>
                               
-                              {(storageInfo.quotaMB || storageInfo.usageMB) ? (
+                              {(storageInfo.quotaMB || storageInfo.usageMB) &&
+                              !(typeof window !== 'undefined' && (window as any).__TAURI_INTERNALS__) ? (
                                 <div className="mt-2 text-[10px] text-Astro-elements-textTertiary flex items-center justify-between border-t border-Astro-elements-borderColor/30 pt-2">
-                                  <span>Storage Used: {storageInfo.usageMB || 0}MB</span>
-                                  <span>Available: {storageInfo.quotaMB ? `${storageInfo.quotaMB}MB` : 'Unlimited'}</span>
+                                  <span>Browser Storage Used: {storageInfo.usageMB || 0}MB</span>
+                                  <span>Quota: {storageInfo.quotaMB ? `${storageInfo.quotaMB}MB` : 'Unlimited'}</span>
                                 </div>
                               ) : null}
                             </div>

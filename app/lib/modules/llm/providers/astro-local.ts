@@ -65,7 +65,7 @@ export default class AstroLocalProvider extends BaseProvider {
     const isTauri = typeof window !== 'undefined' && (window as any).__TAURI_INTERNALS__;
     
     if (isTauri) {
-      return getOpenAILikeModel('http://127.0.0.1:8080/v1', 'sk-no-key-required', model);
+      return getOpenAILikeModel('http://127.0.0.1:8081/v1', 'sk-no-key-required', model);
     }
 
     throw new Error('AstroLocal native engine is only available in the desktop application.');

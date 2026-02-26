@@ -107,7 +107,18 @@ export async function streamText(props: {
     return newMessage;
   });
 
-  const provider = PROVIDER_LIST.find((p) => p.name === currentProvider) || DEFAULT_PROVIDER;
+  let provider = PROVIDER_LIST.find((p) => p.name === currentProvider);
+
+  if (!provider) {
+    if (currentProvider === 'AstroLocal') {
+      throw new Error(
+        'AstroLocal engine is not detected. Please ensure the desktop app is running and you have downloaded a local model.',
+      );
+    }
+
+    provider = DEFAULT_PROVIDER;
+  }
+
   const staticModels = LLMManager.getInstance().getStaticModelListFromProvider(provider);
   let modelDetails = staticModels.find((m) => m.name === currentModel);
 

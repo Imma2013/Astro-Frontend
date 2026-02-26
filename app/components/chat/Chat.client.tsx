@@ -335,8 +335,15 @@ export const ChatImpl = memo(
           errorType = 'quota';
           title = 'Quota Exceeded';
         } else if (errorInfo.statusCode >= 500) {
-          errorType = 'network';
-          title = 'Server Error';
+          if (provider.name === 'AstroLocal') {
+            errorType = 'network';
+            title = 'Native Engine Offline';
+            errorInfo.message =
+              'The Astro local AI engine is not responding. Please try clicking "Download & Load" again in Model Settings to restart it.';
+          } else {
+            errorType = 'network';
+            title = 'Server Error';
+          }
         }
 
         logStore.logError(`${context} request failed`, error, {

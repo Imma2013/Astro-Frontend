@@ -76,7 +76,7 @@ async fn start_engine(app: AppHandle, model_path: String) -> Result<(), String> 
 
     // Arguments for llama-server
     let (mut rx, _child) = sidecar_command
-        .args(["--model", &model_path, "--port", "8080", "--host", "127.0.0.1", "-c", "2048"])
+        .args(["--model", &model_path, "--port", "8081", "--host", "127.0.0.1", "-c", "2048"])
         .spawn()
         .map_err(|e| format!("Failed to spawn sidecar: {}", e))?;
 

@@ -176,9 +176,8 @@ export function WebSearch({ onSearchResult, disabled = false }: WebSearchProps) 
             </button>
           </div>
           <div className="text-[11px] text-Astro-elements-textTertiary px-1">
-            Provider:{' '}
-            {astroSettings.deploymentMode === 'local-only' ? 'searxng (locked by Local-Only mode)' : astroSettings.webSearchProvider}{' '}
-            ({astroSettings.deploymentMode === 'local-only' ? 'http://localhost:8080' : astroSettings.webSearchEndpoint || 'default endpoint'})
+            Mode:{' '}
+            {astroSettings.deploymentMode === 'local-only' ? 'Private Local Search' : `Cloud (${astroSettings.webSearchProvider})`}
           </div>
           <input
             ref={inputRef}
