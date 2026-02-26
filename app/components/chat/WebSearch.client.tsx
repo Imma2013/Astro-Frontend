@@ -91,10 +91,9 @@ export function WebSearch({ onSearchResult, disabled = false }: WebSearchProps) 
     setIsSearching(true);
 
     try {
-      const searchProvider = astroSettings.deploymentMode === 'local-only' ? 'searxng' : astroSettings.webSearchProvider;
-      const searchEndpoint =
-        astroSettings.deploymentMode === 'local-only' ? 'http://localhost:8080' : astroSettings.webSearchEndpoint;
-      const searchApiKey = astroSettings.deploymentMode === 'local-only' ? '' : astroSettings.webSearchApiKey;
+      const searchProvider = astroSettings.webSearchProvider || 'searxng';
+      const searchEndpoint = astroSettings.webSearchEndpoint;
+      const searchApiKey = astroSettings.webSearchApiKey;
 
       const response = await fetch('/api/web-search', {
         method: 'POST',
@@ -106,7 +105,7 @@ export function WebSearch({ onSearchResult, disabled = false }: WebSearchProps) 
           provider: searchProvider,
           endpoint: searchEndpoint,
           apiKey: searchApiKey,
-          deploymentMode: astroSettings.deploymentMode,
+          deploymentMode: 'standard', // Allow all providers
         }),
       });
 

@@ -6,6 +6,13 @@ import type { AstroDeploymentMode, AstroWebSearchProvider } from '~/types/astro'
 const MAX_CONTENT_LENGTH = 8000;
 const MAX_RESULTS = 6;
 
+const PUBLIC_SEARXNG_INSTANCES = [
+  'https://searx.be',
+  'https://search.ononoki.org',
+  'https://searx.work',
+  'https://baresearch.org',
+];
+
 const FETCH_HEADERS = {
   'User-Agent':
     'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
@@ -103,32 +110,50 @@ function summarizeSearchResults(query: string, provider: AstroWebSearchProvider,
 }
 
 async function searchWithSearxng(query: string, endpoint: string): Promise<UnifiedSearchResult[]> {
-  const searchUrl = new URL(`${endpoint}/search`);
-  searchUrl.searchParams.set('q', query);
-  searchUrl.searchParams.set('format', 'json');
-  searchUrl.searchParams.set('language', 'en-US');
+  const isLocal = endpoint.includes('localhost') || endpoint.includes('127.0.0.1');
+  const targets = isLocal ? [endpoint, ...PUBLIC_SEARXNG_INSTANCES] : [endpoint];
 
-  const response = await fetch(searchUrl.toString(), {
-    headers: { Accept: 'application/json' },
-    signal: AbortSignal.timeout(10_000),
-  });
+  let lastError: Error | null = null;
 
-  if (!response.ok) {
-    throw new Error(`SearXNG request failed: ${response.status} ${response.statusText}`);
+  for (const target of targets) {
+    try {
+      const searchUrl = new URL(`${target}/search`);
+      searchUrl.searchParams.set('q', query);
+      searchUrl.searchParams.set('format', 'json');
+      searchUrl.searchParams.set('language', 'en-US');
+
+      const response = await fetch(searchUrl.toString(), {
+        headers: { Accept: 'application/json' },
+        signal: AbortSignal.timeout(10_000),
+      });
+
+      if (!response.ok) {
+        continue;
+      }
+
+      const data = (await response.json()) as {
+        results?: Array<{ title?: string; content?: string; url?: string }>;
+      };
+
+      if (!data.results || data.results.length === 0) {
+        continue;
+      }
+
+      return data.results
+        .filter((item) => item.url)
+        .slice(0, MAX_RESULTS)
+        .map((item) => ({
+          title: item.title,
+          snippet: item.content,
+          url: item.url as string,
+        }));
+    } catch (error: any) {
+      lastError = error;
+      continue;
+    }
   }
 
-  const data = (await response.json()) as {
-    results?: Array<{ title?: string; content?: string; url?: string }>;
-  };
-
-  return (data.results || [])
-    .filter((item) => item.url)
-    .slice(0, MAX_RESULTS)
-    .map((item) => ({
-      title: item.title,
-      snippet: item.content,
-      url: item.url as string,
-    }));
+  throw new Error(`Search failed after trying ${targets.length} sources. ${lastError?.message || ''}`);
 }
 
 async function searchWithTavily(query: string, endpoint: string, apiKey: string): Promise<UnifiedSearchResult[]> {
