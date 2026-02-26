@@ -484,9 +484,10 @@ export const ChatImpl = memo(
         const isTauri = typeof window !== 'undefined' && (window as any).__TAURI_INTERNALS__;
 
         if (isTauri) {
+          const userMessageText = `[Model: ${model}]\n\n[Provider: ${provider.name}]\n\n${finalMessageContent}`;
           append({
             role: 'user',
-            content: finalMessageContent,
+            content: userMessageText,
           });
           return;
         }
