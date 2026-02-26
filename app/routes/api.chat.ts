@@ -1,19 +1,19 @@
 import { type ActionFunctionArgs } from '@remix-run/cloudflare';
 import { createDataStream, generateId } from 'ai';
-import { MAX_RESPONSE_SEGMENTS, MAX_TOKENS, type FileMap } from '~/lib/.server/llm/constants';
+import { MAX_RESPONSE_SEGMENTS, MAX_TOKENS, type FileMap } from '~/lib/server-impl/llm/constants';
 import { CONTINUE_PROMPT } from '~/lib/common/prompts/prompts';
-import { streamText, type Messages, type StreamingOptions } from '~/lib/.server/llm/stream-text';
-import SwitchableStream from '~/lib/.server/llm/switchable-stream';
+import { streamText, type Messages, type StreamingOptions } from '~/lib/server-impl/llm/stream-text';
+import SwitchableStream from '~/lib/server-impl/llm/switchable-stream';
 import type { IProviderSetting } from '~/types/model';
 import { createScopedLogger } from '~/utils/logger';
-import { getFilePaths, selectContext } from '~/lib/.server/llm/select-context';
+import { getFilePaths, selectContext } from '~/lib/server-impl/llm/select-context';
 import type { ContextAnnotation, ProgressAnnotation } from '~/types/context';
 import { WORK_DIR } from '~/utils/constants';
-import { createSummary } from '~/lib/.server/llm/create-summary';
-import { extractPropertiesFromMessage } from '~/lib/.server/llm/utils';
+import { createSummary } from '~/lib/server-impl/llm/create-summary';
+import { extractPropertiesFromMessage } from '~/lib/server-impl/llm/utils';
 import type { DesignScheme } from '~/types/design-scheme';
 import { MCPService } from '~/lib/services/mcpService';
-import { StreamRecoveryManager } from '~/lib/.server/llm/stream-recovery';
+import { StreamRecoveryManager } from '~/lib/server-impl/llm/stream-recovery';
 import type { AstroRuntimeConfig } from '~/types/astro';
 
 export async function action(args: ActionFunctionArgs) {

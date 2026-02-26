@@ -1,9 +1,9 @@
 import { type ActionFunctionArgs } from '@remix-run/cloudflare';
-import { streamText } from '~/lib/.server/llm/stream-text';
+import { streamText } from '~/lib/server-impl/llm/stream-text';
 import type { IProviderSetting, ProviderInfo } from '~/types/model';
 import { generateText } from 'ai';
 import { PROVIDER_LIST } from '~/utils/constants';
-import { MAX_TOKENS, PROVIDER_COMPLETION_LIMITS, isReasoningModel } from '~/lib/.server/llm/constants';
+import { MAX_TOKENS, PROVIDER_COMPLETION_LIMITS, isReasoningModel } from '~/lib/server-impl/llm/constants';
 import { LLMManager } from '~/lib/modules/llm/manager';
 import type { ModelInfo } from '~/lib/modules/llm/types';
 import { getApiKeysFromCookie, getProviderSettingsFromCookie } from '~/lib/api/cookies';

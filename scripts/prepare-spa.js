@@ -20,8 +20,10 @@ files.forEach(file => {
   let content = fs.readFileSync(file, 'utf8');
   let changed = false;
 
-  // Stub out ALL api routes for desktop build to avoid server-side dependency leakage
-  if (path.basename(file).startsWith('api.')) {
+  // Stub out most api routes, EXCEPT essential LLM ones
+  const isEssentialApi = ['api.chat.ts', 'api.models.ts', 'api.models.$provider.ts'].includes(path.basename(file));
+
+  if (path.basename(file).startsWith('api.') && !isEssentialApi) {
       console.log(`  Stubbing API route: ${path.basename(file)}`);
       content = `
 import { json } from '@remix-run/react';
@@ -36,6 +38,12 @@ export const clientAction = () => {
 `;
       fs.writeFileSync(file, content);
       return;
+  }
+
+  // Replace .server imports with server-impl to allow client-side execution in SPA
+  if (content.includes('~/lib/.server/')) {
+    content = content.replace(/~\/lib\/\.server\//g, '~/lib/server-impl/');
+    changed = true;
   }
 
   // Replace export { loader, ... } or export { loader as ... } from '...'
