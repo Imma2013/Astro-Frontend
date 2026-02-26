@@ -201,6 +201,25 @@ export const ChatBox: React.FC<ChatBoxProps> = (props) => {
     setModelAccessMode(nextMode);
   };
   const [localSettingsMode, setLocalSettingsMode] = React.useState<'simple' | 'advanced'>('simple');
+  const [isManualMode, setIsManualMode] = React.useState(false);
+
+  React.useEffect(() => {
+    if (typeof window === 'undefined') {
+      return;
+    }
+
+    const savedManual = localStorage.getItem('Astro_manual_mode');
+    setIsManualMode(savedManual === 'true');
+  }, []);
+
+  const toggleManualMode = () => {
+    const nextValue = !isManualMode;
+    setIsManualMode(nextValue);
+
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('Astro_manual_mode', String(nextValue));
+    }
+  };
 
   const handleDownloadLocalModel = async () => {
     if (isDownloadingModel) {
@@ -561,178 +580,267 @@ export const ChatBox: React.FC<ChatBoxProps> = (props) => {
                 {() =>
                   !props.isModelSettingsCollapsed ? (
                     <div className="absolute right-0 bottom-12 z-50 w-[min(420px,calc(100vw-1.5rem))] max-h-[70vh] overflow-y-auto rounded-xl border border-Astro-elements-borderColor bg-Astro-elements-background-depth-2/95 p-2 shadow-2xl backdrop-blur">
-                      <div className="mb-2 rounded-lg border border-Astro-elements-borderColor/70 bg-Astro-elements-background-depth-1/90 p-2.5">
-                        <div className="mb-2 flex items-center justify-between gap-2">
-                          <span className="text-xs font-semibold text-Astro-elements-textSecondary">Model Mode</span>
-                          <div className="inline-flex items-center gap-1 rounded-full border border-Astro-elements-borderColor bg-Astro-elements-background-depth-2 p-1">
-                            <button
-                              type="button"
-                              onClick={() => setMode('local')}
-                              className={classNames(
-                                'rounded-full px-2 py-1 text-xs font-medium transition-colors',
-                                modelAccessMode === 'local'
-                                  ? 'bg-Astro-elements-item-backgroundAccent text-Astro-elements-item-contentAccent'
-                                  : 'text-Astro-elements-textSecondary hover:bg-Astro-elements-background-depth-3',
-                              )}
-                            >
-                              Local
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => setMode('cloud')}
-                              className={classNames(
-                                'rounded-full px-2 py-1 text-xs font-medium transition-colors',
-                                modelAccessMode === 'cloud'
-                                  ? 'bg-Astro-elements-item-backgroundAccent text-Astro-elements-item-contentAccent'
-                                  : 'text-Astro-elements-textSecondary hover:bg-Astro-elements-background-depth-3',
-                              )}
-                            >
-                              Cloud
-                            </button>
-                          </div>
-                        </div>
-                        <div className="grid grid-cols-2 gap-2 text-[11px] leading-4 text-Astro-elements-textTertiary">
-                          <div className="rounded-md border border-Astro-elements-borderColor/60 bg-Astro-elements-background-depth-2 px-2 py-1.5">
-                            Local: High-performance native engine (No API key).
-                          </div>
-                          <div className="rounded-md border border-Astro-elements-borderColor/60 bg-Astro-elements-background-depth-2 px-2 py-1.5">
-                            Cloud: BYO API key, paid usage limits apply.
-                          </div>
-                        </div>
-                      </div>
+                      {!isManualMode ? (
+                        <div className="mt-1 rounded-lg border border-Astro-elements-borderColor/60 bg-Astro-elements-background-depth-1/80 p-3 text-sm text-Astro-elements-textPrimary">
+                          <div className="flex flex-col gap-3">
+                            <div className="flex items-center justify-between">
+                              <div className="font-bold text-Astro-elements-textSecondary flex items-center gap-1.5 uppercase tracking-wider text-[11px]">
+                                <div className="i-ph:lightning-fill text-purple-400" />
+                                Astro Native AI
+                              </div>
+                              <button
+                                type="button"
+                                onClick={toggleManualMode}
+                                className="text-[10px] text-Astro-elements-textTertiary hover:text-purple-400 transition-colors uppercase tracking-widest font-bold px-1.5 py-0.5 rounded border border-transparent hover:border-Astro-elements-borderColor/30"
+                              >
+                                Manual Mode
+                              </button>
+                            </div>
 
-                      {modelAccessMode === 'cloud' ? (
-                        <>
-                          <ModelSelector
-                            key={props.provider?.name + ':' + props.modelList.length}
-                            model={props.model}
-                            setModel={props.setModel}
-                            modelList={props.modelList}
-                            provider={props.provider}
-                            setProvider={props.setProvider}
-                            providerList={(cloudProviders as ProviderInfo[]) || (PROVIDER_LIST as ProviderInfo[])}
-                            apiKeys={props.apiKeys}
-                            modelLoading={props.isModelLoading}
-                          />
-                          {(props.providerList || []).length > 0 &&
-                            props.provider &&
-                            !LOCAL_PROVIDERS.includes(props.provider.name) && (
-                              <>
-                                <APIKeyManager
-                                  provider={props.provider}
-                                  apiKey={props.apiKeys[props.provider.name] || ''}
-                                  setApiKey={(key) => {
-                                    props.onApiKeysChange(props.provider.name, key);
-                                  }}
+                            <p className="text-xs text-Astro-elements-textTertiary leading-relaxed">
+                              Astro is running natively on your computer for maximum privacy and performance. Everything
+                              stays on your machine.
+                            </p>
+
+                            <div className="flex flex-col gap-2 mt-2">
+                              <div className="text-xs font-medium flex items-center gap-1.5">
+                                <div className="i-ph:brain-duotone text-purple-400" />
+                                Current Brain:{' '}
+                                <span className="text-purple-400 font-bold">
+                                  {props.model?.split('-')[0] || 'None'}
+                                </span>
+                              </div>
+                              <button
+                                type="button"
+                                onClick={handleDownloadLocalModel}
+                                disabled={isDownloadingModel}
+                                className={classNames(
+                                  'w-full flex items-center justify-center gap-2 rounded-lg border py-2.5 text-xs font-bold transition-all shadow-sm active:scale-[0.98]',
+                                  isDownloadingModel
+                                    ? 'border-Astro-elements-borderColor bg-Astro-elements-background-depth-3 text-Astro-elements-textTertiary cursor-not-allowed'
+                                    : 'border-purple-500/40 bg-purple-500/10 text-purple-400 hover:bg-purple-500/20 hover:border-purple-500/60',
+                                )}
+                              >
+                                <div
+                                  className={
+                                    isDownloadingModel
+                                      ? 'i-ph:spinner animate-spin text-sm'
+                                      : 'i-ph:lightning-fill text-sm'
+                                  }
                                 />
-                              </>
-                            )}
-                        </>
-                      ) : (
-                        <>
-                          <div className="mt-2 rounded-lg border border-Astro-elements-borderColor/60 bg-Astro-elements-background-depth-1/80 p-3 text-sm text-Astro-elements-textPrimary">
-                            <div className="flex flex-col gap-3">
-                              <div className="flex items-center justify-between">
-                                <div className="font-medium text-Astro-elements-textSecondary">
-                                  {localSettingsMode === 'simple' ? 'Astro Native AI' : 'Advanced Local Settings'}
-                                </div>
+                                {isDownloadingModel
+                                  ? downloadStatus || 'Downloading...'
+                                  : 'Download & Start AI Engine'}
+                              </button>
+
+                              {recommendedModel.modelId && props.model !== recommendedModel.modelId && (
                                 <button
                                   type="button"
-                                  onClick={() =>
-                                    setLocalSettingsMode(localSettingsMode === 'simple' ? 'advanced' : 'simple')
-                                  }
-                                  className="text-[10px] text-Astro-elements-textTertiary hover:text-purple-400 transition-colors uppercase tracking-widest font-bold border border-Astro-elements-borderColor/30 px-1.5 py-0.5 rounded bg-Astro-elements-background-depth-3"
+                                  onClick={handleDownloadRecommendedModel}
+                                  disabled={isDownloadingModel}
+                                  className={classNames(
+                                    'w-full flex items-center justify-center gap-2 rounded-lg border border-Astro-elements-borderColor/50 py-2 text-[10px] font-medium transition-colors mt-1',
+                                    isDownloadingModel
+                                      ? 'opacity-50 cursor-not-allowed'
+                                      : 'bg-Astro-elements-background-depth-3 text-Astro-elements-textSecondary hover:bg-Astro-elements-background-depth-4 hover:text-Astro-elements-textPrimary',
+                                  )}
                                 >
-                                  {localSettingsMode === 'simple' ? 'Manual Mode' : 'Exit Manual'}
+                                  <div className="i-ph:sparkle text-xs text-yellow-500" />
+                                  Switch to Recommended Brain
                                 </button>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      ) : (
+                        <>
+                          <div className="mb-2 rounded-lg border border-Astro-elements-borderColor/70 bg-Astro-elements-background-depth-1/90 p-2.5">
+                            <div className="mb-2 flex items-center justify-between gap-2">
+                              <span className="text-xs font-semibold text-Astro-elements-textSecondary">
+                                Model Mode
+                              </span>
+                              <div className="flex items-center gap-2">
+                                <button
+                                  type="button"
+                                  onClick={toggleManualMode}
+                                  className="text-[10px] text-purple-400 hover:underline uppercase tracking-widest font-bold"
+                                >
+                                  Exit Manual
+                                </button>
+                                <div className="inline-flex items-center gap-1 rounded-full border border-Astro-elements-borderColor bg-Astro-elements-background-depth-2 p-1">
+                                  <button
+                                    type="button"
+                                    onClick={() => setMode('local')}
+                                    className={classNames(
+                                      'rounded-full px-2 py-1 text-xs font-medium transition-colors',
+                                      modelAccessMode === 'local'
+                                        ? 'bg-Astro-elements-item-backgroundAccent text-Astro-elements-item-contentAccent'
+                                        : 'text-Astro-elements-textSecondary hover:bg-Astro-elements-background-depth-3',
+                                    )}
+                                  >
+                                    Local
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={() => setMode('cloud')}
+                                    className={classNames(
+                                      'rounded-full px-2 py-1 text-xs font-medium transition-colors',
+                                      modelAccessMode === 'cloud'
+                                        ? 'bg-Astro-elements-item-backgroundAccent text-Astro-elements-item-contentAccent'
+                                        : 'text-Astro-elements-textSecondary hover:bg-Astro-elements-background-depth-3',
+                                    )}
+                                  >
+                                    Cloud
+                                  </button>
+                                </div>
                               </div>
+                            </div>
+                            <div className="grid grid-cols-2 gap-2 text-[11px] leading-4 text-Astro-elements-textTertiary">
+                              <div className="rounded-md border border-Astro-elements-borderColor/60 bg-Astro-elements-background-depth-2 px-2 py-1.5">
+                                Local: High-performance native engine (No API key).
+                              </div>
+                              <div className="rounded-md border border-Astro-elements-borderColor/60 bg-Astro-elements-background-depth-2 px-2 py-1.5">
+                                Cloud: BYO API key, paid usage limits apply.
+                              </div>
+                            </div>
+                          </div>
 
-                              {localSettingsMode === 'simple' ? (
-                                <>
-                                  <p className="text-xs text-Astro-elements-textTertiary leading-relaxed">
-                                    Astro is running natively on your computer for maximum privacy and performance.
-                                    Everything stays on your machine.
-                                  </p>
-
-                                  <div className="flex flex-col gap-2 mt-2">
-                                    <div className="text-xs font-medium flex items-center gap-1.5">
-                                      <div className="i-ph:brain-duotone text-purple-400" />
-                                      Current Brain:{' '}
-                                      <span className="text-purple-400 font-bold">
-                                        {props.model?.split('-')[0] || 'None'}
-                                      </span>
+                          {modelAccessMode === 'cloud' ? (
+                            <>
+                              <ModelSelector
+                                key={props.provider?.name + ':' + props.modelList.length}
+                                model={props.model}
+                                setModel={props.setModel}
+                                modelList={props.modelList}
+                                provider={props.provider}
+                                setProvider={props.setProvider}
+                                providerList={(cloudProviders as ProviderInfo[]) || (PROVIDER_LIST as ProviderInfo[])}
+                                apiKeys={props.apiKeys}
+                                modelLoading={props.isModelLoading}
+                              />
+                              {(props.providerList || []).length > 0 &&
+                                props.provider &&
+                                !LOCAL_PROVIDERS.includes(props.provider.name) && (
+                                  <>
+                                    <APIKeyManager
+                                      provider={props.provider}
+                                      apiKey={props.apiKeys[props.provider.name] || ''}
+                                      setApiKey={(key) => {
+                                        props.onApiKeysChange(props.provider.name, key);
+                                      }}
+                                    />
+                                  </>
+                                )}
+                            </>
+                          ) : (
+                            <>
+                              <div className="mt-2 rounded-lg border border-Astro-elements-borderColor/60 bg-Astro-elements-background-depth-1/80 p-3 text-sm text-Astro-elements-textPrimary">
+                                <div className="flex flex-col gap-3">
+                                  <div className="flex items-center justify-between">
+                                    <div className="font-medium text-Astro-elements-textSecondary">
+                                      {localSettingsMode === 'simple' ? 'Astro Native AI' : 'Advanced Local Settings'}
                                     </div>
                                     <button
                                       type="button"
-                                      onClick={handleDownloadLocalModel}
-                                      disabled={isDownloadingModel}
-                                      className={classNames(
-                                        'w-full flex items-center justify-center gap-2 rounded-lg border py-2.5 text-xs font-bold transition-all shadow-sm active:scale-[0.98]',
-                                        isDownloadingModel
-                                          ? 'border-Astro-elements-borderColor bg-Astro-elements-background-depth-3 text-Astro-elements-textTertiary cursor-not-allowed'
-                                          : 'border-purple-500/40 bg-purple-500/10 text-purple-400 hover:bg-purple-500/20 hover:border-purple-500/60',
-                                      )}
+                                      onClick={() =>
+                                        setLocalSettingsMode(localSettingsMode === 'simple' ? 'advanced' : 'simple')
+                                      }
+                                      className="text-[10px] text-Astro-elements-textTertiary hover:text-purple-400 transition-colors uppercase tracking-widest font-bold border border-Astro-elements-borderColor/30 px-1.5 py-0.5 rounded bg-Astro-elements-background-depth-3"
                                     >
-                                      <div
-                                        className={
-                                          isDownloadingModel
-                                            ? 'i-ph:spinner animate-spin text-sm'
-                                            : 'i-ph:lightning-fill text-sm'
-                                        }
-                                      />
-                                      {isDownloadingModel
-                                        ? downloadStatus || 'Downloading...'
-                                        : 'Download & Start AI Engine'}
+                                      {localSettingsMode === 'simple' ? 'Manual Mode' : 'Exit Manual'}
                                     </button>
-
-                                    {recommendedModel.modelId && props.model !== recommendedModel.modelId && (
-                                      <button
-                                        type="button"
-                                        onClick={handleDownloadRecommendedModel}
-                                        disabled={isDownloadingModel}
-                                        className={classNames(
-                                          'w-full flex items-center justify-center gap-2 rounded-lg border border-Astro-elements-borderColor/50 py-2 text-[10px] font-medium transition-colors mt-1',
-                                          isDownloadingModel
-                                            ? 'opacity-50 cursor-not-allowed'
-                                            : 'bg-Astro-elements-background-depth-3 text-Astro-elements-textSecondary hover:bg-Astro-elements-background-depth-4 hover:text-Astro-elements-textPrimary',
-                                        )}
-                                      >
-                                        <div className="i-ph:sparkle text-xs text-yellow-500" />
-                                        Switch to Recommended Brain
-                                      </button>
-                                    )}
                                   </div>
-                                </>
-                              ) : (
-                                <>
-                                  <p className="text-[11px] text-Astro-elements-textTertiary mb-1">
-                                    Manual control for Ollama, LM Studio, or custom local endpoints.
-                                  </p>
-                                  <ModelSelector
-                                    key={props.provider?.name + ':' + props.modelList.length}
-                                    model={props.model}
-                                    setModel={props.setModel}
-                                    modelList={props.modelList}
-                                    provider={props.provider}
-                                    setProvider={props.setProvider}
-                                    providerList={
-                                      (localProviders as ProviderInfo[]) || (PROVIDER_LIST as ProviderInfo[])
-                                    }
-                                    apiKeys={props.apiKeys}
-                                    modelLoading={props.isModelLoading}
-                                  />
-                                </>
-                              )}
 
-                              {(storageInfo.quotaMB || storageInfo.usageMB) &&
-                              !(typeof window !== 'undefined' && (window as any).__TAURI_INTERNALS__) ? (
-                                <div className="mt-2 text-[10px] text-Astro-elements-textTertiary flex items-center justify-between border-t border-Astro-elements-borderColor/30 pt-2">
-                                  <span>Browser Storage Used: {storageInfo.usageMB || 0}MB</span>
-                                  <span>Quota: {storageInfo.quotaMB ? `${storageInfo.quotaMB}MB` : 'Unlimited'}</span>
+                                  {localSettingsMode === 'simple' ? (
+                                    <>
+                                      <p className="text-xs text-Astro-elements-textTertiary leading-relaxed">
+                                        Astro is running natively on your computer for maximum privacy and performance.
+                                        Everything stays on your machine.
+                                      </p>
+
+                                      <div className="flex flex-col gap-2 mt-2">
+                                        <div className="text-xs font-medium flex items-center gap-1.5">
+                                          <div className="i-ph:brain-duotone text-purple-400" />
+                                          Current Brain:{' '}
+                                          <span className="text-purple-400 font-bold">
+                                            {props.model?.split('-')[0] || 'None'}
+                                          </span>
+                                        </div>
+                                        <button
+                                          type="button"
+                                          onClick={handleDownloadLocalModel}
+                                          disabled={isDownloadingModel}
+                                          className={classNames(
+                                            'w-full flex items-center justify-center gap-2 rounded-lg border py-2.5 text-xs font-bold transition-all shadow-sm active:scale-[0.98]',
+                                            isDownloadingModel
+                                              ? 'border-Astro-elements-borderColor bg-Astro-elements-background-depth-3 text-Astro-elements-textTertiary cursor-not-allowed'
+                                              : 'border-purple-500/40 bg-purple-500/10 text-purple-400 hover:bg-purple-500/20 hover:border-purple-500/60',
+                                          )}
+                                        >
+                                          <div
+                                            className={
+                                              isDownloadingModel
+                                                ? 'i-ph:spinner animate-spin text-sm'
+                                                : 'i-ph:lightning-fill text-sm'
+                                            }
+                                          />
+                                          {isDownloadingModel
+                                            ? downloadStatus || 'Downloading...'
+                                            : 'Download & Start AI Engine'}
+                                        </button>
+
+                                        {recommendedModel.modelId && props.model !== recommendedModel.modelId && (
+                                          <button
+                                            type="button"
+                                            onClick={handleDownloadRecommendedModel}
+                                            disabled={isDownloadingModel}
+                                            className={classNames(
+                                              'w-full flex items-center justify-center gap-2 rounded-lg border border-Astro-elements-borderColor/50 py-2 text-[10px] font-medium transition-colors mt-1',
+                                              isDownloadingModel
+                                                ? 'opacity-50 cursor-not-allowed'
+                                                : 'bg-Astro-elements-background-depth-3 text-Astro-elements-textSecondary hover:bg-Astro-elements-background-depth-4 hover:text-Astro-elements-textPrimary',
+                                            )}
+                                          >
+                                            <div className="i-ph:sparkle text-xs text-yellow-500" />
+                                            Switch to Recommended Brain
+                                          </button>
+                                        )}
+                                      </div>
+                                    </>
+                                  ) : (
+                                    <>
+                                      <p className="text-[11px] text-Astro-elements-textTertiary mb-1">
+                                        Manual control for Ollama, LM Studio, or custom local endpoints.
+                                      </p>
+                                      <ModelSelector
+                                        key={props.provider?.name + ':' + props.modelList.length}
+                                        model={props.model}
+                                        setModel={props.setModel}
+                                        modelList={props.modelList}
+                                        provider={props.provider}
+                                        setProvider={props.setProvider}
+                                        providerList={
+                                          (localProviders as ProviderInfo[]) || (PROVIDER_LIST as ProviderInfo[])
+                                        }
+                                        apiKeys={props.apiKeys}
+                                        modelLoading={props.isModelLoading}
+                                      />
+                                    </>
+                                  )}
+
+                                  {(storageInfo.quotaMB || storageInfo.usageMB) &&
+                                  !(typeof window !== 'undefined' && (window as any).__TAURI_INTERNALS__) ? (
+                                    <div className="mt-2 text-[10px] text-Astro-elements-textTertiary flex items-center justify-between border-t border-Astro-elements-borderColor/30 pt-2">
+                                      <span>Browser Storage Used: {storageInfo.usageMB || 0}MB</span>
+                                      <span>
+                                        Quota: {storageInfo.quotaMB ? `${storageInfo.quotaMB}MB` : 'Unlimited'}
+                                      </span>
+                                    </div>
+                                  ) : null}
                                 </div>
-                              ) : null}
-                            </div>
-                          </div>
+                              </div>
+                            </>
+                          )}
                         </>
                       )}
                     </div>
