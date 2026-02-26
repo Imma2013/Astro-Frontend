@@ -18,7 +18,6 @@ import type { DesignScheme } from '~/types/design-scheme';
 import type { ElementInfo } from '~/components/workbench/Inspector';
 import { McpTools } from './MCPTools';
 import { WebSearch } from './WebSearch.client';
-import { DEFAULT_OPENROUTER_APP_RPM_LIMIT } from '~/lib/openrouter/policy';
 import {
   getBrowserStorageEstimate,
   getWebLLMModelCatalog,
@@ -28,7 +27,7 @@ import {
 const MANUAL_MODEL_LOCK_KEY = 'Astro_model_manual_lock';
 const MODEL_ACCESS_MODE_KEY = 'Astro_model_access_mode';
 const LOCAL_PROVIDER_PREFERENCE = ['WebLLM', 'OpenAILike', 'LMStudio', 'Ollama'];
-const CLOUD_PROVIDER_PREFERENCE = ['OpenRouter', 'OpenAI', 'Anthropic', 'Google'];
+const CLOUD_PROVIDER_PREFERENCE = ['OpenAI', 'Anthropic', 'Google'];
 const WEBLLM_RECOMMENDATIONS = {
   mobile: ['Phi-3.5-mini-instruct-q4f16_1-MLC', 'Llama-3.2-1B-Instruct-q4f16_1-MLC'],
   eco: ['Phi-3.5-mini-instruct-q4f16_1-MLC', 'Llama-3.2-1B-Instruct-q4f16_1-MLC'],
@@ -528,7 +527,7 @@ export const ChatBox: React.FC<ChatBoxProps> = (props) => {
                             Local: free in-browser models (WebGPU, no API key).
                           </div>
                           <div className="rounded-md border border-Astro-elements-borderColor/60 bg-Astro-elements-background-depth-2 px-2 py-1.5">
-                            Cloud: BYO OpenRouter/API key, paid usage limits apply.
+                            Cloud: BYO API key, paid usage limits apply.
                           </div>
                         </div>
                       </div>
@@ -557,84 +556,64 @@ export const ChatBox: React.FC<ChatBoxProps> = (props) => {
                                     props.onApiKeysChange(props.provider.name, key);
                                   }}
                                 />
-                                {props.provider.name === 'OpenRouter' && (
-                                  <p className="px-1 pb-1 text-[11px] text-Astro-elements-textTertiary">
-                                    OpenRouter guardrail: app-level cap {DEFAULT_OPENROUTER_APP_RPM_LIMIT} req/min.
-                                    Provider-side limits still apply.
-                                  </p>
-                                )}
                               </>
                             )}
                         </>
                       ) : (
                         <>
-                          <ModelSelector
-                            key={props.provider?.name + ':' + props.modelList.length}
-                            model={props.model}
-                            setModel={props.setModel}
-                            modelList={props.modelList}
-                            provider={props.provider}
-                            setProvider={props.setProvider}
-                            providerList={(localProviders as ProviderInfo[]) || (PROVIDER_LIST as ProviderInfo[])}
-                            apiKeys={props.apiKeys}
-                            modelLoading={props.isModelLoading}
-                          />
-                          <div className="mt-2 rounded-lg border border-Astro-elements-borderColor/60 bg-Astro-elements-background-depth-1/80 p-2 text-xs text-Astro-elements-textTertiary">
-                            Local mode active. Start with one small model, then add a second model only if needed.
-                          </div>
-                          {props.provider?.name === 'WebLLM' && (
-                            <div className="mt-2 rounded-lg border border-Astro-elements-borderColor/60 bg-Astro-elements-background-depth-1/80 p-2 text-xs text-Astro-elements-textTertiary">
-                              <div className="flex items-center justify-between gap-2">
-                                <span>Download selected local model for browser use</span>
+                          <div className="mt-2 rounded-lg border border-Astro-elements-borderColor/60 bg-Astro-elements-background-depth-1/80 p-3 text-sm text-Astro-elements-textPrimary">
+                            <div className="flex flex-col gap-3">
+                              <div className="font-medium text-Astro-elements-textSecondary">
+                                Local Models (No setup required)
+                              </div>
+                              <p className="text-xs text-Astro-elements-textTertiary leading-relaxed">
+                                Astro runs completely in your browser for total privacy. No installations needed.
+                                These models download once and run offline.
+                              </p>
+                              
+                              <div className="flex flex-col gap-2 mt-2">
+                                <div className="text-xs font-medium">Selected Model: <span className="text-purple-400">{props.model || 'None'}</span></div>
                                 <button
                                   type="button"
                                   onClick={handleDownloadLocalModel}
                                   disabled={isDownloadingModel}
                                   className={classNames(
-                                    'rounded-md border px-2 py-1 text-xs transition-colors',
+                                    'w-full flex items-center justify-center gap-2 rounded-lg border py-2 text-xs font-medium transition-colors shadow-sm',
                                     isDownloadingModel
-                                      ? 'border-Astro-elements-borderColor text-Astro-elements-textTertiary'
-                                      : 'border-Astro-elements-item-backgroundAccent text-Astro-elements-item-contentAccent hover:bg-Astro-elements-background-depth-2',
+                                      ? 'border-Astro-elements-borderColor bg-Astro-elements-background-depth-3 text-Astro-elements-textTertiary cursor-not-allowed'
+                                      : 'border-purple-500/30 bg-purple-500/10 text-purple-400 hover:bg-purple-500/20',
                                   )}
                                 >
-                                  {isDownloadingModel ? 'Downloading...' : 'Download Model'}
+                                  <div className={isDownloadingModel ? "i-ph:spinner animate-spin text-sm" : "i-ph:download text-sm"} />
+                                  {isDownloadingModel ? (downloadStatus || 'Downloading...') : 'Download & Load Selected Model'}
                                 </button>
-                              </div>
-                              {downloadStatus && <p className="mt-2">{downloadStatus}</p>}
-                              {recommendedModel.modelId && (
-                                <div className="mt-2 rounded-md border border-Astro-elements-borderColor/60 bg-Astro-elements-background-depth-2 px-2 py-1.5">
-                                  <p>
-                                    Recommended for this device:{' '}
-                                    <span className="font-medium text-Astro-elements-textSecondary">
-                                      {recommendedModel.modelId}
-                                    </span>
-                                    {recommendedModel.estimatedDownloadMB
-                                      ? ` (~${recommendedModel.estimatedDownloadMB}MB)`
-                                      : ''}
-                                  </p>
+                                
+                                {recommendedModel.modelId && props.model !== recommendedModel.modelId && (
                                   <button
                                     type="button"
                                     onClick={handleDownloadRecommendedModel}
                                     disabled={isDownloadingModel}
                                     className={classNames(
-                                      'mt-1 rounded-md border px-2 py-1 text-xs transition-colors',
+                                      'w-full flex items-center justify-center gap-2 rounded-lg border border-Astro-elements-borderColor/50 py-2 text-xs font-medium transition-colors mt-1',
                                       isDownloadingModel
-                                        ? 'border-Astro-elements-borderColor text-Astro-elements-textTertiary'
-                                        : 'border-Astro-elements-item-backgroundAccent text-Astro-elements-item-contentAccent hover:bg-Astro-elements-background-depth-3',
+                                        ? 'opacity-50 cursor-not-allowed'
+                                        : 'bg-Astro-elements-background-depth-3 text-Astro-elements-textSecondary hover:bg-Astro-elements-background-depth-4 hover:text-Astro-elements-textPrimary',
                                     )}
                                   >
-                                    {isDownloadingModel ? 'Downloading...' : 'Download Recommended'}
+                                    <div className="i-ph:lightning text-sm text-yellow-500" />
+                                    Switch to Recommended: {recommendedModel.modelId.split('-').slice(0, 2).join('-')}
                                   </button>
+                                )}
+                              </div>
+                              
+                              {(storageInfo.quotaMB || storageInfo.usageMB) ? (
+                                <div className="mt-2 text-[10px] text-Astro-elements-textTertiary flex items-center justify-between border-t border-Astro-elements-borderColor/30 pt-2">
+                                  <span>Storage Used: {storageInfo.usageMB || 0}MB</span>
+                                  <span>Available: {storageInfo.quotaMB ? `${storageInfo.quotaMB}MB` : 'Unlimited'}</span>
                                 </div>
-                              )}
-                              {(storageInfo.quotaMB || storageInfo.usageMB) && (
-                                <p className="mt-1">
-                                  Browser storage for this site: {storageInfo.usageMB || 0}MB used /{' '}
-                                  {storageInfo.quotaMB || '?'}MB quota
-                                </p>
-                              )}
+                              ) : null}
                             </div>
-                          )}
+                          </div>
                         </>
                       )}
                     </div>

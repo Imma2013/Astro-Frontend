@@ -15,7 +15,6 @@ import type { DesignScheme } from '~/types/design-scheme';
 import { MCPService } from '~/lib/services/mcpService';
 import { StreamRecoveryManager } from '~/lib/.server/llm/stream-recovery';
 import type { AstroRuntimeConfig } from '~/types/astro';
-import { enforceOpenRouterModelAllowlist, enforceOpenRouterRateLimit } from '~/lib/.server/openrouter/guard';
 
 export async function action(args: ActionFunctionArgs) {
   return chatAction(args);
@@ -79,12 +78,6 @@ async function chatAction({ context, request }: ActionFunctionArgs) {
 
   if (latestUserMessage) {
     const { model, provider } = extractPropertiesFromMessage(latestUserMessage);
-    enforceOpenRouterModelAllowlist(provider, model);
-    enforceOpenRouterRateLimit({
-      provider,
-      apiKeys,
-      env: context.cloudflare?.env as unknown as Record<string, string> | undefined,
-    });
   }
 
   const stream = new SwitchableStream();

@@ -4,7 +4,6 @@ import type { KeyboardEvent } from 'react';
 import type { ModelInfo } from '~/lib/modules/llm/types';
 import { classNames } from '~/utils/classNames';
 import { LOCAL_PROVIDERS } from '~/lib/stores/settings';
-import { isOpenRouterAllowedModel } from '~/lib/openrouter/policy';
 
 // Fuzzy search utilities
 const levenshteinDistance = (str1: string, str2: string): number => {
@@ -94,11 +93,6 @@ interface ModelSelectorProps {
 
 // Helper function to determine if a model is likely free
 const isModelLikelyFree = (model: ModelInfo, providerName?: string): boolean => {
-  // OpenRouter models with zero pricing in the label
-  if (providerName === 'OpenRouter' && model.label.includes('in:$0.00') && model.label.includes('out:$0.00')) {
-    return true;
-  }
-
   // Models with "free" in the name or label
   if (model.name.toLowerCase().includes('free') || model.label.toLowerCase().includes('free')) {
     return true;
@@ -200,8 +194,7 @@ export const ModelSelector = ({
 
   const filteredModels = useMemo(() => {
     const baseModels = [...modelList]
-      .filter((e) => e.provider === provider?.name && e.name)
-      .filter((entry) => (provider?.name === 'OpenRouter' ? isOpenRouterAllowedModel(entry.name) : true));
+      .filter((e) => e.provider === provider?.name && e.name);
 
     return baseModels
       .filter((model) => {

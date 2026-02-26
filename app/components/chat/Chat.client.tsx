@@ -280,6 +280,7 @@ export const ChatImpl = memo(
 
     const abort = () => {
       stop();
+      setFakeLoading(false);
       chatStore.setKey('aborted', true);
       workbenchStore.abortAllActions();
 

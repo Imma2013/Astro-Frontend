@@ -8,7 +8,6 @@ import { LLMManager } from '~/lib/modules/llm/manager';
 import type { ModelInfo } from '~/lib/modules/llm/types';
 import { getApiKeysFromCookie, getProviderSettingsFromCookie } from '~/lib/api/cookies';
 import { createScopedLogger } from '~/utils/logger';
-import { enforceOpenRouterModelAllowlist, enforceOpenRouterRateLimit } from '~/lib/.server/openrouter/guard';
 
 export async function action(args: ActionFunctionArgs) {
   return llmCallAction(args);
@@ -94,7 +93,6 @@ async function llmCallAction({ context, request }: ActionFunctionArgs) {
   const cookieHeader = request.headers.get('Cookie');
   const apiKeys = getApiKeysFromCookie(cookieHeader);
   const providerSettings = getProviderSettingsFromCookie(cookieHeader);
-  enforceOpenRouterModelAllowlist(providerName, model);
 
   if (streamOutput) {
     try {
@@ -179,11 +177,6 @@ async function llmCallAction({ context, request }: ActionFunctionArgs) {
       }
 
       logger.info(`Generating response Provider: ${provider.name}, Model: ${modelDetails.name}`);
-      enforceOpenRouterRateLimit({
-        provider: provider.name,
-        apiKeys,
-        env: context.cloudflare?.env as unknown as Record<string, string> | undefined,
-      });
 
       // DEBUG: Log reasoning model detection
       const isReasoning = isReasoningModel(modelDetails.name);

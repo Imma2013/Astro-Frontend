@@ -11,7 +11,6 @@ import { createFilesContext, extractPropertiesFromMessage } from './utils';
 import { discussPrompt } from '~/lib/common/prompts/discuss-prompt';
 import type { DesignScheme } from '~/types/design-scheme';
 import type { AstroRuntimeConfig } from '~/types/astro';
-import { enforceOpenRouterModelAllowlist, enforceOpenRouterRateLimit } from '~/lib/.server/openrouter/guard';
 
 export type Messages = Message[];
 
@@ -329,12 +328,6 @@ END DESIGN DNA
   }
 
   logger.info(`Sending llm call to ${provider.name} with model ${modelDetails.name}`);
-  enforceOpenRouterModelAllowlist(provider.name, modelDetails.name);
-  enforceOpenRouterRateLimit({
-    provider: provider.name,
-    apiKeys,
-    env: serverEnv as Record<string, string> | undefined,
-  });
 
   // Log reasoning model detection and token parameters
   const isReasoning = isReasoningModel(modelDetails.name);

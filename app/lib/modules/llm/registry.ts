@@ -9,7 +9,6 @@ import HuggingFaceProvider from './providers/huggingface';
 import LMStudioProvider from './providers/lmstudio';
 import MistralProvider from './providers/mistral';
 import OllamaProvider from './providers/ollama';
-import OpenRouterProvider from './providers/open-router';
 import OpenAILikeProvider from './providers/openai-like';
 import OpenAIProvider from './providers/openai';
 import PerplexityProvider from './providers/perplexity';
@@ -36,7 +35,6 @@ export {
   MoonshotProvider,
   OllamaProvider,
   OpenAIProvider,
-  OpenRouterProvider,
   OpenAILikeProvider,
   PerplexityProvider,
   XAIProvider,

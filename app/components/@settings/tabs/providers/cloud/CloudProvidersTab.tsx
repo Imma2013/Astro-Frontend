@@ -28,7 +28,6 @@ type ProviderName =
   | 'Hyperbolic'
   | 'Mistral'
   | 'OpenAI'
-  | 'OpenRouter'
   | 'Perplexity'
   | 'Together'
   | 'XAI';
@@ -46,7 +45,6 @@ const PROVIDER_ICONS: Record<ProviderName, IconType> = {
   Hyperbolic: TbCloudComputing,
   Mistral: TbBrain,
   OpenAI: SiOpenai,
-  OpenRouter: FaCloud,
   Perplexity: SiPerplexity,
   Together: BsCloud,
   XAI: BsRobot,
