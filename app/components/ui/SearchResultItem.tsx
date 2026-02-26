@@ -132,4 +132,3 @@ export function SearchResultItem({
     </motion.div>
   );
 }
-

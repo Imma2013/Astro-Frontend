@@ -99,4 +99,3 @@ function stripMetadata(content: string) {
   const artifactRegex = /<AstroArtifact\s+[^>]*>[\s\S]*?<\/AstroArtifact>/gm;
   return content.replace(MODEL_REGEX, '').replace(PROVIDER_REGEX, '').replace(artifactRegex, '');
 }
-

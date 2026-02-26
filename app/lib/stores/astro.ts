@@ -9,7 +9,7 @@ const DEFAULT_SETTINGS: AstroSettings = {
   backendCustomApiUrl: '',
   autoScaffoldBackend: true,
   webSearchProvider: 'searxng',
-  webSearchEndpoint: 'http://localhost:8080',
+  webSearchEndpoint: 'http://localhost:8081',
   webSearchApiKey: '',
   designDna: '',
   designDnaSourceUrl: '',
@@ -61,7 +61,7 @@ function normalizeAstroSettings(settings: AstroSettings): AstroSettings {
       ...settings,
       backendProvider: 'magical-scaffold',
       webSearchProvider: 'searxng',
-      webSearchEndpoint: settings.webSearchEndpoint || 'http://localhost:8080',
+      webSearchEndpoint: settings.webSearchEndpoint || 'http://localhost:8081',
     };
   }
 
@@ -82,7 +82,8 @@ export const setDeploymentMode = (deploymentMode: AstroDeploymentMode) => update
 export const setBackendProvider = (backendProvider: AstroBackendProvider) => updateAstroSettings({ backendProvider });
 export const setAutoScaffoldBackend = (autoScaffoldBackend: boolean) => updateAstroSettings({ autoScaffoldBackend });
 export const setBackendCustomApiUrl = (backendCustomApiUrl: string) => updateAstroSettings({ backendCustomApiUrl });
-export const setWebSearchProvider = (webSearchProvider: AstroWebSearchProvider) => updateAstroSettings({ webSearchProvider });
+export const setWebSearchProvider = (webSearchProvider: AstroWebSearchProvider) =>
+  updateAstroSettings({ webSearchProvider });
 export const setWebSearchEndpoint = (webSearchEndpoint: string) => updateAstroSettings({ webSearchEndpoint });
 export const setWebSearchApiKey = (webSearchApiKey: string) => updateAstroSettings({ webSearchApiKey });
 export const setDesignDna = (designDna: string) => updateAstroSettings({ designDna });

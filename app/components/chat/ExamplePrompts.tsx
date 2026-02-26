@@ -35,4 +35,3 @@ export function ExamplePrompts(sendMessage?: { (event: React.UIEvent, messageInp
     </div>
   );
 }
-

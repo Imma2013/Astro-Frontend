@@ -310,4 +310,3 @@ export function GitHubRepositorySelector({ onClone, className }: GitHubRepositor
     </motion.div>
   );
 }
-

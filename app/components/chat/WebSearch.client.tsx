@@ -39,7 +39,9 @@ function formatSearchResult(data: WebSearchData, mode: SearchMode): string {
   }
 
   if (data.sources?.length) {
-    const sourceLines = data.sources.slice(0, 8).map((source, index) => `${index + 1}. ${source.title || source.url} - ${source.url}`);
+    const sourceLines = data.sources
+      .slice(0, 8)
+      .map((source, index) => `${index + 1}. ${source.title || source.url} - ${source.url}`);
     parts.push('Sources:', ...sourceLines);
   }
 
@@ -176,7 +178,9 @@ export function WebSearch({ onSearchResult, disabled = false }: WebSearchProps) 
           </div>
           <div className="text-[11px] text-Astro-elements-textTertiary px-1">
             Mode:{' '}
-            {astroSettings.deploymentMode === 'local-only' ? 'Private Local Search' : `Cloud (${astroSettings.webSearchProvider})`}
+            {astroSettings.deploymentMode === 'local-only'
+              ? 'Private Local Search'
+              : `Cloud (${astroSettings.webSearchProvider})`}
           </div>
           <input
             ref={inputRef}

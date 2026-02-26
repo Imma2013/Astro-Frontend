@@ -92,7 +92,7 @@ interface ModelSelectorProps {
 }
 
 // Helper function to determine if a model is likely free
-const isModelLikelyFree = (model: ModelInfo, providerName?: string): boolean => {
+const isModelLikelyFree = (model: ModelInfo, _providerName?: string): boolean => {
   // Models with "free" in the name or label
   if (model.name.toLowerCase().includes('free') || model.label.toLowerCase().includes('free')) {
     return true;
@@ -198,8 +198,7 @@ export const ModelSelector = ({
   }, []);
 
   const filteredModels = useMemo(() => {
-    const baseModels = [...modelList]
-      .filter((e) => e.provider === provider?.name && e.name);
+    const baseModels = [...modelList].filter((e) => e.provider === provider?.name && e.name);
 
     return baseModels
       .filter((model) => {
@@ -872,4 +871,3 @@ export const ModelSelector = ({
     </div>
   );
 };
-

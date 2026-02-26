@@ -1087,4 +1087,3 @@ export default function SupabaseTab() {
     </div>
   );
 }
-

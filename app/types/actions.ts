@@ -83,4 +83,3 @@ export interface FileHistory {
   // Novo campo para rastrear a origem das mudanÃ§as
   changeSource?: 'user' | 'auto-save' | 'external';
 }
-

@@ -33,4 +33,3 @@ export const HelpButton = memo(({ onClick }: HelpButtonProps) => {
     />
   );
 });
-

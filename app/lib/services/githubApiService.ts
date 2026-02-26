@@ -448,4 +448,3 @@ export class GitHubApiServiceClass {
 
 // Export an instance of the service
 export const gitHubApiService = new GitHubApiServiceClass();
-

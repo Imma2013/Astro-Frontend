@@ -18,4 +18,3 @@ export const PanelHeader = memo(({ className, children }: PanelHeaderProps) => {
     </div>
   );
 });
-

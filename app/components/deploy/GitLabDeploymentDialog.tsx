@@ -762,4 +762,3 @@ export function GitLabDeploymentDialog({ isOpen, onClose, projectName, files }: 
     </Dialog.Root>
   );
 }
-

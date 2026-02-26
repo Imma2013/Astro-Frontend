@@ -89,4 +89,3 @@ export function StatsDisplay({ stats, onRefresh, isRefreshing }: StatsDisplayPro
     </div>
   );
 }
-

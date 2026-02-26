@@ -71,4 +71,3 @@ ${escapeAstroTags(file.content)}
 
   return messages;
 };
-

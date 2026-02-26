@@ -68,4 +68,3 @@ export default function McpServerListItem({ toolName, toolSchema }: McpToolProps
     </div>
   );
 }
-

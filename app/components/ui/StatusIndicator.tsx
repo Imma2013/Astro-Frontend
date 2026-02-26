@@ -88,4 +88,3 @@ export function StatusIndicator({ status, size = 'md', pulse = false, label, cla
     </div>
   );
 }
-

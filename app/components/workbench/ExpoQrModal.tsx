@@ -53,4 +53,3 @@ export const ExpoQrModal: React.FC<ExpoQrModalProps> = ({ open, onClose }) => {
     </DialogRoot>
   );
 };
-

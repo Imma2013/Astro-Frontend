@@ -517,4 +517,3 @@ class LogStore {
 }
 
 export const logStore = new LogStore();
-

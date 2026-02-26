@@ -110,4 +110,3 @@ export default function ChatAlert({ alert, clearAlert, postMessage }: Props) {
     </AnimatePresence>
   );
 }
-

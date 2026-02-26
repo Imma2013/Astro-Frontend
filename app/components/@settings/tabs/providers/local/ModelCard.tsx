@@ -104,4 +104,3 @@ function ModelCard({ model, onUpdate, onDelete }: ModelCardProps) {
 }
 
 export default ModelCard;
-

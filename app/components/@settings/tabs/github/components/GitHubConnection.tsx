@@ -231,4 +231,3 @@ export function GitHubConnection({ connectionTest, onTestConnection }: GitHubCon
     </motion.div>
   );
 }
-

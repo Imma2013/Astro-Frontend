@@ -46,4 +46,3 @@ describe('stripCodeFenceFromArtifact', () => {
     expect(stripCodeFenceFromArtifact(input)).toBe(expected);
   });
 });
-

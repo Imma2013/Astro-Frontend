@@ -57,8 +57,20 @@ export default class OpenAIProvider extends BaseProvider {
       maxCompletionTokens: 32000,
     },
     { name: 'o1-mini', label: 'o1-mini', provider: 'OpenAI', maxTokenAllowed: 128000, maxCompletionTokens: 65000 },
-    { name: 'o3-mini', label: 'o3-mini (High-Speed Reasoning)', provider: 'OpenAI', maxTokenAllowed: 200000, maxCompletionTokens: 100000 },
-    { name: 'gpt-5-preview', label: 'GPT-5 (Experimental)', provider: 'OpenAI', maxTokenAllowed: 200000, maxCompletionTokens: 32000 },
+    {
+      name: 'o3-mini',
+      label: 'o3-mini (High-Speed Reasoning)',
+      provider: 'OpenAI',
+      maxTokenAllowed: 200000,
+      maxCompletionTokens: 100000,
+    },
+    {
+      name: 'gpt-5-preview',
+      label: 'GPT-5 (Experimental)',
+      provider: 'OpenAI',
+      maxTokenAllowed: 200000,
+      maxCompletionTokens: 32000,
+    },
   ];
 
   async getDynamicModels(

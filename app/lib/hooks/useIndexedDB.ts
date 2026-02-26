@@ -56,4 +56,3 @@ export function useIndexedDB() {
 
   return { db, isLoading, error };
 }
-

@@ -10,7 +10,6 @@ import { ScreenshotStateManager } from './ScreenshotStateManager';
 import { SendButton } from './SendButton.client';
 import { IconButton } from '~/components/ui/IconButton';
 import { toast } from 'react-toastify';
-import Cookies from 'js-cookie';
 import { SpeechRecognitionButton } from '~/components/chat/SpeechRecognition';
 import { ExpoQrModal } from '~/components/workbench/ExpoQrModal';
 import styles from './BaseChat.module.scss';
@@ -19,19 +18,17 @@ import type { DesignScheme } from '~/types/design-scheme';
 import type { ElementInfo } from '~/components/workbench/Inspector';
 import { McpTools } from './MCPTools';
 import { WebSearch } from './WebSearch.client';
-import {
-  getBrowserStorageEstimate,
-  getWebLLMModelCatalog,
-  predownloadWebLLMModel,
-} from '~/lib/local/webllm.client';
+import { getBrowserStorageEstimate, predownloadWebLLMModel } from '~/lib/local/webllm.client';
 
 // Use dynamic imports for Tauri to avoid SSR/non-Tauri environment crashes
 const getTauriApi = async () => {
   if (typeof window !== 'undefined' && (window as any).__TAURI_INTERNALS__) {
     const { invoke } = await import('@tauri-apps/api/core');
     const { listen } = await import('@tauri-apps/api/event');
+
     return { invoke, listen };
   }
+
   return null;
 };
 
@@ -100,6 +97,7 @@ export const ChatBox: React.FC<ChatBoxProps> = (props) => {
       if (isTauri && entry.name === 'WebLLM') {
         return false;
       }
+
       return LOCAL_PROVIDERS.includes(entry.name);
     });
   }, [props.providerList]);
@@ -114,10 +112,7 @@ export const ChatBox: React.FC<ChatBoxProps> = (props) => {
     {},
   );
   const pickPreferredProvider = (providers: ProviderInfo[], order: string[]) => {
-    return (
-      order.map((name) => providers.find((entry) => entry.name === name)).find(Boolean) ||
-      providers[0]
-    );
+    return order.map((name) => providers.find((entry) => entry.name === name)).find(Boolean) || providers[0];
   };
   const applyProviderWithFirstModel = (nextProvider: ProviderInfo | undefined) => {
     if (!nextProvider) {
@@ -162,8 +157,11 @@ export const ChatBox: React.FC<ChatBoxProps> = (props) => {
     const ua = navigator.userAgent.toLowerCase();
     const isMobile = /android|iphone|ipad|mobile/.test(ua);
     const hasVisionNeed = (props.imageDataList || []).length > 0;
-    const tier: 'mobile' | 'eco' | 'starter' | 'pro' | 'god' =
-      isMobile ? 'mobile' : profile?.tier === 'god-mode' ? 'god' : profile?.tier || 'starter';
+    const tier: 'mobile' | 'eco' | 'starter' | 'pro' | 'god' = isMobile
+      ? 'mobile'
+      : profile?.tier === 'god-mode'
+        ? 'god'
+        : profile?.tier || 'starter';
     const preferenceList = hasVisionNeed
       ? ASTRO_LOCAL_RECOMMENDATIONS.vision
       : ASTRO_LOCAL_RECOMMENDATIONS[tier] || ASTRO_LOCAL_RECOMMENDATIONS.starter;
@@ -260,16 +258,18 @@ export const ChatBox: React.FC<ChatBoxProps> = (props) => {
         setDownloadStatus('Starting Local Engine...');
         await tauri.invoke('start_engine', { modelPath: filePath });
 
-        setDownloadStatus('Local Engine Ready (Port 8080)');
+        setDownloadStatus('Local Engine Ready (Port 8081)');
 
         // Automatically switch to AstroLocal pointing to local sidecar
         const astroLocalProvider = (localProviders as ProviderInfo[]).find((entry) => entry.name === 'AstroLocal');
 
         if (astroLocalProvider) {
           props.setProvider?.(astroLocalProvider);
-          
-          // AstroLocal doesn't need API keys or manual base URL settings in the UI
-          // since the provider handles http://127.0.0.1:8080/v1 internally for Tauri.
+
+          /*
+           * AstroLocal doesn't need API keys or manual base URL settings in the UI
+           * since the provider handles http://127.0.0.1:8081/v1 internally for Tauri.
+           */
 
           toast.success('Astro Native Engine started! High-performance mode active.');
         }
@@ -299,6 +299,7 @@ export const ChatBox: React.FC<ChatBoxProps> = (props) => {
       props.setProvider?.(astroLocalProvider);
       props.setModel?.(firstAstroLocalModel);
       setDownloadStatus('Switched to AstroLocal. Click download once more.');
+
       return;
     }
 
@@ -323,12 +324,11 @@ export const ChatBox: React.FC<ChatBoxProps> = (props) => {
       }
 
       setDownloadStatus('Model ready for local use.');
+
       const estimate = await getBrowserStorageEstimate();
       setStorageInfo(estimate);
     } catch (error: any) {
-      setDownloadStatus(
-        error?.message || 'Model download failed. Check WebGPU support and try a smaller local model.',
-      );
+      setDownloadStatus(error?.message || 'Model download failed. Check WebGPU support and try a smaller local model.');
     } finally {
       setIsDownloadingModel(false);
     }
@@ -638,7 +638,9 @@ export const ChatBox: React.FC<ChatBoxProps> = (props) => {
                                 </div>
                                 <button
                                   type="button"
-                                  onClick={() => setLocalSettingsMode(localSettingsMode === 'simple' ? 'advanced' : 'simple')}
+                                  onClick={() =>
+                                    setLocalSettingsMode(localSettingsMode === 'simple' ? 'advanced' : 'simple')
+                                  }
                                   className="text-[10px] text-Astro-elements-textTertiary hover:text-purple-400 transition-colors uppercase tracking-widest font-bold border border-Astro-elements-borderColor/30 px-1.5 py-0.5 rounded bg-Astro-elements-background-depth-3"
                                 >
                                   {localSettingsMode === 'simple' ? 'Manual Mode' : 'Exit Manual'}
@@ -648,14 +650,17 @@ export const ChatBox: React.FC<ChatBoxProps> = (props) => {
                               {localSettingsMode === 'simple' ? (
                                 <>
                                   <p className="text-xs text-Astro-elements-textTertiary leading-relaxed">
-                                    Astro is running natively on your computer for maximum privacy and performance. 
+                                    Astro is running natively on your computer for maximum privacy and performance.
                                     Everything stays on your machine.
                                   </p>
-                                  
+
                                   <div className="flex flex-col gap-2 mt-2">
                                     <div className="text-xs font-medium flex items-center gap-1.5">
                                       <div className="i-ph:brain-duotone text-purple-400" />
-                                      Current Brain: <span className="text-purple-400 font-bold">{props.model?.split('-')[0] || 'None'}</span>
+                                      Current Brain:{' '}
+                                      <span className="text-purple-400 font-bold">
+                                        {props.model?.split('-')[0] || 'None'}
+                                      </span>
                                     </div>
                                     <button
                                       type="button"
@@ -668,10 +673,18 @@ export const ChatBox: React.FC<ChatBoxProps> = (props) => {
                                           : 'border-purple-500/40 bg-purple-500/10 text-purple-400 hover:bg-purple-500/20 hover:border-purple-500/60',
                                       )}
                                     >
-                                      <div className={isDownloadingModel ? "i-ph:spinner animate-spin text-sm" : "i-ph:lightning-fill text-sm"} />
-                                      {isDownloadingModel ? (downloadStatus || 'Downloading...') : 'Download & Start AI Engine'}
+                                      <div
+                                        className={
+                                          isDownloadingModel
+                                            ? 'i-ph:spinner animate-spin text-sm'
+                                            : 'i-ph:lightning-fill text-sm'
+                                        }
+                                      />
+                                      {isDownloadingModel
+                                        ? downloadStatus || 'Downloading...'
+                                        : 'Download & Start AI Engine'}
                                     </button>
-                                    
+
                                     {recommendedModel.modelId && props.model !== recommendedModel.modelId && (
                                       <button
                                         type="button"
@@ -702,13 +715,15 @@ export const ChatBox: React.FC<ChatBoxProps> = (props) => {
                                     modelList={props.modelList}
                                     provider={props.provider}
                                     setProvider={props.setProvider}
-                                    providerList={(localProviders as ProviderInfo[]) || (PROVIDER_LIST as ProviderInfo[])}
+                                    providerList={
+                                      (localProviders as ProviderInfo[]) || (PROVIDER_LIST as ProviderInfo[])
+                                    }
                                     apiKeys={props.apiKeys}
                                     modelLoading={props.isModelLoading}
                                   />
                                 </>
                               )}
-                              
+
                               {(storageInfo.quotaMB || storageInfo.usageMB) &&
                               !(typeof window !== 'undefined' && (window as any).__TAURI_INTERNALS__) ? (
                                 <div className="mt-2 text-[10px] text-Astro-elements-textTertiary flex items-center justify-between border-t border-Astro-elements-borderColor/30 pt-2">
@@ -752,4 +767,3 @@ export const ChatBox: React.FC<ChatBoxProps> = (props) => {
     </div>
   );
 };
-

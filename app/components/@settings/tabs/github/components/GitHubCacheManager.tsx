@@ -365,4 +365,3 @@ export function GitHubCacheManager({ className = '', showStats = true }: GitHubC
     </div>
   );
 }
-

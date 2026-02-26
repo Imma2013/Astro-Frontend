@@ -341,4 +341,3 @@ export async function deleteSnapshot(db: IDBDatabase, chatId: string): Promise<v
     };
   });
 }
-

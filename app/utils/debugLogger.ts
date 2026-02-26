@@ -1282,4 +1282,3 @@ if (typeof window !== 'undefined') {
     debugLogger.initialize();
   }, 0);
 }
-

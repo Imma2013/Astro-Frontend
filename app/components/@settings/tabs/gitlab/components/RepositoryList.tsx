@@ -140,4 +140,3 @@ export function RepositoryList({ repositories, onClone, onRefresh, isRefreshing 
     </div>
   );
 }
-

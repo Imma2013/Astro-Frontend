@@ -407,4 +407,3 @@ const ToolCallsList = memo(({ toolInvocations, toolCallAnnotations, addToolResul
     </motion.div>
   );
 });
-

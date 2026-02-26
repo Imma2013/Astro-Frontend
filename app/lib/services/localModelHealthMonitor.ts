@@ -387,4 +387,3 @@ export class LocalModelHealthMonitor extends SimpleEventEmitter {
 
 // Singleton instance
 export const localModelHealthMonitor = new LocalModelHealthMonitor();
-

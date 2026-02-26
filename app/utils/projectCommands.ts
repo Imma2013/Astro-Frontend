@@ -195,4 +195,3 @@ export function createCommandActionsString(commands: ProjectCommands): string {
 
   return commandString;
 }
-

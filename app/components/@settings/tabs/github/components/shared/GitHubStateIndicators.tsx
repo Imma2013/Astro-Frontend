@@ -262,4 +262,3 @@ export function ConnectionTestIndicator({ status, message, timestamp, className 
     </div>
   );
 }
-

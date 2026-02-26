@@ -171,4 +171,3 @@ export function GitHubAuthDialog({ isOpen, onClose, onSuccess }: GitHubAuthDialo
     </Dialog.Root>
   );
 }
-

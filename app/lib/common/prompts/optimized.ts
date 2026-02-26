@@ -561,4 +561,3 @@ Examples:
 Always use artifacts for file contents and commands, following the format shown in these examples.
 `;
 };
-

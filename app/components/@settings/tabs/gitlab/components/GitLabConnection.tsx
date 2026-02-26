@@ -251,4 +251,3 @@ export default function GitLabConnection({ connectionTest, onTestConnection }: G
     </motion.div>
   );
 }
-

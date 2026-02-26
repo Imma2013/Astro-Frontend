@@ -382,4 +382,3 @@ export function DataVisualization({ chats }: DataVisualizationProps) {
     </div>
   );
 }
-

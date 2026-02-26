@@ -119,4 +119,3 @@ export function GitHubRepositoryCard({ repo, onClone }: GitHubRepositoryCardProp
     </a>
   );
 }
-

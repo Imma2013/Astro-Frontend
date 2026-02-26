@@ -1,4 +1,4 @@
-import { type ClientClientClientActionFunctionArgs } from '@remix-run/react';
+import { type ClientActionFunctionArgs } from '@remix-run/react';
 import { createDataStream, generateId } from 'ai';
 import { MAX_RESPONSE_SEGMENTS, MAX_TOKENS, type FileMap } from '~/lib/server-impl/llm/constants';
 import { CONTINUE_PROMPT } from '~/lib/common/prompts/prompts';
@@ -16,7 +16,7 @@ import { MCPService } from '~/lib/services/mcpService';
 import { StreamRecoveryManager } from '~/lib/server-impl/llm/stream-recovery';
 import type { AstroRuntimeConfig } from '~/types/astro';
 
-export async function clientAction(args: ClientClientClientActionFunctionArgs) {
+export async function clientAction(args: ClientActionFunctionArgs) {
   return chatAction(args);
 }
 
@@ -40,7 +40,7 @@ function parseCookies(cookieHeader: string): Record<string, string> {
   return cookies;
 }
 
-async function chatAction({ context, request }: ClientClientClientActionFunctionArgs) {
+async function chatAction({ context, request }: ClientActionFunctionArgs) {
   const streamRecovery = new StreamRecoveryManager({
     timeout: 45000,
     maxRetries: 2,
@@ -49,25 +49,34 @@ async function chatAction({ context, request }: ClientClientClientActionFunction
     },
   });
 
-  const { messages, files, promptId, contextOptimization, supabase, chatMode, designScheme, astroRuntime, maxLLMSteps } =
-    await request.json<{
-      messages: Messages;
-      files: any;
-      promptId?: string;
-      contextOptimization: boolean;
-      chatMode: 'discuss' | 'build';
-      designScheme?: DesignScheme;
-      astroRuntime?: AstroRuntimeConfig;
-      supabase?: {
-        isConnected: boolean;
-        hasSelectedProject: boolean;
-        credentials?: {
-          anonKey?: string;
-          supabaseUrl?: string;
-        };
+  const {
+    messages,
+    files,
+    promptId,
+    contextOptimization,
+    supabase,
+    chatMode,
+    designScheme,
+    astroRuntime,
+    maxLLMSteps,
+  } = await request.json<{
+    messages: Messages;
+    files: any;
+    promptId?: string;
+    contextOptimization: boolean;
+    chatMode: 'discuss' | 'build';
+    designScheme?: DesignScheme;
+    astroRuntime?: AstroRuntimeConfig;
+    supabase?: {
+      isConnected: boolean;
+      hasSelectedProject: boolean;
+      credentials?: {
+        anonKey?: string;
+        supabaseUrl?: string;
       };
-      maxLLMSteps: number;
-    }>();
+    };
+    maxLLMSteps: number;
+  }>();
 
   const cookieHeader = request.headers.get('Cookie');
   const apiKeys = JSON.parse(parseCookies(cookieHeader || '').apiKeys || '{}');
@@ -77,7 +86,7 @@ async function chatAction({ context, request }: ClientClientClientActionFunction
   const latestUserMessage = [...messages].reverse().find((entry) => entry.role === 'user');
 
   if (latestUserMessage) {
-    const { model, provider } = extractPropertiesFromMessage(latestUserMessage);
+    // extractPropertiesFromMessage(latestUserMessage);
   }
 
   const stream = new SwitchableStream();
@@ -92,7 +101,10 @@ async function chatAction({ context, request }: ClientClientClientActionFunction
 
   try {
     const mcpService = MCPService.getInstance();
-    const totalMessageContent = messages.reduce((acc, message) => acc + message.content, '');
+    const totalMessageContent = messages.reduce(
+      (acc: string, message: { content: string }) => acc + message.content,
+      '',
+    );
     logger.debug(`Total message length: ${totalMessageContent.split(' ').length}, words`);
 
     let lastChunk: string | undefined = undefined;
@@ -127,7 +139,7 @@ async function chatAction({ context, request }: ClientClientClientActionFunction
 
           summary = await createSummary({
             messages: [...processedMessages],
-            env: context.cloudflare?.env,
+            env: (context as any).cloudflare?.env,
             apiKeys,
             providerSettings,
             promptId,
@@ -169,7 +181,7 @@ async function chatAction({ context, request }: ClientClientClientActionFunction
           console.log(`Messages count: ${processedMessages.length}`);
           filteredFiles = await selectContext({
             messages: [...processedMessages],
-            env: context.cloudflare?.env,
+            env: (context as any).cloudflare?.env,
             apiKeys,
             files,
             providerSettings,
@@ -275,7 +287,7 @@ async function chatAction({ context, request }: ClientClientClientActionFunction
 
             const result = await streamText({
               messages: [...processedMessages],
-              env: context.cloudflare?.env,
+              env: (context as any).cloudflare?.env,
               options,
               apiKeys,
               files,
@@ -284,11 +296,11 @@ async function chatAction({ context, request }: ClientClientClientActionFunction
               contextOptimization,
               contextFiles: filteredFiles,
               chatMode,
-            designScheme,
-            astroRuntime,
-            summary,
-            messageSliceId,
-          });
+              designScheme,
+              astroRuntime,
+              summary,
+              messageSliceId,
+            });
 
             result.mergeIntoDataStream(dataStream);
 
@@ -317,7 +329,7 @@ async function chatAction({ context, request }: ClientClientClientActionFunction
 
         const result = await streamText({
           messages: [...processedMessages],
-          env: context.cloudflare?.env,
+          env: (context as any).cloudflare?.env,
           options,
           apiKeys,
           files,
@@ -470,4 +482,3 @@ async function chatAction({ context, request }: ClientClientClientActionFunction
     });
   }
 }
-

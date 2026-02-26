@@ -275,4 +275,3 @@ export const TerminalTabs = memo(() => {
     </Panel>
   );
 });
-

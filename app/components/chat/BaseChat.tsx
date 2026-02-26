@@ -39,16 +39,7 @@ const LOCAL_PROVIDER_NAMES = ['AstroLocal', 'OpenAILike', 'LMStudio'];
 const MANUAL_MODEL_LOCK_KEY = 'Astro_model_manual_lock';
 const AUTOSET_GUARD_KEY = 'Astro_model_autoset_in_progress';
 const MOBILE_UA_REGEX = /android|iphone|ipad|mobile/;
-const LIGHT_TASK_HINTS = [
-  'scaffold',
-  'boilerplate',
-  'template',
-  'quick',
-  'outline',
-  'summarize',
-  'summarise',
-  'draft',
-];
+const LIGHT_TASK_HINTS = ['scaffold', 'boilerplate', 'template', 'quick', 'outline', 'summarize', 'summarise', 'draft'];
 const HEAVY_TASK_HINTS = [
   'refactor',
   'architecture',
@@ -335,6 +326,7 @@ export const BaseChat = React.forwardRef<HTMLDivElement, BaseChatProps>(
 
       try {
         JSON.parse(rawProfile);
+
         const isMobile = isLikelyMobileDevice();
         const modelCandidates = pickAutoModelCandidates({
           isMobile,
@@ -367,9 +359,8 @@ export const BaseChat = React.forwardRef<HTMLDivElement, BaseChatProps>(
         }
 
         const matchedModel =
-          modelCandidates
-            .map((modelName) => localModels.find((entry) => entry.name === modelName))
-            .find(Boolean) || localModels[0];
+          modelCandidates.map((modelName) => localModels.find((entry) => entry.name === modelName)).find(Boolean) ||
+          localModels[0];
 
         localStorage.setItem(AUTOSET_GUARD_KEY, '1');
         setProvider(selectedLocalProvider);
@@ -426,9 +417,8 @@ export const BaseChat = React.forwardRef<HTMLDivElement, BaseChatProps>(
         normalizedPrompt,
       });
       const nextModel =
-        modelCandidates
-          .map((modelName) => providerModels.find((entry) => entry.name === modelName))
-          .find(Boolean) || providerModels[0];
+        modelCandidates.map((modelName) => providerModels.find((entry) => entry.name === modelName)).find(Boolean) ||
+        providerModels[0];
 
       if (provider?.name !== selectedLocalProvider.name) {
         localStorage.setItem(AUTOSET_GUARD_KEY, '1');
@@ -740,4 +730,3 @@ function ScrollToBottom() {
     )
   );
 }
-

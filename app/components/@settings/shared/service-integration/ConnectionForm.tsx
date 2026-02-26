@@ -191,4 +191,3 @@ export function ConnectionForm({
     </motion.div>
   );
 }
-

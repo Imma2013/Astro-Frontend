@@ -82,4 +82,3 @@ function getIconSize(size: IconSize) {
     return 'text-2xl';
   }
 }
-

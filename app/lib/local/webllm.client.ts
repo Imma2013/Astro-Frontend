@@ -107,6 +107,7 @@ export async function predownloadWebLLMModel(options: {
 }): Promise<{ resolvedModel: string }> {
   const { model, onProgress } = options;
   const result = await ensureEngine(model, onProgress);
+
   return { resolvedModel: result.model };
 }
 
@@ -115,6 +116,7 @@ export async function getWebLLMModelCatalog(): Promise<
 > {
   const mod = await loadWebLLMModule();
   const list = mod.prebuiltAppConfig?.model_list || [];
+
   return list
     .map((entry) => ({
       modelId: entry.model_id || '',
@@ -132,6 +134,7 @@ export async function getBrowserStorageEstimate(): Promise<{ quotaMB?: number; u
   const result = await navigator.storage.estimate();
   const quotaMB = typeof result.quota === 'number' ? Math.round(result.quota / (1024 * 1024)) : undefined;
   const usageMB = typeof result.usage === 'number' ? Math.round(result.usage / (1024 * 1024)) : undefined;
+
   return { quotaMB, usageMB };
 }
 

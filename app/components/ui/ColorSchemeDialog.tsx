@@ -376,4 +376,3 @@ export const ColorSchemeDialog: React.FC<ColorSchemeDialogProps> = ({ setDesignS
     </div>
   );
 };
-

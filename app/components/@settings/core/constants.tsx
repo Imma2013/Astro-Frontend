@@ -95,6 +95,7 @@ export const DEFAULT_TAB_CONFIG = [
   { id: 'data', visible: true, window: 'user' as const, order: 1 },
   { id: 'cloud-providers', visible: true, window: 'user' as const, order: 2 },
   { id: 'local-providers', visible: true, window: 'user' as const, order: 3 },
+
   // Infra/admin tabs are intentionally hidden from user UI; setup is terminal-only.
   { id: 'github', visible: false, window: 'user' as const, order: 4 },
   { id: 'gitlab', visible: false, window: 'user' as const, order: 5 },

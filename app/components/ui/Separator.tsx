@@ -20,4 +20,3 @@ export const Separator = ({ className, orientation = 'horizontal' }: SeparatorPr
 };
 
 export default Separator;
-

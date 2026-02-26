@@ -173,4 +173,3 @@ export const AvatarDropdown = ({ onSelectTab }: AvatarDropdownProps) => {
     </DropdownMenu.Root>
   );
 };
-

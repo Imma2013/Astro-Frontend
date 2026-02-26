@@ -100,4 +100,3 @@ export const Messages = forwardRef<HTMLDivElement, MessagesProps>(
     );
   },
 );
-

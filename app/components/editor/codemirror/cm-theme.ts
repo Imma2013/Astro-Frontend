@@ -190,4 +190,3 @@ function getLightTheme() {
 function getDarkTheme() {
   return vscodeDark;
 }
-

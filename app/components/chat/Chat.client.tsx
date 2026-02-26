@@ -155,6 +155,7 @@ export const ChatImpl = memo(
             setDesignDna(text.slice(0, 30_000));
             setDesignDnaSourceUrl(source);
             logger.info(`Auto-loaded Design DNA from ${source}`);
+
             return;
           } catch {
             // Try next source.
@@ -476,11 +477,14 @@ export const ChatImpl = memo(
       }
 
       runAnimation();
+
       const useLocalInference = provider.name === ASTRO_LOCAL_PROVIDER_NAME;
 
       if (useLocalInference) {
-        // If we are in Tauri, the AstroLocalProvider already handles native sidecar routing via the server entry.
-        // However, if we are in the browser, we fall back to client-side WebLLM.
+        /*
+         * If we are in Tauri, the AstroLocalProvider already handles native sidecar routing via the server entry.
+         * However, if we are in the browser, we fall back to client-side WebLLM.
+         */
         const isTauri = typeof window !== 'undefined' && (window as any).__TAURI_INTERNALS__;
 
         if (isTauri) {
@@ -489,6 +493,7 @@ export const ChatImpl = memo(
             role: 'user',
             content: userMessageText,
           });
+
           return;
         }
 
@@ -840,4 +845,3 @@ export const ChatImpl = memo(
     );
   },
 );
-

@@ -1,4 +1,4 @@
-﻿import { type ClientClientClientClientLoaderFunctionArgs, type MetaFunction } from '@remix-run/react';
+﻿import { type ClientLoaderFunctionArgs, type MetaFunction } from '@remix-run/react';
 import { ClientOnly } from 'remix-utils/client-only';
 import { BaseChat } from '~/components/chat/BaseChat';
 import { GitUrlImport } from '~/components/git/GitUrlImport.client';
@@ -9,7 +9,7 @@ export const meta: MetaFunction = () => {
   return [{ title: 'Astro' }, { name: 'description', content: 'Talk with Astro, an AI assistant from StackBlitz' }];
 };
 
-export function clientLoader({ params }: ClientClientClientClientLoaderFunctionArgs) {
+export function clientLoader({ params }: ClientLoaderFunctionArgs) {
   return { url: params.url };
 }
 
@@ -22,4 +22,3 @@ export default function Index() {
     </div>
   );
 }
-

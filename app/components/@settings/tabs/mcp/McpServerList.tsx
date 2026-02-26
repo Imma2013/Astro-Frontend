@@ -75,7 +75,9 @@ export default function McpServerList({
             {/* Tool list */}
             {isExpanded && isAvailable && (
               <div className="mt-2">
-                <div className="text-Astro-elements-textSecondary text-xs font-medium ml-1 mb-1.5">Available Tools:</div>
+                <div className="text-Astro-elements-textSecondary text-xs font-medium ml-1 mb-1.5">
+                  Available Tools:
+                </div>
                 {serverTools.length === 0 ? (
                   <div className="ml-4 text-xs text-Astro-elements-textSecondary">No tools available</div>
                 ) : (
@@ -97,4 +99,3 @@ export default function McpServerList({
     </div>
   );
 }
-

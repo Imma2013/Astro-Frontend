@@ -145,4 +145,3 @@ ${escapeAstroTags(file.content)}
     </ClientOnly>
   );
 }
-

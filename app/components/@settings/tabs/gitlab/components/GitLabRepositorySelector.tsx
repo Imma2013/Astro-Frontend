@@ -356,4 +356,3 @@ export function GitLabRepositorySelector({ onClone, className }: GitLabRepositor
     </motion.div>
   );
 }
-

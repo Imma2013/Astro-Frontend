@@ -794,4 +794,3 @@ export const DiffView = memo(({ fileHistory, setFileHistory }: DiffViewProps) =>
     );
   }
 });
-

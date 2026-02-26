@@ -98,4 +98,3 @@ function getGradientColorFromSeed(seedString?: string): string {
 
   return GRADIENT_COLORS[index];
 }
-

@@ -184,4 +184,3 @@ export function GitLabAuthDialog({ isOpen, onClose }: GitLabAuthDialogProps) {
     </Dialog.Root>
   );
 }
-

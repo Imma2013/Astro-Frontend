@@ -248,4 +248,3 @@ export function useGitHubConnection(): UseGitHubConnectionReturn {
     testConnection,
   };
 }
-

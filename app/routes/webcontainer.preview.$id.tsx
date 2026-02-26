@@ -1,9 +1,9 @@
-import { useLoaderData, type ClientClientClientClientLoaderFunctionArgs } from '@remix-run/react';
+import { useLoaderData, type ClientLoaderFunctionArgs } from '@remix-run/react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 const PREVIEW_CHANNEL = 'preview-updates';
 
-export function clientLoader({ params }: ClientClientClientClientLoaderFunctionArgs) {
+export function clientLoader({ params }: ClientLoaderFunctionArgs) {
   const previewId = params.id;
 
   if (!previewId) {

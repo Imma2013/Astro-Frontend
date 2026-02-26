@@ -26,6 +26,7 @@ export function OnboardingModal() {
 
   useEffect(() => {
     const saved = localStorage.getItem('Astro_hardware_profile');
+
     if (saved) {
       try {
         setProfile(JSON.parse(saved));
@@ -49,6 +50,7 @@ export function OnboardingModal() {
       // Set up the listener for progress updates from Rust
       unlisten = await listen<DownloadProgress>('download-progress', (event) => {
         const { downloaded, total } = event.payload;
+
         if (total > 0) {
           const percent = Math.round((downloaded / total) * 100);
           setProgress(percent);
@@ -57,14 +59,19 @@ export function OnboardingModal() {
 
       // The actual HuggingFace URLs for the models
       let downloadUrl = '';
+
       if (profile.recommendedModel.includes('Qwen2.5-Coder-32B')) {
-        downloadUrl = 'https://huggingface.co/Qwen/Qwen2.5-Coder-32B-Instruct-GGUF/resolve/main/qwen2.5-coder-32b-instruct-q4_k_m.gguf';
+        downloadUrl =
+          'https://huggingface.co/Qwen/Qwen2.5-Coder-32B-Instruct-GGUF/resolve/main/qwen2.5-coder-32b-instruct-q4_k_m.gguf';
       } else if (profile.recommendedModel.includes('Codestral')) {
-        downloadUrl = 'https://huggingface.co/mistralai/Codestral-22B-v0.1-GGUF/resolve/main/codestral-22b-v0.1.Q4_K_M.gguf';
+        downloadUrl =
+          'https://huggingface.co/mistralai/Codestral-22B-v0.1-GGUF/resolve/main/codestral-22b-v0.1.Q4_K_M.gguf';
       } else if (profile.recommendedModel.includes('Qwen2.5-Coder-7B')) {
-        downloadUrl = 'https://huggingface.co/Qwen/Qwen2.5-Coder-7B-Instruct-GGUF/resolve/main/qwen2.5-coder-7b-instruct-q4_k_m.gguf';
+        downloadUrl =
+          'https://huggingface.co/Qwen/Qwen2.5-Coder-7B-Instruct-GGUF/resolve/main/qwen2.5-coder-7b-instruct-q4_k_m.gguf';
       } else {
-        downloadUrl = 'https://huggingface.co/DeepSeek-Coder-V2-Lite-Instruct-GGUF/resolve/main/DeepSeek-Coder-V2-Lite-Instruct-Q4_K_M.gguf';
+        downloadUrl =
+          'https://huggingface.co/DeepSeek-Coder-V2-Lite-Instruct-GGUF/resolve/main/DeepSeek-Coder-V2-Lite-Instruct-Q4_K_M.gguf';
       }
 
       // Invoke the Rust command
@@ -77,19 +84,22 @@ export function OnboardingModal() {
 
       // Start the engine
       await invoke('start_engine', { modelPath: filePath });
-      console.log('Local AI engine started successfully on port 8080');
+      console.log('Local AI engine started successfully on port 8081');
 
-      updateAstroSettings({ 
+      updateAstroSettings({
         onboardingCompleted: true,
-        selectedModel: profile.recommendedModel
+        selectedModel: profile.recommendedModel,
       });
-
     } catch (error) {
       console.error('Failed to download model:', error);
+
       // Fallback or error handling could go here
     } finally {
       setIsDownloading(false);
-      if (unlisten) unlisten();
+
+      if (unlisten) {
+        unlisten();
+      }
     }
   };
 
@@ -117,12 +127,13 @@ export function OnboardingModal() {
 
           <div className="relative z-10 flex flex-col items-center text-center">
             <AstroLogo className="scale-125 mb-6" />
-            
+
             <h2 className="text-2xl font-bold tracking-tight text-Astro-elements-textPrimary mb-2">
               Welcome to Local-First AI
             </h2>
             <p className="text-Astro-elements-textSecondary mb-8 max-w-md">
-              Astro has analyzed your hardware ({profile.tier.toUpperCase()}-tier) and found the perfect intelligence engine for your machine.
+              Astro has analyzed your hardware ({profile.tier.toUpperCase()}-tier) and found the perfect intelligence
+              engine for your machine.
             </p>
 
             <div className="w-full rounded-xl border border-white/5 bg-white/5 p-6 mb-8 text-left shadow-inner backdrop-blur-sm">
@@ -148,11 +159,11 @@ export function OnboardingModal() {
                     <span>{progress}%</span>
                   </div>
                   <div className="h-2 w-full bg-white/10 rounded-full overflow-hidden">
-                    <motion.div 
-                      className="h-full bg-blue-500" 
+                    <motion.div
+                      className="h-full bg-blue-500"
                       initial={{ width: 0 }}
                       animate={{ width: `${progress}%` }}
-                      transition={{ ease: "linear" }}
+                      transition={{ ease: 'linear' }}
                     />
                   </div>
                 </div>
@@ -165,7 +176,7 @@ export function OnboardingModal() {
                   Download & Start
                 </button>
               )}
-              
+
               {!isDownloading && (
                 <button
                   onClick={handleSkip}

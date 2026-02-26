@@ -35,4 +35,3 @@ export const Switch = memo(({ className, onCheckedChange, checked }: SwitchProps
     </SwitchPrimitive.Root>
   );
 });
-

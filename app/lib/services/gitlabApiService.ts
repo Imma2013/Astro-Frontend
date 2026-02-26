@@ -506,4 +506,3 @@ export class GitLabApiService {
 }
 
 export { gitlabCache };
-

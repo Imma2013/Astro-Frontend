@@ -47,4 +47,3 @@ export function CloseButton({ onClick, className, size = 'md' }: CloseButtonProp
     </motion.button>
   );
 }
-

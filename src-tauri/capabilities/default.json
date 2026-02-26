@@ -13,7 +13,17 @@
       "allow": [
         {
           "name": "bin/llama-server",
-          "sidecar": true
+          "sidecar": true,
+          "args": [
+            "--model",
+            { "validator": ".+" },
+            "--port",
+            "8081",
+            "--host",
+            "127.0.0.1",
+            "-c",
+            "2048"
+          ]
         }
       ]
     },
@@ -22,7 +32,17 @@
       "allow": [
         {
           "name": "bin/llama-server",
-          "sidecar": true
+          "sidecar": true,
+          "args": [
+            "--model",
+            { "validator": ".+" },
+            "--port",
+            "8081",
+            "--host",
+            "127.0.0.1",
+            "-c",
+            "2048"
+          ]
         }
       ]
     }

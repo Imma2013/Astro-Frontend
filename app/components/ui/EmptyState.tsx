@@ -152,4 +152,3 @@ export function EmptyState({
     </div>
   );
 }
-

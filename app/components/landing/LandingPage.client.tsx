@@ -9,29 +9,38 @@ export function LandingPage() {
 
   const handleDownload = async (platform: Platform) => {
     setIsDownloading(platform);
-    
+
     try {
       // Fetch the latest release from the GitHub API
       const response = await fetch('https://api.github.com/repos/Imma2013/Astro-Frontend/releases/latest');
-      
+
       if (!response.ok) {
         throw new Error('Release not found yet. The developers might still be building it!');
       }
-      
+
       const release = (await response.json()) as any;
-      
+
       // Find the correct asset based on the platform
       let assetExtension = '';
-      if (platform === 'win') assetExtension = '.exe';
-      if (platform === 'mac') assetExtension = '.dmg';
-      if (platform === 'linux') assetExtension = '.AppImage';
+
+      if (platform === 'win') {
+        assetExtension = '.exe';
+      }
+
+      if (platform === 'mac') {
+        assetExtension = '.dmg';
+      }
+
+      if (platform === 'linux') {
+        assetExtension = '.AppImage';
+      }
 
       const targetAsset = release.assets.find((asset: any) => asset.name.endsWith(assetExtension));
-      
+
       if (!targetAsset) {
         throw new Error(`Could not find the ${platform.toUpperCase()} installer in the latest release.`);
       }
-      
+
       // Trigger the direct download
       const link = document.createElement('a');
       link.href = targetAsset.browser_download_url;
@@ -39,9 +48,8 @@ export function LandingPage() {
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
-      
+
       toast.success(`Downloading Astro for ${platform.toUpperCase()}...`);
-      
     } catch (error: any) {
       console.error('Download failed:', error);
       toast.error(error.message || 'Failed to start download.');
@@ -70,10 +78,10 @@ export function LandingPage() {
         <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-Astro-elements-textPrimary mb-6">
           The Local-First AI IDE
         </h1>
-        
+
         <p className="text-xl md:text-2xl text-Astro-elements-textSecondary mb-12 max-w-2xl font-medium leading-relaxed">
-          Build ideas into production-ready apps right on your computer. 
-          Zero cloud latency. Total privacy. Infinite capabilities.
+          Build ideas into production-ready apps right on your computer. Zero cloud latency. Total privacy. Infinite
+          capabilities.
         </p>
 
         {/* Primary Download (Windows) */}
@@ -93,7 +101,7 @@ export function LandingPage() {
 
           {/* Secondary Downloads (Mac & Linux) */}
           <div className="flex flex-wrap justify-center gap-4 text-sm font-medium text-Astro-elements-textSecondary">
-            <button 
+            <button
               onClick={() => handleDownload('mac')}
               disabled={isDownloading !== null}
               className="flex items-center gap-2 hover:text-Astro-elements-textPrimary transition-colors disabled:opacity-50"
@@ -102,7 +110,7 @@ export function LandingPage() {
               Mac (Universal)
             </button>
             <span className="opacity-30">•</span>
-            <button 
+            <button
               onClick={() => handleDownload('linux')}
               disabled={isDownloading !== null}
               className="flex items-center gap-2 hover:text-Astro-elements-textPrimary transition-colors disabled:opacity-50"

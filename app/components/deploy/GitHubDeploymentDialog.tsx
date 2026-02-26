@@ -1039,4 +1039,3 @@ export function GitHubDeploymentDialog({ isOpen, onClose, projectName, files }: 
     </Dialog.Root>
   );
 }
-

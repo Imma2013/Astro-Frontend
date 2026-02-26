@@ -86,7 +86,11 @@ async function withStore<T>(mode: IDBTransactionMode, run: (store: IDBObjectStor
   }
 }
 
-export async function putAstroRecord<T extends JsonValue>(namespace: string, id: string, payload: T): Promise<AstroRecord<T>> {
+export async function putAstroRecord<T extends JsonValue>(
+  namespace: string,
+  id: string,
+  payload: T,
+): Promise<AstroRecord<T>> {
   const now = new Date().toISOString();
   const sanitizedPayload = sanitizeValue(payload);
 

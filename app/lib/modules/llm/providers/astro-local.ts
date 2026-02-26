@@ -60,10 +60,12 @@ export default class AstroLocalProvider extends BaseProvider {
   }): LanguageModelV1 {
     const { model } = options;
 
-    // In Tauri, our native sidecar runs on port 8080 by default.
-    // It exposes an OpenAI-compatible API.
+    /*
+     * In Tauri, our native sidecar runs on port 8081 by default.
+     * It exposes an OpenAI-compatible API.
+     */
     const isTauri = typeof window !== 'undefined' && (window as any).__TAURI_INTERNALS__;
-    
+
     if (isTauri) {
       return getOpenAILikeModel('http://127.0.0.1:8081/v1', 'sk-no-key-required', model);
     }

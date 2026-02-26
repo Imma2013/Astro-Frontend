@@ -26,4 +26,3 @@ export const updateProfile = (updates: Partial<Profile>) => {
     localStorage.setItem('Astro_profile', JSON.stringify(profileStore.get()));
   }
 };
-

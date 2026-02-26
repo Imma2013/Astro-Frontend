@@ -62,4 +62,3 @@ function HealthStatusBadge({ status, responseTime, className }: HealthStatusBadg
 }
 
 export default HealthStatusBadge;
-

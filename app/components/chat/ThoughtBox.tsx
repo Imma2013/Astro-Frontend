@@ -41,4 +41,3 @@ const ThoughtBox = ({ title, children }: PropsWithChildren<{ title: string }>) =
 };
 
 export default ThoughtBox;
-

@@ -382,4 +382,3 @@ export function cleanTerminalOutput(input: string): string {
 export function newAstroShellProcess() {
   return new AstroShell();
 }
-

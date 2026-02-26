@@ -89,4 +89,3 @@ export function RepositoryStats({ stats, className, compact = false }: Repositor
     </div>
   );
 }
-

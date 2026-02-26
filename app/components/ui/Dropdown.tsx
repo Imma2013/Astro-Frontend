@@ -61,4 +61,3 @@ export const Dropdown = ({ trigger, children, align = 'end', sideOffset = 5 }: D
     </DropdownMenu.Root>
   );
 };
-

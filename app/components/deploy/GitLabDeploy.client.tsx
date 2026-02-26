@@ -172,4 +172,3 @@ export function useGitLabDeploy() {
     isConnected: !!getLocalStorage('gitlab_connection')?.user,
   };
 }
-

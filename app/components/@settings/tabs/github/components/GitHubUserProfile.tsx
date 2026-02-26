@@ -20,7 +20,9 @@ export function GitHubUserProfile({ user, className = '' }: GitHubUserProfilePro
         <h4 className="text-sm font-medium text-Astro-elements-textPrimary dark:text-Astro-elements-textPrimary">
           {user.name || user.login}
         </h4>
-        <p className="text-sm text-Astro-elements-textSecondary dark:text-Astro-elements-textSecondary">@{user.login}</p>
+        <p className="text-sm text-Astro-elements-textSecondary dark:text-Astro-elements-textSecondary">
+          @{user.login}
+        </p>
         {user.bio && (
           <p className="text-xs text-Astro-elements-textTertiary dark:text-Astro-elements-textTertiary mt-1">
             {user.bio}
@@ -44,4 +46,3 @@ export function GitHubUserProfile({ user, className = '' }: GitHubUserProfilePro
     </div>
   );
 }
-

@@ -89,4 +89,3 @@ function StatusDashboard({ onBack }: { onBack: () => void }) {
 }
 
 export default StatusDashboard;
-

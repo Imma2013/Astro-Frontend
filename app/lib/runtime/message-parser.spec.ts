@@ -788,4 +788,3 @@ function runTest(input: string | string[], outputOrExpectedResult: string | Expe
 
   expect(result).toEqual(expected.output);
 }
-

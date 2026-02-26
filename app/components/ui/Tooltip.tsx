@@ -120,4 +120,3 @@ export function Tooltip({
 }
 
 export default WithTooltip;
-

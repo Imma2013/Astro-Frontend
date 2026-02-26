@@ -34,4 +34,3 @@ export function getTerminalTheme(overrides?: ITheme): ITheme {
     ...overrides,
   };
 }
-

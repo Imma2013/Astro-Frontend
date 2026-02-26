@@ -1,4 +1,11 @@
-﻿import type { ActionType, AstroAction, AstroActionData, FileAction, ShellAction, SupabaseAction } from '~/types/actions';
+﻿import type {
+  ActionType,
+  AstroAction,
+  AstroActionData,
+  FileAction,
+  ShellAction,
+  SupabaseAction,
+} from '~/types/actions';
 import type { AstroArtifactData } from '~/types/artifact';
 import { createScopedLogger } from '~/utils/logger';
 import { unreachable } from '~/utils/unreachable';
@@ -7,8 +14,8 @@ const ARTIFACT_TAG_OPEN = '<AstroArtifact';
 const ARTIFACT_TAG_CLOSE = '</AstroArtifact>';
 const ARTIFACT_ACTION_TAG_OPEN = '<AstroAction';
 const ARTIFACT_ACTION_TAG_CLOSE = '</AstroAction>';
-const Astro_QUICK_ACTIONS_OPEN = '<Astro-quick-actions>';
-const Astro_QUICK_ACTIONS_CLOSE = '</Astro-quick-actions>';
+const ASTRO_QUICK_ACTIONS_OPEN = '<Astro-quick-actions>';
+const ASTRO_QUICK_ACTIONS_CLOSE = '</Astro-quick-actions>';
 
 const logger = createScopedLogger('MessageParser');
 
@@ -100,11 +107,11 @@ export class StreamingMessageParser {
     let earlyBreak = false;
 
     while (i < input.length) {
-      if (input.startsWith(Astro_QUICK_ACTIONS_OPEN, i)) {
-        const actionsBlockEnd = input.indexOf(Astro_QUICK_ACTIONS_CLOSE, i);
+      if (input.startsWith(ASTRO_QUICK_ACTIONS_OPEN, i)) {
+        const actionsBlockEnd = input.indexOf(ASTRO_QUICK_ACTIONS_CLOSE, i);
 
         if (actionsBlockEnd !== -1) {
-          const actionsBlockContent = input.slice(i + Astro_QUICK_ACTIONS_OPEN.length, actionsBlockEnd);
+          const actionsBlockContent = input.slice(i + ASTRO_QUICK_ACTIONS_OPEN.length, actionsBlockEnd);
 
           // Find all <Astro-quick-action ...>label</Astro-quick-action> inside
           const quickActionRegex = /<Astro-quick-action([^>]*)>([\s\S]*?)<\/Astro-quick-action>/g;
@@ -126,7 +133,7 @@ export class StreamingMessageParser {
             );
           }
           output += createQuickActionGroup(buttons);
-          i = actionsBlockEnd + Astro_QUICK_ACTIONS_CLOSE.length;
+          i = actionsBlockEnd + ASTRO_QUICK_ACTIONS_CLOSE.length;
           continue;
         }
       }
@@ -414,4 +421,3 @@ function createQuickActionElement(props: Record<string, string>, label: string) 
 function createQuickActionGroup(buttons: string[]) {
   return `<div class=\"__AstroQuickAction__\" data-Astro-quick-action=\"true\">${buttons.join('')}</div>`;
 }
-

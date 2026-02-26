@@ -1047,4 +1047,3 @@ export const Preview = memo(({ setSelectedElement }: PreviewProps) => {
     </div>
   );
 });
-

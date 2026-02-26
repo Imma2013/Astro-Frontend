@@ -49,4 +49,3 @@ export function NetlifyDeploymentLink() {
     </Tooltip.Provider>
   );
 }
-

@@ -482,7 +482,7 @@ function SetupGuide({ onBack }: { onBack: () => void }) {
               <div className="p-4 rounded-lg bg-Astro-elements-background-depth-3">
                 <h5 className="font-medium text-Astro-elements-textPrimary mb-2">Docker (Recommended)</h5>
                 <div className="text-xs bg-Astro-elements-background-depth-4 p-3 rounded font-mono text-Astro-elements-textPrimary space-y-1">
-                  <div>docker run -p 8080:8080</div>
+                  <div>docker run -p 8081:8081</div>
                   <div>quay.io/go-skynet/local-ai:latest</div>
                 </div>
               </div>
@@ -631,7 +631,9 @@ function SetupGuide({ onBack }: { onBack: () => void }) {
                     <Cable className="w-4 h-4 text-purple-500" />
                     <span className="font-medium text-Astro-elements-textPrimary">KoboldAI</span>
                   </div>
-                  <p className="text-xs text-Astro-elements-textSecondary">Focus on creative writing and storytelling</p>
+                  <p className="text-xs text-Astro-elements-textSecondary">
+                    Focus on creative writing and storytelling
+                  </p>
                 </div>
               </div>
             </div>
@@ -669,4 +671,3 @@ function SetupGuide({ onBack }: { onBack: () => void }) {
 }
 
 export default SetupGuide;
-

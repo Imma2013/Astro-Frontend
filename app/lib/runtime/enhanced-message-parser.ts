@@ -525,4 +525,3 @@ ${content.trim()}
     this._artifactCounter = 0;
   }
 }
-

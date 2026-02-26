@@ -250,4 +250,3 @@ export const stripCodeFenceFromArtifact = (content: string) => {
 
   return lines.join('\n');
 };
-

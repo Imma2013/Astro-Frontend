@@ -115,4 +115,3 @@ export function fileModificationsToHTML(modifications: FileModifications) {
 
   return result.join('\n');
 }
-

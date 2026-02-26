@@ -49,4 +49,3 @@ function Badge({ className, variant, size, icon, children, ...props }: BadgeProp
 }
 
 export { Badge, badgeVariants };
-

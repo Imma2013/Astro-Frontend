@@ -366,4 +366,3 @@ export default function VercelConnection() {
     </motion.div>
   );
 }
-

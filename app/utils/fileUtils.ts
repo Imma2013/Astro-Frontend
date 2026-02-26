@@ -119,4 +119,3 @@ ${files[filePath].content}
 </AstroArtifact>
   `;
 };
-

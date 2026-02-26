@@ -59,4 +59,3 @@ export const useConnectionStatus = () => {
 
   return { hasConnectionIssues, currentIssue, acknowledgeIssue, resetAcknowledgment };
 };
-

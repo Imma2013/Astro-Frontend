@@ -234,4 +234,3 @@ export function SupabaseChatAlert({ alert, clearAlert, postMessage }: Props) {
     </AnimatePresence>
   );
 }
-

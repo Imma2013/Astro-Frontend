@@ -443,4 +443,3 @@ const pathUtils = {
     return relativeParts.length === 0 ? '.' : relativeParts.join('/');
   },
 };
-

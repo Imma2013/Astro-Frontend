@@ -355,7 +355,7 @@ export default function SettingsTab() {
               disabled={astroSettings.deploymentMode === 'local-only'}
               placeholder={
                 astroSettings.webSearchProvider === 'searxng'
-                  ? 'http://localhost:8080'
+                  ? 'http://localhost:8081'
                   : astroSettings.webSearchProvider === 'tavily'
                     ? 'https://api.tavily.com'
                     : 'https://api.exa.ai'
@@ -398,8 +398,8 @@ export default function SettingsTab() {
         <div className="pt-2 border-t border-[#E5E5E5] dark:border-[#1A1A1A] space-y-2">
           <p className="text-sm text-Astro-elements-textPrimary">Practical Deployment Reality</p>
           <p className="text-xs text-Astro-elements-textTertiary">
-            Recommended production path: Cloudflare Pages (frontend hosting) + Supabase (Auth, Postgres, Edge Functions).
-            This keeps Astro local-first while adding a professional hosted backend when needed.
+            Recommended production path: Cloudflare Pages (frontend hosting) + Supabase (Auth, Postgres, Edge
+            Functions). This keeps Astro local-first while adding a professional hosted backend when needed.
           </p>
           <p className="text-xs text-Astro-elements-textTertiary">
             Local-Only: Dexie/IndexedDB + OPFS, local logs, optional local search.
@@ -408,8 +408,8 @@ export default function SettingsTab() {
             Hosted Augment: keep core local, then add Supabase/custom API, cloud search, and remote analytics.
           </p>
           <p className="text-xs text-Astro-elements-textTertiary">
-            Note: GitHub Pages remains static-only, and plan quotas/pricing can change. Verify current Cloudflare/Supabase
-            limits before launch.
+            Note: GitHub Pages remains static-only, and plan quotas/pricing can change. Verify current
+            Cloudflare/Supabase limits before launch.
           </p>
           <div className="pt-2 space-y-2">
             <p className="text-sm text-Astro-elements-textPrimary">Domain Onboarding (No Payment Handling)</p>
@@ -444,8 +444,9 @@ export default function SettingsTab() {
             Import reference code or paste design rules. Astro injects this into build-time AI behavior.
           </p>
           <p className="text-xs text-Astro-elements-textTertiary">
-            Auto-load supported: if <code className="px-1 rounded bg-Astro-elements-background-depth-3">/public/design-dna.md</code>{' '}
-            exists, Astro will load it automatically on chat startup.
+            Auto-load supported: if{' '}
+            <code className="px-1 rounded bg-Astro-elements-background-depth-3">/public/design-dna.md</code> exists,
+            Astro will load it automatically on chat startup.
           </p>
           <div className="flex gap-2">
             <input
@@ -544,4 +545,3 @@ export default function SettingsTab() {
     </div>
   );
 }
-

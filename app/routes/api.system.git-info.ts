@@ -1,4 +1,3 @@
-
 import { json } from '@remix-run/react';
 
 export const clientLoader = () => {

@@ -105,4 +105,3 @@ export function ModelManagerSkeleton({ className, cardCount = 3 }: ModelManagerS
     </div>
   );
 }
-

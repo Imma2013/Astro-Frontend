@@ -509,4 +509,3 @@ if (typeof window !== 'undefined') {
     }
   });
 }
-

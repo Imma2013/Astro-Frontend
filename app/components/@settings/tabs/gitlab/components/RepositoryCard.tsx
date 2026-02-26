@@ -77,4 +77,3 @@ export function RepositoryCard({ repo, onClone }: RepositoryCardProps) {
     </a>
   );
 }
-

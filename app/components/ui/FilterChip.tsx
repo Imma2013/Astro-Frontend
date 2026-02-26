@@ -90,4 +90,3 @@ export function FilterChip({ label, value, onRemove, active = false, icon, class
     </motion.div>
   );
 }
-

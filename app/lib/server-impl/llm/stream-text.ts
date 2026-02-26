@@ -250,7 +250,6 @@ ${scaffoldBehavior}
 ${deploymentGuidance}
 ${skillRuntimeGuidance}
 `;
-
   }
 
   if (astroRuntime) {
@@ -434,4 +433,3 @@ END DESIGN DNA
 
   return await _streamText(streamParams);
 }
-

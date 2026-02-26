@@ -126,4 +126,3 @@ export function extractCurrentContext(messages: Message[]) {
 
   return { summary, codeContext };
 }
-

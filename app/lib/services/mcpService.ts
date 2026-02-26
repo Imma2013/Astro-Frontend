@@ -203,7 +203,7 @@ export class MCPService {
       throw new Error('STDIO MCP transport is not supported in the browser environment.');
     }
 
-    // @ts-ignore
+    // @ts-ignore: StdioMCPTransport is only available in server environments
     const { Experimental_StdioMCPTransport } = await import('ai/mcp-stdio');
 
     const client = await experimental_createMCPClient({ transport: new Experimental_StdioMCPTransport(config) });

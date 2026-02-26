@@ -110,4 +110,3 @@ export function TabsWithSlider({
     </div>
   );
 }
-

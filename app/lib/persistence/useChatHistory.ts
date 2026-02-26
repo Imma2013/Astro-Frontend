@@ -409,4 +409,3 @@ function navigateChat(nextId: string) {
 
   window.history.replaceState({}, '', url);
 }
-

@@ -253,4 +253,3 @@ IMPORTANT: Dont Forget to install the dependencies before running the app by usi
     userMessage,
   };
 }
-

@@ -920,4 +920,3 @@ function compareNodes(a: Node, b: Node): number {
 
   return a.name.localeCompare(b.name, undefined, { numeric: true, sensitivity: 'base' });
 }
-

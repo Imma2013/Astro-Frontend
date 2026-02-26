@@ -325,4 +325,3 @@ ${escapeAstroTags(file.content)}
     </>
   );
 }
-

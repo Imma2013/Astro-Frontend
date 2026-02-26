@@ -949,4 +949,3 @@ function isBinaryFile(buffer: Uint8Array | undefined) {
 function convertToBuffer(view: Uint8Array): Buffer {
   return Buffer.from(view.buffer, view.byteOffset, view.byteLength);
 }
-

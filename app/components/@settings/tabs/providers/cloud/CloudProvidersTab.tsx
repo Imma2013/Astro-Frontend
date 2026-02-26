@@ -12,7 +12,7 @@ import { SiAmazon, SiGoogle, SiGithub, SiHuggingface, SiPerplexity, SiOpenai } f
 import { BsRobot, BsCloud } from 'react-icons/bs';
 import { TbBrain, TbCloudComputing } from 'react-icons/tb';
 import { BiCodeBlock, BiChip } from 'react-icons/bi';
-import { FaCloud, FaBrain } from 'react-icons/fa';
+import { FaBrain } from 'react-icons/fa';
 import type { IconType } from 'react-icons';
 
 // Add type for provider names to ensure type safety
@@ -304,4 +304,3 @@ const CloudProvidersTab = () => {
 };
 
 export default CloudProvidersTab;
-

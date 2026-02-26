@@ -1,6 +1,6 @@
-import { type ClientClientClientClientLoaderFunctionArgs } from '@remix-run/react';
+import { type ClientLoaderFunctionArgs } from '@remix-run/react';
 
-export const clientLoader = async ({ request }: ClientClientClientClientLoaderFunctionArgs) => {
+export const clientLoader = async ({ request }: ClientLoaderFunctionArgs) => {
   const url = new URL(request.url);
   const editorOrigin = url.searchParams.get('editorOrigin') || 'https://stackblitz.com';
   console.log('editorOrigin', editorOrigin);

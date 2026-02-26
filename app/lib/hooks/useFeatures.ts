@@ -70,4 +70,3 @@ export const useFeatures = () => {
 
   return { hasNewFeatures, unviewedFeatures, acknowledgeFeature, acknowledgeAllFeatures };
 };
-

@@ -7,7 +7,8 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: 'bg-Astro-elements-background text-Astro-elements-textPrimary hover:bg-Astro-elements-background-depth-2',
+        default:
+          'bg-Astro-elements-background text-Astro-elements-textPrimary hover:bg-Astro-elements-background-depth-2',
         destructive: 'bg-red-500 text-white hover:bg-red-600',
         outline:
           'border border-Astro-elements-borderColor bg-transparent hover:bg-Astro-elements-background-depth-2 hover:text-Astro-elements-textPrimary text-Astro-elements-textPrimary dark:border-Astro-elements-borderColorActive',
@@ -44,4 +45,3 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 Button.displayName = 'Button';
 
 export { Button, buttonVariants };
-

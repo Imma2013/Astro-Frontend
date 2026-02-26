@@ -1,4 +1,4 @@
-﻿import { json, type MetaFunction } from '@remix-run/cloudflare';
+﻿import { type MetaFunction } from '@remix-run/cloudflare';
 import { ClientOnly } from 'remix-utils/client-only';
 import { BaseChat } from '~/components/chat/BaseChat';
 import { Chat } from '~/components/chat/Chat.client';
@@ -20,17 +20,16 @@ export default function Index() {
     <div className="flex flex-col h-full w-full bg-Astro-elements-background-depth-1">
       <BackgroundRays />
       <Header />
-            <ClientOnly fallback={<BaseChat />}>
-              {() => {
-                const isTauri = typeof window !== 'undefined' && (
-                  '__TAURI_INTERNALS__' in window || 
-                  '__TAURI__' in window || 
-                  window.location.hostname === 'tauri.localhost' ||
-                  window.location.protocol === 'tauri:'
-                );
-      
-                if (isTauri) {
-      
+      <ClientOnly fallback={<BaseChat />}>
+        {() => {
+          const isTauri =
+            typeof window !== 'undefined' &&
+            ('__TAURI_INTERNALS__' in window ||
+              '__TAURI__' in window ||
+              window.location.hostname === 'tauri.localhost' ||
+              window.location.protocol === 'tauri:');
+
+          if (isTauri) {
             return (
               <>
                 <Chat />
@@ -45,4 +44,3 @@ export default function Index() {
     </div>
   );
 }
-

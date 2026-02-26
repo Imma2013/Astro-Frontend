@@ -71,4 +71,3 @@ const SliderButton = memo(({ selected, children, setSelected }: SliderButtonProp
     </button>
   );
 });
-

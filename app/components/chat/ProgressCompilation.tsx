@@ -108,4 +108,3 @@ const ProgressItem = ({ progress }: { progress: ProgressAnnotation }) => {
     </motion.div>
   );
 };
-

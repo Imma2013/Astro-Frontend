@@ -106,4 +106,3 @@ export const acknowledgeUpdate = async (version: string): Promise<void> => {
     console.error('Failed to store acknowledged version:', error);
   }
 };
-

@@ -144,4 +144,3 @@ export const InspectorPanel = ({ selectedElement, isVisible, onClose }: Inspecto
     </div>
   );
 };
-

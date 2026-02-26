@@ -99,7 +99,9 @@ export default function DeployChatAlert({ alert, clearAlert, postMessage }: Depl
                     <div
                       className={classNames(
                         'h-0.5 w-8',
-                        buildStatus === 'complete' ? 'bg-Astro-elements-icon-success' : 'bg-Astro-elements-textTertiary',
+                        buildStatus === 'complete'
+                          ? 'bg-Astro-elements-icon-success'
+                          : 'bg-Astro-elements-textTertiary',
                       )}
                     ></div>
 
@@ -199,4 +201,3 @@ export default function DeployChatAlert({ alert, clearAlert, postMessage }: Depl
     </AnimatePresence>
   );
 }
-

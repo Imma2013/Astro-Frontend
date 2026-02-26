@@ -145,4 +145,3 @@ export const STARTER_TEMPLATES: Template[] = [
     icon: 'i-Astro:solidjs',
   },
 ];
-
