@@ -24,9 +24,22 @@ import {
   predownloadWebLLMModel,
 } from '~/lib/local/webllm.client';
 
+// Use dynamic imports for Tauri to avoid SSR/non-Tauri environment crashes
+const getTauriApi = async () => {
+  if (typeof window !== 'undefined' && (window as any).__TAURI_INTERNALS__) {
+    const { invoke } = await import('@tauri-apps/api/core');
+    const { listen } = await import('@tauri-apps/api/event');
+    return { invoke, listen };
+  }
+  return null;
+};
+
 const MANUAL_MODEL_LOCK_KEY = 'Astro_model_manual_lock';
 const MODEL_ACCESS_MODE_KEY = 'Astro_model_access_mode';
-const LOCAL_PROVIDER_PREFERENCE = ['WebLLM', 'OpenAILike', 'LMStudio', 'Ollama'];
+const LOCAL_PROVIDER_PREFERENCE =
+  typeof window !== 'undefined' && (window as any).__TAURI_INTERNALS__
+    ? ['OpenAILike', 'LMStudio', 'Ollama']
+    : ['WebLLM', 'OpenAILike', 'LMStudio', 'Ollama'];
 const CLOUD_PROVIDER_PREFERENCE = ['OpenAI', 'Anthropic', 'Google'];
 const WEBLLM_RECOMMENDATIONS = {
   mobile: ['Phi-3.5-mini-instruct-q4f16_1-MLC', 'Llama-3.2-1B-Instruct-q4f16_1-MLC'],
@@ -205,6 +218,90 @@ export const ChatBox: React.FC<ChatBoxProps> = (props) => {
       return;
     }
 
+    const tauri = await getTauriApi();
+
+    if (tauri) {
+      // NATIVE TAURI PATH
+      const targetModel = props.model || recommendedModel.modelId;
+
+      if (!targetModel) {
+        setDownloadStatus('No local model selected yet.');
+        return;
+      }
+
+      setIsDownloadingModel(true);
+      setDownloadStatus('Initializing native download...');
+
+      let unlisten: (() => void) | undefined;
+
+      try {
+        unlisten = await tauri.listen<{ downloaded: number; total: number }>('download-progress', (event) => {
+          const { downloaded, total } = event.payload;
+
+          if (total > 0) {
+            const percent = Math.round((downloaded / total) * 100);
+            setDownloadStatus(`Downloading: ${percent}%`);
+          }
+        });
+
+        // Determine GGUF URL
+        let downloadUrl = '';
+
+        if (targetModel.includes('32B')) {
+          downloadUrl =
+            'https://huggingface.co/Qwen/Qwen2.5-Coder-32B-Instruct-GGUF/resolve/main/qwen2.5-coder-32b-instruct-q4_k_m.gguf';
+        } else if (targetModel.includes('22B') || targetModel.includes('Codestral')) {
+          downloadUrl =
+            'https://huggingface.co/mistralai/Codestral-22B-v0.1-GGUF/resolve/main/codestral-22b-v0.1.Q4_K_M.gguf';
+        } else if (targetModel.includes('7B')) {
+          downloadUrl =
+            'https://huggingface.co/Qwen/Qwen2.5-Coder-7B-Instruct-GGUF/resolve/main/qwen2.5-coder-7b-instruct-q4_k_m.gguf';
+        } else {
+          downloadUrl =
+            'https://huggingface.co/Qwen/Qwen2.5-Coder-3B-Instruct-GGUF/resolve/main/qwen2.5-coder-3b-instruct-q4_k_m.gguf';
+        }
+
+        const filePath = await tauri.invoke<string>('download_model', {
+          url: downloadUrl,
+          filename: `${targetModel}.gguf`,
+        });
+
+        setDownloadStatus('Starting Local Engine...');
+        await tauri.invoke('start_engine', { modelPath: filePath });
+
+        setDownloadStatus('Local Engine Ready (Port 8080)');
+
+        // Automatically switch to OpenAILike pointing to local sidecar
+        const openAILikeProvider = (localProviders as ProviderInfo[]).find((entry) => entry.name === 'OpenAILike');
+
+        if (openAILikeProvider) {
+          props.setProvider?.(openAILikeProvider);
+          props.onApiKeysChange('OpenAILike', 'sk-no-key-required');
+
+          // Persist the base URL for OpenAILike to point to our sidecar
+          const currentProviders = Cookies.get('providers') ? JSON.parse(Cookies.get('providers')!) : {};
+          currentProviders.OpenAILike = {
+            ...currentProviders.OpenAILike,
+            OPENAI_LIKE_API_BASE_URL: 'http://127.0.0.1:8080/v1',
+          };
+          Cookies.set('providers', JSON.stringify(currentProviders), { expires: 30 });
+
+          toast.success('Native AI Engine started! High-performance mode active.');
+        }
+      } catch (error: any) {
+        setDownloadStatus(`Native error: ${error?.message || error}`);
+      } finally {
+        setIsDownloadingModel(false);
+
+        if (unlisten) {
+          unlisten();
+        }
+      }
+
+      return;
+    }
+
+    // BROWSER FALLBACK (WEBLLM)
     if (props.provider?.name !== 'WebLLM') {
       const webllmProvider = (localProviders as ProviderInfo[]).find((entry) => entry.name === 'WebLLM');
       const firstWebllmModel = props.modelList.find((entry) => entry.provider === 'WebLLM')?.name;
@@ -253,30 +350,17 @@ export const ChatBox: React.FC<ChatBoxProps> = (props) => {
   };
 
   const handleDownloadRecommendedModel = async () => {
-    if (!recommendedModel.modelId || isDownloadingModel || props.provider?.name !== 'WebLLM') {
+    if (!recommendedModel.modelId || isDownloadingModel) {
       return;
     }
 
+    // Force selection of recommended model
     if (props.model !== recommendedModel.modelId) {
       props.setModel?.(recommendedModel.modelId);
     }
 
-    setIsDownloadingModel(true);
-    setDownloadStatus(`Preparing recommended model: ${recommendedModel.modelId}`);
-
-    try {
-      await predownloadWebLLMModel({
-        model: recommendedModel.modelId,
-        onProgress: (text) => setDownloadStatus(text),
-      });
-      setDownloadStatus('Recommended model ready for local use.');
-      const estimate = await getBrowserStorageEstimate();
-      setStorageInfo(estimate);
-    } catch (error: any) {
-      setDownloadStatus(error?.message || 'Recommended model download failed.');
-    } finally {
-      setIsDownloadingModel(false);
-    }
+    // Reuse the enhanced handleDownloadLocalModel logic
+    handleDownloadLocalModel();
   };
 
   return (

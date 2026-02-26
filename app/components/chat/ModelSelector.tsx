@@ -192,6 +192,16 @@ export const ModelSelector = ({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  const visibleProviderList = useMemo(() => {
+    const isTauri = typeof window !== 'undefined' && (window as any).__TAURI_INTERNALS__;
+    return (providerList || []).filter((p) => {
+      if (isTauri && p.name === 'WebLLM') {
+        return false;
+      }
+      return true;
+    });
+  }, [providerList]);
+
   const filteredModels = useMemo(() => {
     const baseModels = [...modelList]
       .filter((e) => e.provider === provider?.name && e.name);
