@@ -62,6 +62,20 @@ export const clientAction = () => {
   transformExport('loader');
   transformExport('action');
 
+  // 3.5 Transform cross-route imports
+  // Example: import { loader } from './api.models' -> import { clientLoader } from './api.models'
+  const transformImport = (type) => {
+      const target = type === 'loader' ? 'clientLoader' : 'clientAction';
+      const regex = new RegExp(`\\bimport\\s+\\{([^}]*\\b)${type}(\\b[^}]*)\\}\\s+from\\s+['"](\\.\\/|\\.\\.\\/|~\\/routes\\/)`, 'g');
+      if (content.match(regex)) {
+          content = content.replace(regex, `import {$1${target}$2} from`);
+          changed = true;
+      }
+  };
+
+  transformImport('loader');
+  transformImport('action');
+
   // 4. Transform type imports
   const transformType = (type) => {
       const target = type === 'LoaderFunctionArgs' ? 'ClientLoaderFunctionArgs' : 'ClientActionFunctionArgs';

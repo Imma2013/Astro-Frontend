@@ -1,4 +1,4 @@
-import { json, type ActionFunctionArgs } from '@remix-run/cloudflare';
+import { json, type ClientActionFunctionArgs } from '@remix-run/react';
 
 interface SearchResult {
   title: string;
@@ -27,7 +27,7 @@ async function fetchWithTimeout(url: string, options: any, timeout = 10000) {
   }
 }
 
-export async function action({ request }: ActionFunctionArgs) {
+export async function clientAction({ request }: ClientActionFunctionArgs) {
   try {
     const body = await request.json();
     const { mode, query, url, provider, endpoint, apiKey } = body;
