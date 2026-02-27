@@ -27,10 +27,10 @@
     "active": true,
     "targets": "all",
     "externalBin": [
-      "bin/llama-server"
+      "binaries/llama-server"
     ],
     "resources": [
-      "bin/*"
+      "binaries/*"
     ],
     "icon": [
       "icons/32x32.png",

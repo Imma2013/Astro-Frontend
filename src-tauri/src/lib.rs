@@ -88,7 +88,7 @@ async fn start_engine(app: AppHandle, model_path: String, use_gpu: bool) -> Resu
     // Spawn the sidecar
     let sidecar_command = app
         .shell()
-        .sidecar("llama-server")
+        .sidecar("binaries/llama-server")
         .map_err(|e| format!("Binary not found: {}", e))?;
 
     let mut args = vec![
