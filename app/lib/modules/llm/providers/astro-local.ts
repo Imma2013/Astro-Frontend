@@ -54,7 +54,7 @@ export default class AstroLocalProvider extends BaseProvider {
 
   getModelInstance(options: {
     model: string;
-    serverenv?: any;
+    serverEnv?: any;
     apiKeys?: Record<string, string>;
     providerSettings?: Record<string, IProviderSetting>;
   }): LanguageModelV1 {
