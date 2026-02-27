@@ -1,7 +1,7 @@
-import { type ClientLoaderFunctionArgs } from '@remix-run/react';
+import { type LoaderFunctionArgs } from '@remix-run/cloudflare';
 import { default as IndexRoute } from './_index';
 
-export function clientLoader({ params }: ClientLoaderFunctionArgs) {
+export function loader({ params }: LoaderFunctionArgs) {
   return { id: params?.id };
 }
 

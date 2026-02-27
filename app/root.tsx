@@ -114,6 +114,17 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
 import { logStore } from './lib/stores/logs';
 
+export function HydrateFallback() {
+  return (
+    <div className="w-full h-full flex items-center justify-center bg-Astro-elements-background-depth-1 text-Astro-elements-textPrimary">
+      <div className="flex flex-col items-center gap-4">
+        <div className="i-svg-spinners:90-ring-with-bg text-4xl animate-spin text-purple-500"></div>
+        <p className="text-sm font-medium tracking-widest uppercase opacity-50">Initializing Astro...</p>
+      </div>
+    </div>
+  );
+}
+
 export default function App() {
   const theme = useStore(themeStore);
 

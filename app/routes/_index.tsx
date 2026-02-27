@@ -11,7 +11,7 @@ export const meta: MetaFunction = () => {
   return [{ title: 'Astro' }, { name: 'description', content: 'Talk with Astro, an AI assistant from StackBlitz' }];
 };
 
-export const clientLoader = () => {
+export const loader = () => {
   return {};
 };
 

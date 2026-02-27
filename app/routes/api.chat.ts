@@ -1,4 +1,4 @@
-import { type ClientActionFunctionArgs } from '@remix-run/react';
+import { type ActionFunctionArgs } from '@remix-run/cloudflare';
 import { createDataStream, generateId } from 'ai';
 import { MAX_RESPONSE_SEGMENTS, MAX_TOKENS, type FileMap } from '~/lib/server-impl/llm/constants';
 import { CONTINUE_PROMPT } from '~/lib/common/prompts/prompts';
@@ -16,7 +16,7 @@ import { MCPService } from '~/lib/services/mcpService';
 import { StreamRecoveryManager } from '~/lib/server-impl/llm/stream-recovery';
 import type { AstroRuntimeConfig } from '~/types/astro';
 
-export async function clientAction(args: ClientActionFunctionArgs) {
+export async function action(args: ActionFunctionArgs) {
   return chatAction(args);
 }
 
@@ -40,7 +40,7 @@ function parseCookies(cookieHeader: string): Record<string, string> {
   return cookies;
 }
 
-async function chatAction({ context, request }: ClientActionFunctionArgs) {
+async function chatAction({ request }: ActionFunctionArgs) {
   const streamRecovery = new StreamRecoveryManager({
     timeout: 45000,
     maxRetries: 2,
