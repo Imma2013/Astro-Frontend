@@ -834,12 +834,15 @@ export const ModelSelector = ({
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex-1 min-w-0">
-                        <div className="truncate">
+                        <div className="truncate flex items-center gap-2">
                           <span
                             dangerouslySetInnerHTML={{
                               __html: (modelOption as any).highlightedLabel || modelOption.label,
                             }}
                           />
+                          <span className="text-[10px] bg-Astro-elements-background-depth-3 px-1.5 py-0.5 rounded text-Astro-elements-textTertiary font-mono">
+                            {modelOption.name}
+                          </span>
                         </div>
                         <div className="flex items-center gap-2 mt-0.5">
                           <span className="text-xs text-Astro-elements-textTertiary">

@@ -144,7 +144,7 @@ export default class OpenAIProvider extends BaseProvider {
 
       return {
         name: m.id,
-        label: `${m.id} (${Math.floor(contextWindow / 1000)}k context)`,
+        label: `${m.id} | ${Math.floor(contextWindow / 1000)}k ctx`,
         provider: this.name,
         maxTokenAllowed: Math.min(contextWindow, 128000), // Cap at 128k for safety
         maxCompletionTokens,

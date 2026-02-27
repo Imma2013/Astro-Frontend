@@ -88,14 +88,14 @@ export function OnboardingModal() {
       setIsWarmingUp(true);
       setWarmupStatus('Igniting Engine...');
 
-      // Start the engine
-      await invoke('start_engine', { modelPath: filePath });
-      console.log('Local AI engine spawned. Starting health check loop...');
+      // Start the engine - Try GPU first
+      await invoke('start_engine', { modelPath: filePath, useGpu: true });
+      console.log('Local AI engine spawned (GPU). Starting health check loop...');
 
       // POLL FOR READINESS
-      // A 32B model can take a few minutes to fully map to RAM
       let isReady = false;
       let attempts = 0;
+      let hasTriedCpuFallback = false;
 
       while (!isReady && attempts < 300) { // 10 minute timeout
         attempts++;
@@ -111,8 +111,15 @@ export function OnboardingModal() {
             setWarmupStatus(`Loading Model... (${attempts * 2}s)`);
           }
         } catch (e) {
-          // Connection refused usually means it's still booting
-          setWarmupStatus(`Engine Booting... (${attempts * 2}s)`);
+          // If GPU fails to boot after 15 attempts (~30s), try CPU fallback
+          if (attempts > 15 && !hasTriedCpuFallback) {
+            console.log('GPU engine failing to boot. Falling back to CPU mode...');
+            setWarmupStatus('Hardware Compatibility Mode...');
+            hasTriedCpuFallback = true;
+            await invoke('start_engine', { modelPath: filePath, useGpu: false });
+          } else {
+            setWarmupStatus(`Engine Booting... (${attempts * 2}s)`);
+          }
         }
 
         if (!isReady) {

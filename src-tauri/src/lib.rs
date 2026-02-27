@@ -84,25 +84,31 @@ async fn check_engine_health() -> Result<String, String> {
 }
 
 #[tauri::command]
-async fn start_engine(app: AppHandle, model_path: String) -> Result<(), String> {
+async fn start_engine(app: AppHandle, model_path: String, use_gpu: bool) -> Result<(), String> {
     // Spawn the sidecar
     let sidecar_command = app
         .shell()
         .sidecar("llama-server")
         .map_err(|e| format!("Failed to create sidecar command: {}", e))?;
 
-    // High-performance arguments for llama-server
-    // -ngl 99: Offload all layers to GPU if possible
-    // -t 16: Use 16 threads for processing
+    let mut args = vec![
+        "--model".to_string(), model_path,
+        "--port".to_string(), "8081".to_string(),
+        "--host".to_string(), "127.0.0.1".to_string(),
+        "-c".to_string(), "4096".to_string(),
+        "--threads".to_string(), "16".to_string(),
+    ];
+
+    if use_gpu {
+        args.push("--n-gpu-layers".to_string());
+        args.push("99".to_string());
+    } else {
+        args.push("--n-gpu-layers".to_string());
+        args.push("0".to_string());
+    }
+
     let (_rx, _child) = sidecar_command
-        .args([
-            "--model", &model_path, 
-            "--port", "8081", 
-            "--host", "127.0.0.1", 
-            "-c", "4096",
-            "--n-gpu-layers", "99",
-            "--threads", "16"
-        ])
+        .args(args)
         .spawn()
         .map_err(|e| format!("Failed to spawn sidecar: {}", e))?;
 
