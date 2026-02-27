@@ -221,6 +221,17 @@ export const ChatBox: React.FC<ChatBoxProps> = (props) => {
     }
   };
 
+  const hasAnyCloudKey = React.useMemo(() => {
+    return Object.values(props.apiKeys || {}).some((key) => key && key.length > 5);
+  }, [props.apiKeys]);
+
+  React.useEffect(() => {
+    if (hasAnyCloudKey && modelAccessMode === 'local' && !isManualMode) {
+      // Suggest manual mode if they have keys but are in restricted local mode
+      console.log('API Keys detected. User may want Cloud models.');
+    }
+  }, [hasAnyCloudKey, modelAccessMode, isManualMode]);
+
   const handleDownloadLocalModel = async () => {
     if (isDownloadingModel) {
       return;
@@ -602,12 +613,11 @@ export const ChatBox: React.FC<ChatBoxProps> = (props) => {
             </IconButton>
             <div className="relative">
               <ClientOnly>
-                                {() =>
-                                  !props.isModelSettingsCollapsed ? (
-                                    <div className="absolute right-0 bottom-12 z-50 w-[min(420px,calc(100vw-1.5rem))] max-h-[70vh] overflow-y-auto rounded-xl border border-Astro-elements-borderColor bg-Astro-elements-background-depth-2/95 p-2 shadow-2xl backdrop-blur">
-                                      {!isManualMode ? (
-                                        <div className="mt-1 rounded-lg border border-Astro-elements-borderColor/60 bg-Astro-elements-background-depth-1/80 p-3 text-sm text-Astro-elements-textPrimary">
-                                          <div className="flex flex-col gap-3">
+                                                {() =>
+                                                  !props.isModelSettingsCollapsed ? (
+                                                    <div className="absolute right-0 bottom-12 z-50 w-[min(420px,calc(100vw-1.5rem))] max-h-[70vh] overflow-y-auto rounded-xl border border-Astro-elements-borderColor bg-Astro-elements-background-depth-2/95 p-2 shadow-2xl backdrop-blur">
+                                                      {(!isManualMode && !hasAnyCloudKey) ? (
+                                                        <div className="mt-1 rounded-lg border border-Astro-elements-borderColor/60 bg-Astro-elements-background-depth-1/80 p-3 text-sm text-Astro-elements-textPrimary">                                          <div className="flex flex-col gap-3">
                                             <div className="flex items-center justify-between">
                                               <div className="font-bold text-Astro-elements-textSecondary flex items-center gap-1.5 uppercase tracking-wider text-[11px]">
                                                 <div className="i-ph:lightning-fill text-purple-400" />

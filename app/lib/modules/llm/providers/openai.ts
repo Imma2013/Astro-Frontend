@@ -102,7 +102,6 @@ export default class OpenAIProvider extends BaseProvider {
     const data = res.data.filter(
       (model: any) =>
         model.object === 'model' &&
-        (model.id.startsWith('gpt-') || model.id.startsWith('o') || model.id.startsWith('chatgpt-')) &&
         !staticModelIds.includes(model.id),
     );
 

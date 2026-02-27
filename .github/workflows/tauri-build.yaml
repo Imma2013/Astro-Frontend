@@ -44,7 +44,7 @@ jobs:
           mkdir -p bin
           cd bin
           if [ "${{ matrix.platform }}" == "windows-latest" ]; then
-            curl -L -o llama.zip https://github.com/ggml-org/llama.cpp/releases/download/b8147/llama-b8147-bin-win-vulkan-x64.zip
+            curl -L -o llama.zip https://github.com/ggml-org/llama.cpp/releases/download/b8147/llama-b8147-bin-win-avx2-x64.zip
             unzip -o llama.zip
             mv llama-server.exe llama-server-x86_64-pc-windows-msvc.exe
             mv *.dll ./ 2>/dev/null || true

@@ -89,7 +89,7 @@ async fn start_engine(app: AppHandle, model_path: String, use_gpu: bool) -> Resu
     let sidecar_command = app
         .shell()
         .sidecar("llama-server")
-        .map_err(|e| format!("Failed to create sidecar command: {}", e))?;
+        .map_err(|e| format!("Binary not found: {}", e))?;
 
     let mut args = vec![
         "--model".to_string(), model_path,
@@ -107,12 +107,21 @@ async fn start_engine(app: AppHandle, model_path: String, use_gpu: bool) -> Resu
         args.push("0".to_string());
     }
 
-    let (_rx, _child) = sidecar_command
-        .args(args)
-        .spawn()
-        .map_err(|e| format!("Failed to spawn sidecar: {}", e))?;
-
-    Ok(())
+    match sidecar_command.args(args).spawn() {
+        Ok((_rx, _child)) => {
+            // Give it 100ms to see if it immediately dies (DLL error)
+            std::thread::sleep(std::time::Duration::from_millis(100));
+            Ok(())
+        },
+        Err(e) => {
+            let err_msg = e.to_string();
+            if err_msg.contains("dll") || err_msg.contains("0xc000007b") {
+                Err("DLL_MISSING".to_string())
+            } else {
+                Err(format!("Spawn failed: {}", err_msg))
+            }
+        }
+    }
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]

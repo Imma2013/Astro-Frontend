@@ -201,14 +201,6 @@ export const ModelSelector = ({
     const baseModels = [...modelList].filter((e) => e.provider === provider?.name && e.name);
 
     return baseModels
-      .filter((model) => {
-        // Apply free models filter
-        if (showFreeModelsOnly && !isModelLikelyFree(model, provider?.name)) {
-          return false;
-        }
-
-        return true;
-      })
       .map((model) => {
         // Calculate search scores for fuzzy matching
         const labelMatch = fuzzyMatch(debouncedModelSearchQuery, model.label);
