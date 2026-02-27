@@ -139,7 +139,7 @@ async function chatAction({ context, request }: ClientActionFunctionArgs) {
 
           summary = await createSummary({
             messages: [...processedMessages],
-            env: (context as any).cloudflare?.env,
+            env: undefined,
             apiKeys,
             providerSettings,
             promptId,
@@ -181,7 +181,7 @@ async function chatAction({ context, request }: ClientActionFunctionArgs) {
           console.log(`Messages count: ${processedMessages.length}`);
           filteredFiles = await selectContext({
             messages: [...processedMessages],
-            env: (context as any).cloudflare?.env,
+            env: undefined,
             apiKeys,
             files,
             providerSettings,
@@ -287,7 +287,7 @@ async function chatAction({ context, request }: ClientActionFunctionArgs) {
 
             const result = await streamText({
               messages: [...processedMessages],
-              env: (context as any).cloudflare?.env,
+              env: undefined,
               options,
               apiKeys,
               files,
@@ -329,7 +329,7 @@ async function chatAction({ context, request }: ClientActionFunctionArgs) {
 
         const result = await streamText({
           messages: [...processedMessages],
-          env: (context as any).cloudflare?.env,
+          env: undefined,
           options,
           apiKeys,
           files,

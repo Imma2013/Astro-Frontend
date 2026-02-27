@@ -20,8 +20,8 @@ files.forEach(file => {
   let content = fs.readFileSync(file, 'utf8');
   let changed = false;
 
-  // Stub out most api routes, EXCEPT essential LLM ones
-  const isEssentialApi = ['api.chat.ts', 'api.models.ts', 'api.models.$provider.ts'].includes(path.basename(file));
+  // Stub out most api routes, EXCEPT essential LLM and search ones
+  const isEssentialApi = ['api.chat.ts', 'api.models.ts', 'api.models.$provider.ts', 'api.web-search.ts'].includes(path.basename(file));
 
   if (path.basename(file).startsWith('api.') && !isEssentialApi) {
       console.log(`  Stubbing API route: ${path.basename(file)}`);

@@ -85,7 +85,7 @@ export default class LMStudioProvider extends BaseProvider {
 
   getModelInstance: (options: {
     model: string;
-    serverEnv?: Env;
+    serverenv?: any;
     apiKeys?: Record<string, string>;
     providerSettings?: Record<string, IProviderSetting>;
   }) => LanguageModelV1 = (options) => {

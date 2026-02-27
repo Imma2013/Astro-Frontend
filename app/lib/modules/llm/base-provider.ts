@@ -25,7 +25,7 @@ export abstract class BaseProvider implements ProviderInfo {
    * Useful because provider methods expect Record<string, string> but
    * Cloudflare Workers pass an Env interface.
    */
-  protected convertEnvToRecord(env?: Env): Record<string, string> {
+  protected convertEnvToRecord(env?: any): Record<string, string> {
     if (!env) {
       return {};
     }
@@ -164,7 +164,7 @@ export abstract class BaseProvider implements ProviderInfo {
 
   abstract getModelInstance(options: {
     model: string;
-    serverEnv?: Env;
+    serverEnv?: any;
     apiKeys?: Record<string, string>;
     providerSettings?: Record<string, IProviderSetting>;
   }): LanguageModelV1;

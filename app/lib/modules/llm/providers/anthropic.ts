@@ -13,48 +13,11 @@ export default class AnthropicProvider extends BaseProvider {
   };
 
   staticModels: ModelInfo[] = [
-    {
-      name: 'claude-3-5-sonnet-20241022',
-      label: 'Claude 3.5 Sonnet',
-      provider: 'Anthropic',
-      maxTokenAllowed: 200000,
-      maxCompletionTokens: 128000,
-    },
-    {
-      name: 'claude-3-5-haiku-20241022',
-      label: 'Claude 3.5 Haiku',
-      provider: 'Anthropic',
-      maxTokenAllowed: 200000,
-      maxCompletionTokens: 128000,
-    },
-    {
-      name: 'claude-3-opus-20240229',
-      label: 'Claude 3 Opus',
-      provider: 'Anthropic',
-      maxTokenAllowed: 200000,
-      maxCompletionTokens: 128000,
-    },
-    {
-      name: 'claude-3-haiku-20240307',
-      label: 'Claude 3 Haiku',
-      provider: 'Anthropic',
-      maxTokenAllowed: 200000,
-      maxCompletionTokens: 128000,
-    },
-    {
-      name: 'claude-3-sonnet-20240229',
-      label: 'Claude 3 Sonnet',
-      provider: 'Anthropic',
-      maxTokenAllowed: 200000,
-      maxCompletionTokens: 128000,
-    },
-    {
-      name: 'claude-opus-4-20250514',
-      label: 'Claude 4 Opus (Experimental)',
-      provider: 'Anthropic',
-      maxTokenAllowed: 200000,
-      maxCompletionTokens: 32000,
-    },
+    { name: 'claude-sonnet-5@20260203', label: 'Claude 5 Sonnet (Preview)', provider: 'Anthropic', maxTokenAllowed: 128000, maxCompletionTokens: 64000 },
+    { name: 'claude-sonnet-4-6', label: 'Claude 4.6 Sonnet', provider: 'Anthropic', maxTokenAllowed: 1000000, maxCompletionTokens: 128000 },
+    { name: 'claude-opus-4-6-v1', label: 'Claude 4.6 Opus', provider: 'Anthropic', maxTokenAllowed: 200000, maxCompletionTokens: 32000 },
+    { name: 'claude-3-5-sonnet-20241022', label: 'Claude 3.5 Sonnet', provider: 'Anthropic', maxTokenAllowed: 200000, maxCompletionTokens: 128000 },
+    { name: 'claude-3-5-haiku-20241022', label: 'Claude 3.5 Haiku', provider: 'Anthropic', maxTokenAllowed: 200000, maxCompletionTokens: 128000 },
   ];
 
   async getDynamicModels(
@@ -126,7 +89,7 @@ export default class AnthropicProvider extends BaseProvider {
 
   getModelInstance: (options: {
     model: string;
-    serverEnv: Env;
+    serverEnv?: any;
     apiKeys?: Record<string, string>;
     providerSettings?: Record<string, IProviderSetting>;
   }) => LanguageModelV1 = (options) => {

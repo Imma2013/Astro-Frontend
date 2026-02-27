@@ -1,4 +1,4 @@
-﻿import { generateText, type CoreTool, type GenerateTextResult, type Message } from 'ai';
+import { generateText, type CoreTool, type GenerateTextResult, type Message } from 'ai';
 import ignore from 'ignore';
 import type { IProviderSetting } from '~/types/model';
 import { IGNORE_PATTERNS, type FileMap } from './constants';
@@ -14,7 +14,7 @@ const logger = createScopedLogger('select-context');
 
 export async function selectContext(props: {
   messages: Message[];
-  env?: Env;
+  env?: any;
   apiKeys?: Record<string, string>;
   files: FileMap;
   providerSettings?: Record<string, IProviderSetting>;

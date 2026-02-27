@@ -13,64 +13,13 @@ export default class OpenAIProvider extends BaseProvider {
   };
 
   staticModels: ModelInfo[] = [
+    { name: 'gpt-5.3-codex', label: 'GPT-5.3 Codex (Agentic)', provider: 'OpenAI', maxTokenAllowed: 200000, maxCompletionTokens: 32000 },
+    { name: 'gpt-5.2-thinking', label: 'GPT-5.2 Thinking', provider: 'OpenAI', maxTokenAllowed: 128000, maxCompletionTokens: 64000 },
+    { name: 'gpt-5', label: 'GPT-5 (Main)', provider: 'OpenAI', maxTokenAllowed: 128000, maxCompletionTokens: 16000 },
+    { name: 'o3-mini', label: 'o3-mini (Reasoning)', provider: 'OpenAI', maxTokenAllowed: 200000, maxCompletionTokens: 100000 },
+    { name: 'gpt-4.5-preview', label: 'GPT-4.5 Preview', provider: 'OpenAI', maxTokenAllowed: 128000, maxCompletionTokens: 8192 },
     { name: 'gpt-4o', label: 'GPT-4o', provider: 'OpenAI', maxTokenAllowed: 128000, maxCompletionTokens: 4096 },
-    {
-      name: 'gpt-4o-mini',
-      label: 'GPT-4o Mini',
-      provider: 'OpenAI',
-      maxTokenAllowed: 128000,
-      maxCompletionTokens: 4096,
-    },
-    {
-      name: 'gpt-4-turbo',
-      label: 'GPT-4 Turbo',
-      provider: 'OpenAI',
-      maxTokenAllowed: 128000,
-      maxCompletionTokens: 4096,
-    },
-    {
-      name: 'gpt-4',
-      label: 'GPT-4',
-      provider: 'OpenAI',
-      maxTokenAllowed: 8192,
-      maxCompletionTokens: 4096,
-    },
-    {
-      name: 'gpt-3.5-turbo',
-      label: 'GPT-3.5 Turbo',
-      provider: 'OpenAI',
-      maxTokenAllowed: 16000,
-      maxCompletionTokens: 4096,
-    },
-    {
-      name: 'o1',
-      label: 'o1 (Flagship Reasoning)',
-      provider: 'OpenAI',
-      maxTokenAllowed: 128000,
-      maxCompletionTokens: 32000,
-    },
-    {
-      name: 'o1-preview',
-      label: 'o1-preview',
-      provider: 'OpenAI',
-      maxTokenAllowed: 128000,
-      maxCompletionTokens: 32000,
-    },
-    { name: 'o1-mini', label: 'o1-mini', provider: 'OpenAI', maxTokenAllowed: 128000, maxCompletionTokens: 65000 },
-    {
-      name: 'o3-mini',
-      label: 'o3-mini (High-Speed Reasoning)',
-      provider: 'OpenAI',
-      maxTokenAllowed: 200000,
-      maxCompletionTokens: 100000,
-    },
-    {
-      name: 'gpt-5-preview',
-      label: 'GPT-5 (Experimental)',
-      provider: 'OpenAI',
-      maxTokenAllowed: 200000,
-      maxCompletionTokens: 32000,
-    },
+    { name: 'gpt-4o-mini', label: 'GPT-4o Mini', provider: 'OpenAI', maxTokenAllowed: 128000, maxCompletionTokens: 4096 },
   ];
 
   async getDynamicModels(
@@ -153,7 +102,7 @@ export default class OpenAIProvider extends BaseProvider {
 
   getModelInstance(options: {
     model: string;
-    serverEnv: Env;
+    serverEnv?: any;
     apiKeys?: Record<string, string>;
     providerSettings?: Record<string, IProviderSetting>;
   }): LanguageModelV1 {

@@ -23,7 +23,7 @@ export interface ProviderInfo {
   ) => Promise<ModelInfo[]>;
   getModelInstance: (options: {
     model: string;
-    serverEnv: Env;
+    serverEnv?: any;
     apiKeys?: Record<string, string>;
     providerSettings?: Record<string, IProviderSetting>;
   }) => LanguageModelV1;

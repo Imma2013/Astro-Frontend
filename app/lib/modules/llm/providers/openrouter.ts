@@ -79,7 +79,7 @@ export default class OpenRouterProvider extends BaseProvider {
 
   getModelInstance(options: {
     model: string;
-    serverEnv: Env;
+    serverEnv?: any;
     apiKeys?: Record<string, string>;
     providerSettings?: Record<string, IProviderSetting>;
   }): LanguageModelV1 {
@@ -99,6 +99,10 @@ export default class OpenRouterProvider extends BaseProvider {
 
     const openrouter = createOpenRouter({
       apiKey,
+      headers: {
+        'HTTP-Referer': 'https://github.com/Imma2013/Astro-Frontend',
+        'X-Title': 'Astro IDE (Desktop)',
+      },
     });
 
     return openrouter(model);

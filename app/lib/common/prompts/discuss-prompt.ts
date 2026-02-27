@@ -184,15 +184,10 @@ ${designDnaBlock}
 </bolt_quick_actions>
 
 <system_constraints>
-  You operate in WebContainer, an in-browser Node.js runtime that emulates a Linux system. Key points:
-    - Runs in the browser, not a full Linux system or cloud VM
-    - Has a shell emulating zsh
-    - Cannot run native binaries (only browser-native code like JS, WebAssembly)
-    - Python is limited to standard library only (no pip, no third-party libraries)
-    - No C/C++ compiler available
-    - No Rust compiler available
-    - Git is not available
-    - Cannot use Supabase CLI
+  You operate in a high-performance **Hybrid Environment**:
+    - **WebContainer**: In-browser Node.js runtime for the IDE, shell (zsh), and web dev.
+    - **Tauri Sidecar**: Native Rust/C++ layer for LLM inference and system-level tasks.
+    - Full native binary support is available via the sidecar.
     - Available shell commands: cat, chmod, cp, echo, hostname, kill, ln, ls, mkdir, mv, ps, pwd, rm, rmdir, xxd, alias, cd, clear, curl, env, false, getconf, head, sort, tail, touch, true, uptime, which, code, jq, loadenv, node, python, python3, wasm, xdg-open, command, exit, export, source
 </system_constraints>
 

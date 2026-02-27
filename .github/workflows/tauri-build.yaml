@@ -55,38 +55,46 @@ jobs:
           if ("${{ matrix.platform }}" -eq "windows-latest") {
               $url = "$baseUrl/llama-$tag-bin-win-cpu-x64.zip"
               $dest = "$binDir/llama.zip"
+              Write-Host "Downloading Windows Binary from $url"
               Invoke-WebRequest -Uri $url -OutFile $dest
               Expand-Archive -Path $dest -DestinationPath $binDir -Force
               Move-Item "$binDir/llama-server.exe" "$binDir/llama-server-x86_64-pc-windows-msvc.exe" -Force
+              # Clean up
+              Remove-Item $dest
           }
           elseif ("${{ matrix.platform }}" -eq "macos-latest") {
-              # Download both architectures for a universal build
               $armUrl = "$baseUrl/llama-$tag-bin-macos-arm64.tar.gz"
               $x64Url = "$baseUrl/llama-$tag-bin-macos-x64.tar.gz"
               
+              Write-Host "Downloading macOS Arm64 Binary"
               Invoke-WebRequest -Uri $armUrl -OutFile "$binDir/llama-arm.tar.gz"
+              Write-Host "Downloading macOS x64 Binary"
               Invoke-WebRequest -Uri $x64Url -OutFile "$binDir/llama-x64.tar.gz"
               
-              # Extract using tar
+              # Extract using native tar
               tar -xzf "$binDir/llama-arm.tar.gz" -C $binDir
               Move-Item "$binDir/llama-server" "$binDir/llama-server-arm" -Force
               
               tar -xzf "$binDir/llama-x64.tar.gz" -C $binDir
               Move-Item "$binDir/llama-server" "$binDir/llama-server-x64" -Force
               
-              # Create Universal Binary for Tauri's universal-apple-darwin target
+              # Create Universal Binary for Tauri's target
+              Write-Host "Merging binaries into Universal format"
               lipo -create "$binDir/llama-server-arm" "$binDir/llama-server-x64" -output "$binDir/llama-server-universal-apple-darwin"
-              # Tauri v2 universal-apple-darwin looks for binaries with the specific target triple
-              Copy-Item "$binDir/llama-server-universal-apple-darwin" "$binDir/llama-server-aarch64-apple-darwin"
-              Copy-Item "$binDir/llama-server-universal-apple-darwin" "$binDir/llama-server-x86_64-apple-darwin"
+              
+              # Clean up
+              Remove-Item "$binDir/llama-arm.tar.gz", "$binDir/llama-x64.tar.gz", "$binDir/llama-server-arm", "$binDir/llama-server-x64"
           }
           elseif ("${{ matrix.platform }}" -eq "ubuntu-22.04") {
               $url = "$baseUrl/llama-$tag-bin-ubuntu-x64.tar.gz"
               $dest = "$binDir/llama-linux.tar.gz"
+              Write-Host "Downloading Ubuntu Binary from $url"
               Invoke-WebRequest -Uri $url -OutFile $dest
               tar -xzf $dest -C $binDir
               Move-Item "$binDir/llama-server" "$binDir/llama-server-x86_64-unknown-linux-gnu" -Force
               chmod +x "$binDir/llama-server-x86_64-unknown-linux-gnu"
+              # Clean up
+              Remove-Item $dest
           }
 
       - name: Install pnpm

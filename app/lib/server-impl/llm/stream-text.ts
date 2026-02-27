@@ -54,7 +54,7 @@ function sanitizeText(text: string): string {
 
 export async function streamText(props: {
   messages: Omit<Message, 'id'>[];
-  env?: Env;
+  env?: any;
   options?: StreamingOptions;
   apiKeys?: Record<string, string>;
   files?: FileMap;

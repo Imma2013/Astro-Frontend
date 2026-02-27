@@ -14,20 +14,7 @@
         {
           "name": "binaries/llama-server",
           "sidecar": true,
-          "args": [
-            "--model",
-            { "validator": ".+" },
-            "--port",
-            "8081",
-            "--host",
-            "127.0.0.1",
-            "-c",
-            "4096",
-            "--n-gpu-layers",
-            "99",
-            "--threads",
-            "16"
-          ]
+          "args": true
         }
       ]
     },
@@ -37,20 +24,7 @@
         {
           "name": "binaries/llama-server",
           "sidecar": true,
-          "args": [
-            "--model",
-            { "validator": ".+" },
-            "--port",
-            "8081",
-            "--host",
-            "127.0.0.1",
-            "-c",
-            "4096",
-            "--n-gpu-layers",
-            "99",
-            "--threads",
-            "16"
-          ]
+          "args": true
         }
       ]
     }

@@ -170,6 +170,30 @@ export const ChatImpl = memo(
       };
     }, [astroSettings.designDna]);
 
+    useEffect(() => {
+      let unlisten: (() => void) | undefined;
+
+      const setupErrorListener = async () => {
+        if (typeof window !== 'undefined' && (window as any).__TAURI_INTERNALS__) {
+          const { listen } = await import('@tauri-apps/api/event');
+          unlisten = await listen<string>('engine-error', (event) => {
+            toast.error(`Engine Failure: ${event.payload}`, {
+              autoClose: false,
+              closeOnClick: false,
+            });
+          });
+        }
+      };
+
+      setupErrorListener();
+
+      return () => {
+        if (unlisten) {
+          unlisten();
+        }
+      };
+    }, []);
+
     const {
       messages,
       isLoading,

@@ -47,7 +47,8 @@ type NavigatorWithHardware = Navigator & {
 export function detectAstroTier(input: TierInput): TierResult {
   const { ram, cores, gpuFallback } = input;
 
-  if (ram >= 32 && cores >= 12 && !gpuFallback) {
+  // GOD-MODE: Needs at least 48GB RAM to comfortably run 32B models + OS
+  if (ram >= 48000 && cores >= 12 && !gpuFallback) {
     return {
       tier: 'god-mode',
       recommendedModel: 'Qwen2.5-Coder-32B-Instruct-q4_K_M',
@@ -61,7 +62,8 @@ export function detectAstroTier(input: TierInput): TierResult {
     };
   }
 
-  if (ram >= 16 && cores >= 8) {
+  // PRO: 16GB-32GB RAM users get 7B-14B models
+  if (ram >= 16000 && cores >= 8) {
     return {
       tier: 'pro',
       recommendedModel: 'Codestral-22B-v0.1-q4_K_M',
@@ -75,7 +77,8 @@ export function detectAstroTier(input: TierInput): TierResult {
     };
   }
 
-  if (ram >= 8) {
+  // STARTER: 8GB RAM users get 7B models
+  if (ram >= 8000) {
     return {
       tier: 'starter',
       recommendedModel: 'Qwen2.5-Coder-7B-Instruct-q4_K_M',
@@ -103,8 +106,24 @@ export function detectAstroTier(input: TierInput): TierResult {
 }
 
 export async function initAstroHardware(): Promise<AstroHardwareProfile> {
-  const nav = navigator as NavigatorWithHardware;
-  const ram = nav.deviceMemory ?? 'Unknown';
+  let ramMB = 4000;
+  const isTauri = typeof window !== 'undefined' && (window as any).__TAURI_INTERNALS__;
+
+  if (isTauri) {
+    try {
+      const { invoke } = await import('@tauri-apps/api/core');
+      const info = await invoke<{ total_memory_mb: number }>('get_hardware_info');
+      ramMB = info.total_memory_mb;
+    } catch (e) {
+      console.warn('Native RAM probe failed, falling back to navigator:', e);
+      const nav = navigator as NavigatorWithHardware;
+      ramMB = (nav.deviceMemory || 4) * 1024;
+    }
+  } else {
+    const nav = navigator as NavigatorWithHardware;
+    ramMB = (nav.deviceMemory || 4) * 1024;
+  }
+
   const threads = navigator.hardwareConcurrency || 1;
 
   let gpuVendor = 'Unknown';
@@ -112,6 +131,7 @@ export async function initAstroHardware(): Promise<AstroHardwareProfile> {
   let gpuFallback = false;
 
   try {
+    const nav = navigator as NavigatorWithHardware;
     const adapter = await nav.gpu?.requestAdapter();
 
     if (adapter?.info) {
@@ -119,31 +139,18 @@ export async function initAstroHardware(): Promise<AstroHardwareProfile> {
       gpuArchitecture = adapter.info.architecture || gpuArchitecture;
       gpuFallback = Boolean(adapter.info.isFallbackAdapter);
     }
-
-    if (typeof adapter?.isFallbackAdapter === 'boolean') {
-      gpuFallback = adapter.isFallbackAdapter;
-    }
-
-    if (adapter?.requestAdapterInfo) {
-      const info = await adapter.requestAdapterInfo();
-      gpuVendor = info?.vendor || gpuVendor;
-      gpuArchitecture = info?.architecture || gpuArchitecture;
-      gpuFallback = typeof info?.isFallbackAdapter === 'boolean' ? info.isFallbackAdapter : gpuFallback;
-    }
   } catch (error) {
-    console.warn('Astro hardware probe failed:', error);
+    console.warn('Astro GPU probe failed:', error);
   }
 
-  const ramValue = typeof ram === 'number' ? ram : 4;
-
   const tierProfile = detectAstroTier({
-    ram: ramValue,
+    ram: ramMB,
     cores: threads,
     gpuFallback,
   });
 
   const profile: AstroHardwareProfile = {
-    ram,
+    ram: Math.round(ramMB / 1024),
     threads,
     gpuVendor,
     gpuArchitecture,
@@ -162,10 +169,6 @@ export async function initAstroHardware(): Promise<AstroHardwareProfile> {
   if (typeof window !== 'undefined') {
     localStorage.setItem('Astro_hardware_profile', JSON.stringify(profile));
   }
-
-  console.log(
-    `Astro Hardware: ${profile.ram}GB RAM, ${profile.threads} Cores, ${profile.gpuVendor} GPU, tier=${profile.tier}, recommended=${profile.recommendedModel} (${profile.recommendedModelSize}), power=${profile.recommendedModelPower}`,
-  );
 
   return profile;
 }

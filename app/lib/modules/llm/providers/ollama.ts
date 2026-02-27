@@ -39,7 +39,7 @@ export default class OllamaProvider extends BaseProvider {
 
   staticModels: ModelInfo[] = [];
 
-  getDefaultNumCtx(serverEnv?: Env): number {
+  getDefaultNumCtx(serverenv?: any): number {
     const envRecord = this.convertEnvToRecord(serverEnv);
 
     return envRecord.DEFAULT_NUM_CTX ? parseInt(envRecord.DEFAULT_NUM_CTX, 10) : 32768;
@@ -112,7 +112,7 @@ export default class OllamaProvider extends BaseProvider {
 
   getModelInstance: (options: {
     model: string;
-    serverEnv?: Env;
+    serverenv?: any;
     apiKeys?: Record<string, string>;
     providerSettings?: Record<string, IProviderSetting>;
   }) => LanguageModelV1 = (options) => {
