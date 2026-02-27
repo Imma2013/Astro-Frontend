@@ -3,19 +3,19 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import { astroSettingsStore, updateAstroSettings } from '~/lib/stores/astro';
 import { AstroLogo } from '~/components/ui/AstroLogo';
-import { invoke } from '@tauri-apps/api/core';
-import { listen } from '@tauri-apps/api/event';
+
+// Add global type for Electron
+declare global {
+  interface Window {
+    astroNative?: any;
+  }
+}
 
 interface HardwareProfile {
   tier: string;
   recommendedModel: string;
   recommendedModelSize: string;
   recommendedModelPower: string;
-}
-
-interface DownloadProgress {
-  downloaded: number;
-  total: number;
 }
 
 export function OnboardingModal() {
@@ -25,6 +25,8 @@ export function OnboardingModal() {
   const [progress, setProgress] = useState(0);
   const [isWarmingUp, setIsWarmingUp] = useState(false);
   const [warmupStatus, setWarmupStatus] = useState('Initializing...');
+
+  const native = typeof window !== 'undefined' ? window.astroNative : null;
 
   useEffect(() => {
     const saved = localStorage.getItem('Astro_hardware_profile');
@@ -49,10 +51,13 @@ export function OnboardingModal() {
     let unlisten: (() => void) | undefined;
 
     try {
-      // Set up the listener for progress updates from Rust
-      unlisten = await listen<DownloadProgress>('download-progress', (event) => {
-        const { downloaded, total } = event.payload;
+      if (!native) {
+        throw new Error('Native interface not found. Are you running in Electron?');
+      }
 
+      // Set up progress listener
+      unlisten = native.onDownloadProgress((payload: any) => {
+        const { downloaded, total } = payload;
         if (total > 0) {
           const percent = Math.round((downloaded / total) * 100);
           setProgress(percent);
@@ -76,11 +81,8 @@ export function OnboardingModal() {
           'https://huggingface.co/DeepSeek-Coder-V2-Lite-Instruct-GGUF/resolve/main/DeepSeek-Coder-V2-Lite-Instruct-Q4_K_M.gguf';
       }
 
-      // Invoke the Rust command
-      const filePath = await invoke<string>('download_model', {
-        url: downloadUrl,
-        filename: `${profile.recommendedModel}.gguf`,
-      });
+      // Invoke the Electron command
+      const filePath = await native.downloadModel(downloadUrl, `${profile.recommendedModel}.gguf`);
 
       console.log('Model successfully downloaded to:', filePath);
 
@@ -89,7 +91,7 @@ export function OnboardingModal() {
       setWarmupStatus('Igniting Engine...');
 
       // Start the engine - Try GPU first
-      await invoke('start_engine', { modelPath: filePath, useGpu: true });
+      await native.startEngine(filePath, { useGpu: true });
       console.log('Local AI engine spawned (GPU). Starting health check loop...');
 
       // POLL FOR READINESS
@@ -101,8 +103,7 @@ export function OnboardingModal() {
         attempts++;
         
         try {
-          const healthJson = await invoke<string>('check_engine_health');
-          const health = JSON.parse(healthJson);
+          const health = await native.checkHealth();
 
           if (health.status === 'ok') {
             isReady = true;
@@ -111,12 +112,12 @@ export function OnboardingModal() {
             setWarmupStatus(`Loading Model... (${attempts * 2}s)`);
           }
         } catch (e) {
-          // If GPU fails to boot after 15 attempts (~30s), try CPU fallback
+          // Connection refused usually means it's still booting
           if (attempts > 15 && !hasTriedCpuFallback) {
             console.log('GPU engine failing to boot. Falling back to CPU mode...');
             setWarmupStatus('Hardware Compatibility Mode...');
             hasTriedCpuFallback = true;
-            await invoke('start_engine', { modelPath: filePath, useGpu: false });
+            await native.startEngine(filePath, { useGpu: false });
           } else {
             setWarmupStatus(`Engine Booting... (${attempts * 2}s)`);
           }

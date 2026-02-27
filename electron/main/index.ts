@@ -12,6 +12,137 @@ import { createWindow } from './ui/window';
 import { initCookies, storeCookies } from './utils/cookie';
 import { loadServerBuild, serveAsset } from './utils/serve';
 import { reloadOnChange } from './utils/reload';
+import { spawn, ChildProcess } from 'node:child_process';
+import { dialog } from 'electron';
+import fs from 'node:fs/promises';
+import https from 'node:https';
+import os from 'node:os';
+
+let llamaProcess: ChildProcess | null = null;
+
+// sidecar management
+ipcMain.handle('start-engine', async (_event, modelPath: string, options: any = {}) => {
+  if (llamaProcess) {
+    llamaProcess.kill();
+  }
+
+  const binaryName = process.platform === 'win32' ? 'llama-server.exe' : 'llama-server';
+  // In dev, look in src-tauri/binaries (re-using current folder structure for now)
+  // In prod, electron-builder puts it in resources
+  const binaryPath = app.isPackaged 
+    ? path.join(process.resourcesPath, 'binaries', binaryName)
+    : path.resolve(process.cwd(), 'src-tauri', 'binaries', binaryName);
+
+  console.log(`Spawning sidecar: ${binaryPath} with model ${modelPath}`);
+
+  const args = [
+    '--model', modelPath,
+    '--port', '8081',
+    '--host', '127.0.0.1',
+    '-c', '4096',
+    '--threads', String(options.threads || 8),
+    '--no-mmap'
+  ];
+
+  if (options.useGpu) {
+    args.push('--n-gpu-layers', '99');
+  } else {
+    args.push('--n-gpu-layers', '0');
+  }
+
+  llamaProcess = spawn(binaryPath, args, {
+    stdio: 'pipe',
+    windowsHide: true
+  });
+
+  llamaProcess.stdout?.on('data', (data) => console.log(`[Llama] ${data}`));
+  llamaProcess.stderr?.on('data', (data) => console.error(`[Llama Error] ${data}`));
+
+  llamaProcess.on('exit', (code) => {
+    console.log(`Llama process exited with code ${code}`);
+    llamaProcess = null;
+  });
+
+  return { success: true };
+});
+
+ipcMain.handle('stop-engine', async () => {
+  if (llamaProcess) {
+    llamaProcess.kill();
+    llamaProcess = null;
+  }
+  return { success: true };
+});
+
+ipcMain.handle('check-engine-health', async () => {
+  try {
+    const res = await fetch('http://127.0.0.1:8081/health');
+    return await res.json();
+  } catch (e) {
+    return { status: 'offline' };
+  }
+});
+
+// model downloader
+ipcMain.handle('download-model', async (event, url: string, filename: string) => {
+  const modelsDir = path.join(app.getPath('userData'), 'models');
+  await fs.mkdir(modelsDir, { recursive: true });
+  const filePath = path.join(modelsDir, filename);
+
+  if (await fs.access(filePath).then(() => true).catch(() => false)) {
+    return filePath;
+  }
+
+  return new Promise((resolve, reject) => {
+    const file = require('node:fs').createWriteStream(filePath);
+    https.get(url, (response) => {
+      const total = parseInt(response.headers['content-length'] || '0', 10);
+      let downloaded = 0;
+
+      response.on('data', (chunk) => {
+        downloaded += chunk.length;
+        event.sender.send('download-progress', { downloaded, total });
+      });
+
+      response.pipe(file);
+
+      file.on('finish', () => {
+        file.close();
+        resolve(filePath);
+      });
+    }).on('error', (err) => {
+      fs.unlink(filePath).catch(() => {});
+      reject(err.message);
+    });
+  });
+});
+
+// system hardware
+ipcMain.handle('get-hardware-info', async () => {
+  return {
+    total_memory_mb: Math.floor(os.totalmem() / (1024 * 1024)),
+    platform: process.platform,
+    arch: process.arch,
+    cpus: os.cpus().length
+  };
+});
+
+// filesystem bridge (Cursor-like)
+ipcMain.handle('open-directory', async (event) => {
+  const result = await dialog.showOpenDialog({
+    properties: ['openDirectory']
+  });
+  return result.filePaths[0];
+});
+
+ipcMain.handle('read-file', async (_event, filePath: string) => {
+  return await fs.readFile(filePath, 'utf-8');
+});
+
+ipcMain.handle('write-file', async (_event, filePath: string, content: string) => {
+  await fs.writeFile(filePath, content, 'utf-8');
+  return { success: true };
+});
 
 Object.assign(console, log.functions);
 

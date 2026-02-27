@@ -252,10 +252,15 @@ export const ChatBox: React.FC<ChatBoxProps> = (props) => {
       setDownloadStatus('Initializing native download...');
 
       let unlisten: (() => void) | undefined;
+      const native = (window as any).astroNative;
 
       try {
-        unlisten = await tauri.listen<{ downloaded: number; total: number }>('download-progress', (event) => {
-          const { downloaded, total } = event.payload;
+        if (!native) {
+          throw new Error('Native interface not found.');
+        }
+
+        unlisten = native.onDownloadProgress((payload: any) => {
+          const { downloaded, total } = payload;
 
           if (total > 0) {
             const percent = Math.round((downloaded / total) * 100);
@@ -280,13 +285,10 @@ export const ChatBox: React.FC<ChatBoxProps> = (props) => {
             'https://huggingface.co/Qwen/Qwen2.5-Coder-3B-Instruct-GGUF/resolve/main/qwen2.5-coder-3b-instruct-q4_k_m.gguf';
         }
 
-        const filePath = await tauri.invoke<string>('download_model', {
-          url: downloadUrl,
-          filename: `${targetModel}.gguf`,
-        });
+        const filePath = await native.downloadModel(downloadUrl, `${targetModel}.gguf`);
 
         setDownloadStatus('Starting Local Engine...');
-        await tauri.invoke('start_engine', { modelPath: filePath });
+        await native.startEngine(filePath, { useGpu: true });
 
         // POLL FOR READINESS
         let isReady = false;
@@ -296,8 +298,7 @@ export const ChatBox: React.FC<ChatBoxProps> = (props) => {
           attempts++;
           
           try {
-            const healthJson = await tauri.invoke<string>('check_engine_health');
-            const health = JSON.parse(healthJson);
+            const health = await native.checkHealth();
 
             if (health.status === 'ok') {
               isReady = true;
@@ -320,12 +321,6 @@ export const ChatBox: React.FC<ChatBoxProps> = (props) => {
 
         if (astroLocalProvider) {
           props.setProvider?.(astroLocalProvider);
-
-          /*
-           * AstroLocal doesn't need API keys or manual base URL settings in the UI
-           * since the provider handles http://127.0.0.1:8081/v1 internally for Tauri.
-           */
-
           toast.success('Astro Native Engine started! High-performance mode active.');
         }
       } catch (error: any) {

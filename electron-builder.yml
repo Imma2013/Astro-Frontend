@@ -11,7 +11,13 @@ files:
   - electron-update.yml
 extraMetadata:
   main: build/electron/main/index.mjs
+extraResources:
+  - from: src-tauri/binaries
+    to: binaries
+    filter:
+      - "**/*"
 asarUnpack:
+  - binaries/**
   - resources/**
   - build/client/**/*
   - build/server/**/*

@@ -108,18 +108,18 @@ export function detectAstroTier(input: TierInput): TierResult {
 export async function initAstroHardware(): Promise<AstroHardwareProfile> {
   let ramMB = 4000;
   const isTauri = typeof window !== 'undefined' && (window as any).__TAURI_INTERNALS__;
+  const isElectron = typeof window !== 'undefined' && (window as any).astroNative;
 
-  if (isTauri) {
+  if (isElectron) {
     try {
-      const { invoke } = await import('@tauri-apps/api/core');
-      const info = await invoke<{ total_memory_mb: number }>('get_hardware_info');
+      const info = await (window as any).astroNative.getHardwareInfo();
       ramMB = info.total_memory_mb;
     } catch (e) {
-      console.warn('Native RAM probe failed, falling back to navigator:', e);
+      console.warn('Electron RAM probe failed, falling back to navigator:', e);
       const nav = navigator as NavigatorWithHardware;
       ramMB = (nav.deviceMemory || 4) * 1024;
     }
-  } else {
+  } else if (isTauri) {
     const nav = navigator as NavigatorWithHardware;
     ramMB = (nav.deviceMemory || 4) * 1024;
   }
